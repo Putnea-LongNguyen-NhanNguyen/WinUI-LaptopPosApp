@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LaptopPosApp (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LaptopPosApp (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

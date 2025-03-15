@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="LaptopPosApp.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaptopPosApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <NavigationView x:Name="MyNavigation" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" ItemInvoked="Navigation_ItemInvoked" SelectionChanged="Navigation_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Icon="Shop" Content="Dữ liệu cơ sở dịch sao mày" IsExpanded="True">
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem Icon="Admin" Content="Products" Tag="ProductsPage"/>
+                        <NavigationViewItem Icon="Admin" Content="Categories" Tag="CategoriesPage"/>
+                        <NavigationViewItem Icon="Admin" Content="Manufacturers" Tag="ManufacturersPage"/>
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+                <NavigationViewItem Icon="Calendar" Content="Dữ liệu theo thời gian dịch sao mày" IsExpanded="True">
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem Icon="Page" Content="Orders" Tag="OrdersPage"/>
+                        <NavigationViewItem Icon="ContactInfo" Content="Customers" Tag="CustomersPage"/>
+                        <NavigationViewItem Icon="Document" Content="Statistics" Tag="StatisticsPage"/>
+                    </NavigationViewItem.MenuItems>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Content="Sell" Tag="SellingPage" Icon="Placeholder" />
+            </NavigationView.FooterMenuItems>
+            <Frame x:Name="Container"/>
+        </NavigationView>
+    </Grid>
+</Page>
