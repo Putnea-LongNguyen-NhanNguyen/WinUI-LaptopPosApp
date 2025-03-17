@@ -9,8 +9,8 @@ namespace LaptopPosApp.Dao
 {
     public interface IDao
     {
-        public IEnumerable<Product> Products { get; }
-        public IEnumerable<Category> Categories { get; }
-        public IEnumerable<Manufacturer> Manufacturers { get; }
+        public IQueryable<Product> Products { get; }
+        public IQueryable<Category> Categories { get; }
+        public IQueryable<Manufacturer> Manufacturers { get; }
     }
 }

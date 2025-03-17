@@ -10,13 +10,15 @@ namespace LaptopPosApp.Dao
 {
     public class MockDao: IDao
     {
-        public IEnumerable<Category> Categories { get; private set; }
-        public IEnumerable<Manufacturer> Manufacturers { get; private set; }
-        public IEnumerable<Product> Products { get; private set; }
-
+        public IQueryable<Category> Categories => categories.AsQueryable();
+        public IQueryable<Manufacturer> Manufacturers => manufacturers.AsQueryable();
+        public IQueryable<Product> Products => products.AsQueryable();
+        private List<Category> categories;
+        private List<Manufacturer> manufacturers;
+        private List<Product> products;
         public MockDao()
         {
-            Categories = new List<Category>()
+            categories = new List<Category>()
             {
                 new Category()
                 {
@@ -34,7 +36,7 @@ namespace LaptopPosApp.Dao
                     Name = "Workstation"
                 },
             };
-            Manufacturers = new List<Manufacturer>()
+            manufacturers = new List<Manufacturer>()
             {
                 new Manufacturer()
                 {
@@ -68,9 +70,9 @@ namespace LaptopPosApp.Dao
                 .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                 .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
                 .RuleFor(o => o.Price, f => f.Finance.Amount(1000000, 20000000, 0))
-                .RuleFor(o => o.Category, f => f.PickRandom(Categories))
-                .RuleFor(o => o.Manufacturer, f => f.PickRandom(Manufacturers));
-            Products = productGen.GenerateBetween(1, 50);
+                .RuleFor(o => o.Category, f => f.PickRandom(categories))
+                .RuleFor(o => o.Manufacturer, f => f.PickRandom(manufacturers));
+            products = productGen.GenerateBetween(1, 50);
         }
     }
 }
