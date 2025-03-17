@@ -11,6 +11,7 @@ namespace LaptopPosApp.Model
         public required string ID { get; set; }
         public required string Name { get; set; }
         public string Description { get; set; } = string.Empty;
+        public ulong Price { get; set; } = 0;
         public Manufacturer? Manufacturer { get; set; }
         public Category? Category { get; set; }
     }
