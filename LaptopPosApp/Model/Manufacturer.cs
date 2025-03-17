@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Model
 {
-    internal class Manufacturer
+    public class Manufacturer
     {
-        public required string ID { get; set; }
+        public required int ID { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 }

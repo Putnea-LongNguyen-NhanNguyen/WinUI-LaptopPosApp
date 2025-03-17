@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Model
 {
-    internal class Product
+    public class Product
     {
         public required string ID { get; set; }
         public required string Name { get; set; }
