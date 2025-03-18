@@ -14,6 +14,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System.ComponentModel;
 using System.Diagnostics;
+using LaptopPosApp.ViewModels;
+using WinRT;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,45 +27,26 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class DashboardPage : Page
     {
-        string currentTag = "";
+        DashboardPageViewModel ViewModel { get; set; } = null!;
         public DashboardPage()
         {
             this.InitializeComponent();
         }
-
-        private void Navigation_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (args.IsSettingsInvoked)
-            {
-                // = "Settings clicked";
-                return;
-            }
-
-            var item = (NavigationViewItem)sender.SelectedItem;
-
-            if (item.Tag != null)
-            {
-                try
-                {
-                    string tag = (string)item.Tag;
-                    if (tag == currentTag)
-                    {
-                        return;
-                    }
-
-                    Container.Navigate(Type.GetType($"{this.GetType().Namespace}.{tag}"));
-                    currentTag = tag;
-                }
-                catch
-                {
-                    Debug.WriteLine("You should create the page NOW");
-                }
-            }
+            base.OnNavigatedTo(e);
+            ViewModel = new(); // DI this
         }
-
-        private void Navigation_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void MyNavigation_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-
+            if (args.InvokedItemContainer.Tag is Func<Page> createPage)
+            {
+                ViewModel.NavigateTo(createPage());
+            }
+            else
+            {
+                ViewModel.NavigateTo(null);
+            }
         }
     }
 }

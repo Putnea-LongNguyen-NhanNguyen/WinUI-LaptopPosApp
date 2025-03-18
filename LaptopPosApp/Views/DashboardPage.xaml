@@ -6,31 +6,44 @@
     xmlns:local="using:LaptopPosApp.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LaptopPosApp.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <DataTemplate x:Key="NavigationViewWithChildren" x:DataType="vm:NavigationItemWithChildren">
+            <NavigationViewItem
+                Icon="{x:Bind Icon}"
+                Content="{x:Bind Title}"
+                IsExpanded="True"
+                MenuItemsSource="{x:Bind Children}"
+            />
+        </DataTemplate>
+        <DataTemplate x:Key="NavigationViewLeaf" x:DataType="vm:NavigationItemLeaf">
+            <NavigationViewItem
+                Icon="{x:Bind Icon}"
+                Content="{x:Bind Title}"
+                Tag="{x:Bind CreatePage}"
+            />
+        </DataTemplate>
+        <vm:NavigationItemTemplateSelector
+            x:Key="NavigationItemTemplateSelector"
+            Branch="{StaticResource NavigationViewWithChildren}"
+            Leaf="{StaticResource NavigationViewLeaf}"
+        />
+    </Page.Resources>
+
     <Grid>
-        <NavigationView x:Name="MyNavigation" IsBackButtonVisible="Collapsed" IsSettingsVisible="False" ItemInvoked="Navigation_ItemInvoked" SelectionChanged="Navigation_SelectionChanged">
-            <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Shop" Content="Dữ liệu cơ sở dịch sao mày" IsExpanded="True">
-                    <NavigationViewItem.MenuItems>
-                        <NavigationViewItem Icon="Admin" Content="Products" Tag="ProductsPage"/>
-                        <NavigationViewItem Icon="Admin" Content="Categories" Tag="CategoriesPage"/>
-                        <NavigationViewItem Icon="Admin" Content="Manufacturers" Tag="ManufacturersPage"/>
-                    </NavigationViewItem.MenuItems>
-                </NavigationViewItem>
-                <NavigationViewItem Icon="Calendar" Content="Dữ liệu theo thời gian dịch sao mày" IsExpanded="True">
-                    <NavigationViewItem.MenuItems>
-                        <NavigationViewItem Icon="Page" Content="Orders" Tag="OrdersPage"/>
-                        <NavigationViewItem Icon="ContactInfo" Content="Customers" Tag="CustomersPage"/>
-                        <NavigationViewItem Icon="Document" Content="Statistics" Tag="StatisticsPage"/>
-                    </NavigationViewItem.MenuItems>
-                </NavigationViewItem>
-            </NavigationView.MenuItems>
-            <NavigationView.FooterMenuItems>
-                <NavigationViewItem Content="Sell" Tag="SellingPage" Icon="Placeholder" />
-            </NavigationView.FooterMenuItems>
-            <Frame x:Name="Container"/>
+        <NavigationView
+            x:Name="MyNavigation"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            ItemInvoked="MyNavigation_ItemInvoked"
+            MenuItemsSource="{x:Bind ViewModel.NavigationItems, Mode=OneWay}"
+            FooterMenuItemsSource="{x:Bind ViewModel.FooterNavigationItems, Mode=OneWay}"
+            MenuItemTemplateSelector="{StaticResource NavigationItemTemplateSelector}"
+        >
+            <Frame x:Name="Container" Content="{x:Bind ViewModel.CurrentPage, Mode=OneWay}"/>
         </NavigationView>
     </Grid>
 </Page>
