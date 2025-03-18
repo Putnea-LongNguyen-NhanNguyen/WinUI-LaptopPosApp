@@ -25,6 +25,7 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class DashboardPage : Page
     {
+        string currentTag = "";
         public DashboardPage()
         {
             this.InitializeComponent();
@@ -45,7 +46,13 @@ namespace LaptopPosApp.Views
                 try
                 {
                     string tag = (string)item.Tag;
+                    if (tag == currentTag)
+                    {
+                        return;
+                    }
+
                     Container.Navigate(Type.GetType($"{this.GetType().Namespace}.{tag}"));
+                    currentTag = tag;
                 }
                 catch
                 {

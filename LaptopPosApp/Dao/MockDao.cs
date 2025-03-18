@@ -76,13 +76,43 @@ namespace LaptopPosApp.Dao
                     ID = 5,
                     Name = "Dell"
                 },
+                new()
+                {
+                    ID = 6,
+                    Name = "MSI"
+                },
+                new()
+                {
+                    ID = 7,
+                    Name = "Apple"
+                },
+                new()
+                {
+                    ID = 8,
+                    Name = "Microsoft"
+                },
+                new()
+                {
+                    ID = 9,
+                    Name = "Corsair"
+                },
+                new()
+                {
+                    ID = 10,
+                    Name = "LG"
+                },
+                new()
+                {
+                    ID = 11,
+                    Name = "Google"
+                },
             };
             var productGen = new Faker<Product>()
                 .StrictMode(true)
                 .RuleFor(o => o.ID, f => f.Random.String(15, 'A', 'Z'))
                 .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                 .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
-                .RuleFor(o => o.Price, f => f.Finance.Amount(1000000, 20000000, 0))
+                .RuleFor(o => o.Price, f => (ulong)f.Finance.Amount(1000000, 20000000, 0))
                 .RuleFor(o => o.Category, f => f.PickRandom(categories.AsEnumerable()))
                 .RuleFor(o => o.Manufacturer, f => f.PickRandom(manufacturers.AsEnumerable()));
             products = new(
