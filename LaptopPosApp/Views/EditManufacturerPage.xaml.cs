@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using LaptopPosApp.ViewModels;
 using LaptopPosApp.Model;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,17 +24,21 @@ namespace LaptopPosApp.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddManufacturerPage : Page
+    public sealed partial class EditManufacturerPage : Page
     {
-        private AddManufacturerViewModel ViewModel;
+        private EditManufacturerViewModel ViewModel { get; set; }
         public ContentDialog ContentDialog { get; set; } = null!;
-        public bool Added { get; private set; } = false;
-
-        public AddManufacturerPage(IQueryable<Manufacturer> manufacturers)
+        public bool Edited { get; private set; } = false;
+        public EditManufacturerPage(IQueryable<Manufacturer> manufacturers, Manufacturer editingItem)
         {
             this.InitializeComponent();
-            ViewModel = new AddManufacturerViewModel(manufacturers);
-            KeyDown += AddManufacturerPage_KeyDown;
+            ViewModel = new(manufacturers, editingItem);
+            KeyDown += EditManufacturerPage_KeyDown;
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeItem();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -41,21 +46,16 @@ namespace LaptopPosApp.Views
             Cancel();
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            AddItem();
-        }
-
         public string GetNewManufacturerName()
         {
-            return ViewModel.Name;
+            return ViewModel.Manufacturer.Name;
         }
 
-        private void AddManufacturerPage_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void EditManufacturerPage_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key.ToString() == "Enter" && ViewModel.IsValid)
             {
-                AddItem();
+                ChangeItem();
             }
             else if (e.Key.ToString() == "Esc")
             {
@@ -63,16 +63,16 @@ namespace LaptopPosApp.Views
             }
         }
 
-        private void AddItem()
+        private void ChangeItem()
         {
             ContentDialog.Hide();
-            Added = true;
+            Edited = true;
         }
 
         private void Cancel()
         {
             ContentDialog.Hide();
-            Added = false;
+            Edited = false;
         }
     }
 }

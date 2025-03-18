@@ -58,13 +58,27 @@ namespace LaptopPosApp.Views
             ViewModel.Remove(selected);
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
             var selected = (ManufacturersPageViewModel.ManufacturerRow)MyTable.SelectedItem;
             if (selected == null)
                 return;
 
+            var page = new EditManufacturerPage(ViewModel.Dao.Manufacturers, new Manufacturer() { ID = selected.ID, Name = selected.Name });
+            var contentDialog = new ContentDialog()
+            {
+                XamlRoot = this.XamlRoot,
+                Content = page,
+                Title = "Sửa tên hãng: " + selected.Name,
+            };
+            page.ContentDialog = contentDialog;
+            await contentDialog.ShowAsync();
 
+            if (page.Edited)
+            {
+                string newName = page.GetNewManufacturerName();
+                ViewModel.Edit(selected, newName);
+            }
         }
 
         private void MyTable_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -27,15 +27,16 @@
             Grid.Row="1" 
             ItemsSource="{x:Bind ViewModel.Items}"
             SelectionChanged="MyTable_SelectionChanged"
+            SelectionUnit="Row"
             SelectionMode="Extended"
             AutoGenerateColumns="False">
             <tableView:TableView.Columns>
                 <tableView:TableViewTextColumn Header="ID"  IsReadOnly="True"
-                    Binding="{Binding ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    Binding="{Binding ID, Mode=OneWay}"/>
                 <tableView:TableViewTextColumn Header="Tên hãng" IsReadOnly="True"
-                    Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    Binding="{Binding Name, Mode=OneWay}"/>
                 <tableView:TableViewTextColumn Header="Số lượng sản phẩm" IsReadOnly="True"
-                    Binding="{Binding ProductCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    Binding="{Binding ProductCount, Mode=OneWay}"/>
             </tableView:TableView.Columns>
         </tableView:TableView>
     </Grid>

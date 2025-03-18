@@ -17,28 +17,22 @@ namespace LaptopPosApp.ViewModels
             _manufacturers = manufacturers;
         }
 
-        public string Name { get; set; } = "";
-
-        public bool IsValid
+        public string WarningMessage { get; private set; } = string.Empty;
+        public bool IsValid => string.IsNullOrWhiteSpace(WarningMessage);
+        public string Name
         {
-            get
+            get;
+            set
             {
-                return !(string.IsNullOrWhiteSpace(Name) || _manufacturers.Any(manu => manu.Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase)));
-            }
-            set;
-        } = true;
-        public string WarningMessage 
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(Name))
-                    return "Tên hãng không hợp lệ";
+                field = value;
+                if (string.IsNullOrWhiteSpace(value))
+                    WarningMessage = "Tên hãng không hợp lệ";
                 else if (_manufacturers.Any(manu => manu.Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase)))
-                    return "Tên hãng đã tồn tại";
-                else return "";
+                    WarningMessage = "Tên hãng đã tồn tại";
+                else
+                    WarningMessage = string.Empty;
             }
-            set;
-        } = "";
+        } = string.Empty;
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }
