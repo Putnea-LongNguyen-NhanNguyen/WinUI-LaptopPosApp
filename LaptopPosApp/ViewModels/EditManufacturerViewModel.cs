@@ -24,7 +24,6 @@ namespace LaptopPosApp.ViewModels
                     WarningMessage = "Tên hãng đã tồn tại";
                 else
                     WarningMessage = string.Empty;
-                Debug.WriteLine("yay");
             }
         }
         private readonly string _oldName;
