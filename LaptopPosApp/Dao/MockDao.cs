@@ -10,55 +10,68 @@ namespace LaptopPosApp.Dao
 {
     public class MockDao: IDao
     {
+        internal class IDComparer<T>: Comparer<T> where T: IHasId<T>
+        {
+            public override int Compare(T? a, T? b)
+            {
+                if (a == null && b == null)
+                    return 0;
+                if (a == null)
+                    return -1;
+                if (b == null)
+                    return 1;
+                return a.ID.CompareTo(b.ID);
+            }
+        }
         public IQueryable<Category> Categories => categories.AsQueryable();
         public IQueryable<Manufacturer> Manufacturers => manufacturers.AsQueryable();
         public IQueryable<Product> Products => products.AsQueryable();
-        private List<Category> categories;
-        private List<Manufacturer> manufacturers;
-        private List<Product> products;
+        private readonly SortedSet<Category> categories;
+        private readonly SortedSet<Manufacturer> manufacturers;
+        private readonly SortedSet<Product> products;
         public MockDao()
         {
-            categories = new List<Category>()
+            categories = new(new IDComparer<Category>())
             {
-                new Category()
+                new()
                 {
                     ID = 1,
                     Name = "Gaming"
                 },
-                new Category()
+                new()
                 {
                     ID = 2,
                     Name = "Văn phòng"
                 },
-                new Category()
+                new()
                 {
                     ID = 3,
                     Name = "Workstation"
                 },
             };
-            manufacturers = new List<Manufacturer>()
+            manufacturers = new(new IDComparer<Manufacturer>())
             {
-                new Manufacturer()
+                new()
                 {
                     ID = 1,
                     Name = "Asus"
                 },
-                new Manufacturer()
+                new()
                 {
                     ID = 2,
                     Name = "Acer"
                 },
-                new Manufacturer()
+                new()
                 {
                     ID = 3,
                     Name = "Lenovo"
                 },
-                new Manufacturer()
+                new()
                 {
                     ID = 4,
                     Name = "HP"
                 },
-                new Manufacturer()
+                new()
                 {
                     ID = 5,
                     Name = "Dell"
@@ -70,9 +83,12 @@ namespace LaptopPosApp.Dao
                 .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                 .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
                 .RuleFor(o => o.Price, f => f.Finance.Amount(1000000, 20000000, 0))
-                .RuleFor(o => o.Category, f => f.PickRandom(categories))
-                .RuleFor(o => o.Manufacturer, f => f.PickRandom(manufacturers));
-            products = productGen.GenerateBetween(1, 50);
+                .RuleFor(o => o.Category, f => f.PickRandom(categories.AsEnumerable()))
+                .RuleFor(o => o.Manufacturer, f => f.PickRandom(manufacturers.AsEnumerable()));
+            products = new(
+                productGen.GenerateBetween(1, 50),
+                new IDComparer<Product>()
+            );
         }
     }
 }

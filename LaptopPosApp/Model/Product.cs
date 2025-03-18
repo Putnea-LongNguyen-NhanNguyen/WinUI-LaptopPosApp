@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Model
 {
-    public class Product
+    public class Product: IHasId<Product>
     {
         public required string ID { get; set; }
+        IComparable IHasId<Product>.ID => ID;
         public required string Name { get; set; }
         public string Description { get; set; } = string.Empty;
         public ulong Price { get; set; } = 0;
