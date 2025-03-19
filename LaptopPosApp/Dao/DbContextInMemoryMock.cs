@@ -96,8 +96,8 @@ namespace LaptopPosApp.Dao
             optionsBuilder.UseSeeding((context, _) =>
             {
                 context.ChangeTracker.AutoDetectChangesEnabled = false;
-                context.Set<Category>().AddRange(_seedCategories);
-                context.Set<Manufacturer>().AddRange(_seedManufacturers);
+                Categories.AddRange(_seedCategories);
+                Manufacturers.AddRange(_seedManufacturers);
                 var productGen = new Faker<Product>()
                     .StrictMode(true)
                     .RuleFor(o => o.ID, f => f.Random.String(15, 'A', 'Z'))
@@ -106,8 +106,9 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.Price, f => (ulong)f.Finance.Amount(1000000, 20000000, 0))
                     .RuleFor(o => o.Category, f => f.PickRandom(_seedCategories.AsEnumerable()))
                     .RuleFor(o => o.Manufacturer, f => f.PickRandom(_seedManufacturers.AsEnumerable()));
-                context.Set<Product>().AddRange(productGen.GenerateBetween(10, 50));
+                Products.AddRange(productGen.GenerateBetween(10, 50));
                 context.ChangeTracker.AutoDetectChangesEnabled = true;
+                context.ChangeTracker.DetectChanges();
                 context.SaveChanges();
             });
         }
