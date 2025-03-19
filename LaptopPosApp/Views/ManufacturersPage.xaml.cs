@@ -16,6 +16,7 @@ using LaptopPosApp.ViewModels;
 using LaptopPosApp.Model;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,16 +29,18 @@ namespace LaptopPosApp.Views
     public sealed partial class ManufacturersPage : Page
     {
         private ManufacturersPageViewModel ViewModel { get; }
-        public int CurrentPage { get; set; } = 1;
-        public static int PerPage => 5;
         public ManufacturersPage()
         {
             this.InitializeComponent();
-            ViewModel = new ManufacturersPageViewModel();
-            ViewModel.LoadPage(CurrentPage, PerPage);
-            CreatePageButtons();
+            ViewModel = (Application.Current as App)!.Services.GetRequiredService<ManufacturersPageViewModel>();
+            Loaded += (_, args) =>
+            {
+                ViewModel.Refresh();
+                CreatePageButtons();
+            };
+            Unloaded += (_, args) => ViewModel.SaveChanges();
         }
-
+        
         private async void NewItemButton_Click(object sender, RoutedEventArgs e)
         {
             var page = new AddManufacturerPage(ViewModel.Dao.Manufacturers);
@@ -60,53 +63,14 @@ namespace LaptopPosApp.Views
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var selected = MyTable.SelectedItems;
-            ViewModel.Remove(selected);
-
-            int totalPage = ViewModel.GetTotalPageNumber(PerPage);
-            // a page disappeared
-            if (totalPage < PageButtonContainer.Children.OfType<Button>().Count())
-            {
-                // if was on last page
-                if (CurrentPage > totalPage)
-                {
-                    CurrentPage = totalPage;
-                }
-                PageButtonContainer.Children.Remove(PageButtonContainer.Children.OfType<Button>().Last());
-            }
-            ViewModel.LoadPage(CurrentPage, PerPage);
-        }
-
-        private async void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            var selected = (ManufacturersPageViewModel.ManufacturerRow)MyTable.SelectedItem;
-            if (selected == null)
-                return;
-
-            var page = new EditManufacturerPage(ViewModel.Dao.Manufacturers, new Manufacturer() { ID = selected.ID, Name = selected.Name });
-            var contentDialog = new ContentDialog()
-            {
-                XamlRoot = this.XamlRoot,
-                Content = page,
-                Title = "Sửa tên hãng: " + selected.Name,
-            };
-            page.ContentDialog = contentDialog;
-            await contentDialog.ShowAsync();
-
-            if (page.Edited)
-            {
-                string newName = page.GetNewManufacturerName();
-                ViewModel.Edit(selected, newName);
-            }
-        }
-
-        private void MyTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            EditButton.IsEnabled = MyTable.SelectedItems?.Count == 1;
+            ViewModel.Remove(selected.Cast<Manufacturer>());
+            CreatePageButtons();
         }
 
         private void CreatePageButtons()
         {
-            for (int i = 1; i <= ViewModel.GetTotalPageNumber(PerPage); i++)
+            PageButtonContainer.Children.Clear();
+            for (int i = 1; i <= ViewModel.PageCount; i++)
             {
                 Button button = CreateButton(i);
                 PageButtonContainer.Children.Add(button);
@@ -121,8 +85,7 @@ namespace LaptopPosApp.Views
             EnableAllButtons();
             button.IsEnabled = false;
             int pageNumber = (int)button.Tag;
-            ViewModel.LoadPage(pageNumber, PerPage);
-            CurrentPage = pageNumber;
+            ViewModel.CurrentPage = pageNumber;
         }
 
         private void EnableAllButtons()
