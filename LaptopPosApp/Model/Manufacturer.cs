@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Model
 {
-    public class Manufacturer: IHasId<Manufacturer>, INotifyPropertyChanged
+    public partial class Manufacturer: IHasId, INotifyPropertyChanged
     {
         public required int ID { get; set; }
-        IComparable IHasId<Manufacturer>.ID => ID;
+        IComparable IHasId.ID => ID;
         public string Name { get; set; } = string.Empty;
-
+        public List<Product> Products { get; set; } = null!;
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

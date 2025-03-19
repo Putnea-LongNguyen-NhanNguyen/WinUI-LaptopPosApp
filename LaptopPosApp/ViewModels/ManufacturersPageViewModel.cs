@@ -1,5 +1,6 @@
 ﻿using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
+using LaptopPosApp.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -17,100 +18,95 @@ namespace LaptopPosApp.ViewModels
     class ManufacturersPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        public ObservableCollection<ManufacturerRow> Items { get; set; } = null!;
-        private List<Manufacturer> _testManufacturers;
-        public IDao Dao { get; private set; }
+        public IList Items { get; private set; } = Array.Empty<Manufacturer>();
+        private readonly DbContextBase dbContext;
 
-        public ManufacturersPageViewModel()
+        public int Count { get; private set; }
+        public int PerPage
         {
-            Dao = new MockDao();
-            _testManufacturers = Dao.Manufacturers.Select(manufacturer => manufacturer).ToList();
-        }
-
-        public void LoadPage(int page, int perPage)
-        {
-            if (page < 1 || perPage < 1)
+            get;
+            set
             {
-                if (Items.Count > 0)
-                {
-                    Items = new ObservableCollection<ManufacturerRow>(new List<ManufacturerRow>());
-                }
-                return;
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(value), "Items per page must be positive");
+                field = value;
+                Refresh();
             }
-
-            Items = new(_testManufacturers
-                .Skip((page - 1) * perPage)
-                .Take(perPage)
-                .Select(
-                    manufacturer => new ManufacturerRow()
-                    {
-                        ID = manufacturer.ID,
-                        Name = manufacturer.Name,
-                        ProductCount = Dao.Products.Count(product => product.Manufacturer != null && product.Manufacturer.ID == manufacturer.ID)
-                    }
-                )
-                .ToList()
-            );
+        } = 5;
+        public int PageCount => (int)Math.Max(1, Math.Ceiling((double)Count / PerPage));
+        private int currentPage = 1;
+        public int CurrentPage
+        {
+            get => currentPage;
+            set
+            {
+                currentPage = value;
+                Refresh();
+            }
+        }
+        public bool Refreshing { get; private set; }
+        public ManufacturersPageViewModel(DbContextBase dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+        public void Refresh()
+        {
+            Refreshing = true;
+            Count = dbContext.Manufacturers.Count();
+            currentPage = Math.Clamp(currentPage, 1, PageCount);
+            Items = dbContext.Manufacturers
+                .Skip((currentPage - 1) * PerPage)
+                .Take(PerPage)
+                .ToArray();
+            Refreshing = false;
         }
 
-        public void Add(string newName)
+        public async Task StartAddFlow(Page parent)
         {
+            var vm = new AddManufacturerViewModel(dbContext.Manufacturers.ToArray());
+            var page = new AddManufacturerPage(vm);
+            var contentDialog = new ContentDialog()
+            {
+                XamlRoot = parent.XamlRoot,
+                Content = page,
+                Title = "Thêm hãng mới",
+            };
+            page.ContentDialog = contentDialog;
+            await contentDialog.ShowAsync();
+
+            if (!vm.WillAdd)
+                return;
+
+            string newName = vm.Name;
             // add in DAO
             Debug.WriteLine("add manufacturer: " + newName);
-            Items.Add(new ManufacturerRow() 
-            { 
-                ID = _testManufacturers.Count() + 1,
-                Name = newName,
+            dbContext.Manufacturers.Add(new()
+            {
+                ID = 0, // temporary value for EF
+                Name = newName
             });
+            SaveChanges();
+            Refresh();
         }
 
-        public void Edit(ManufacturerRow item, string newName)
+        public void Remove(IEnumerable<Manufacturer> items)
         {
-            item.Name = newName;  // item here is the same as the one in this.Items
-            // edit in DAO
-            _testManufacturers.First(manufacturer => manufacturer.ID == item.ID).Name = newName;
-        }
-
-        public void Remove(ManufacturerRow item)
-        {
-            if (item != null)
+            var deleted = false;
+            foreach (var item in items)
             {
-                Items.Remove(item);
-                // remove in DAO
-                var toBeRemoved = _testManufacturers.Find(manufacturer => manufacturer.ID == item.ID);
-                if (toBeRemoved != null)
-                {
-                    _testManufacturers.Remove(toBeRemoved);
-                }
+                dbContext.Manufacturers.Remove(item);
+                deleted = true;
+            }
+            if (deleted)
+            {
+                SaveChanges();
+                Refresh();
             }
         }
 
-        public void Remove(IList<object> items)
+        public void SaveChanges()
         {
-            foreach(ManufacturerRow item in items.ToList())
-            {
-                Items.Remove(item);
-                // remove in DAO
-                var toBeRemoved = _testManufacturers.Find(manufacturer => manufacturer.ID == item.ID);
-                if (toBeRemoved != null)
-                {
-                    _testManufacturers.Remove(toBeRemoved);
-                }
-            }
-        }
-
-        public int GetTotalPageNumber(int perPage)
-        {
-            return (int)(Math.Ceiling((decimal)_testManufacturers.Count() / perPage));
-        }
-
-        public class ManufacturerRow : INotifyPropertyChanged
-        {
-            public required int ID { get; set; }
-            public string Name { get; set; } = String.Empty;
-            public int ProductCount { get; set; } = 0;
-
-            public event PropertyChangedEventHandler? PropertyChanged;
+            dbContext.SaveChanges();
         }
     }
 }

@@ -15,8 +15,12 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using LaptopPosApp.Views;
 using LaptopPosApp.Dao;
+using LaptopPosApp.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,6 +32,9 @@ namespace LaptopPosApp
     /// </summary>
     public partial class App : Application
     {
+        public IHost AppHost { get; private set; } = null!;
+        public IServiceProvider Services { get; private set; } = null!;
+        public static bool UseMockDatabase => true;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -35,6 +42,16 @@ namespace LaptopPosApp
         public App()
         {
             this.InitializeComponent();
+            var appBuilder = Host.CreateApplicationBuilder();
+            if (UseMockDatabase)
+                appBuilder.Services.AddDbContext<DbContextBase, DbContextInMemoryMock>();
+            appBuilder.Services.AddTransient<ManufacturersPageViewModel>();
+            AppHost = appBuilder.Build();
+            Services = AppHost.Services;
+
+            var dbContext = Services.GetRequiredService<DbContextBase>();
+            dbContext.Database.OpenConnection();
+            dbContext.Database.Migrate();
         }
 
         /// <summary>

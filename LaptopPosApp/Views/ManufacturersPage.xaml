@@ -19,25 +19,23 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
             <Button Content="Thêm hãng" Click="NewItemButton_Click"/>
-            <Button Content="Sửa" Click="EditButton_Click" x:Name="EditButton" IsEnabled="False"/>
             <Button Content="Xóa" Click="DeleteButton_Click"/>
         </StackPanel>
 
         <tableView:TableView 
             x:Name="MyTable"
             Grid.Row="1" 
-            ItemsSource="{x:Bind ViewModel.Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            SelectionChanged="MyTable_SelectionChanged"
+            ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
             SelectionUnit="Row"
             SelectionMode="Extended"
             AutoGenerateColumns="False">
             <tableView:TableView.Columns>
-                <tableView:TableViewTextColumn Header="ID"  IsReadOnly="True"
+                <tableView:TableViewTextColumn Header="ID" IsReadOnly="True"
                     Binding="{Binding ID, Mode=OneWay}"/>
-                <tableView:TableViewTextColumn Header="Tên hãng" IsReadOnly="True"
-                    Binding="{Binding Name, Mode=OneWay}"/>
+                <tableView:TableViewTextColumn Header="Tên hãng"
+                    Binding="{Binding Name, Mode=TwoWay}"/>
                 <tableView:TableViewTextColumn Header="Số lượng sản phẩm" IsReadOnly="True"
-                    Binding="{Binding ProductCount, Mode=OneWay}"/>
+                    Binding="{Binding Products.Count, Mode=OneWay, FallbackValue=0}"/>
             </tableView:TableView.Columns>
         </tableView:TableView>
 

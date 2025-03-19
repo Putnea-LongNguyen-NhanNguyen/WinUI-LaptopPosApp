@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using LaptopPosApp.ViewModels;
 using LaptopPosApp.Model;
+using Microsoft.Extensions.DependencyInjection;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,14 +26,13 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class AddManufacturerPage : Page
     {
-        private AddManufacturerViewModel ViewModel;
-        public ContentDialog ContentDialog { get; set; } = null!;
-        public bool Added { get; private set; } = false;
+        private readonly AddManufacturerViewModel viewModel;
+        public ContentDialog? ContentDialog { get; set; }
 
-        public AddManufacturerPage(IQueryable<Manufacturer> manufacturers)
+        public AddManufacturerPage(AddManufacturerViewModel viewModel)
         {
             this.InitializeComponent();
-            ViewModel = new AddManufacturerViewModel(manufacturers);
+            this.viewModel = viewModel;
             KeyDown += AddManufacturerPage_KeyDown;
         }
 
@@ -46,14 +46,9 @@ namespace LaptopPosApp.Views
             AddItem();
         }
 
-        public string GetNewManufacturerName()
-        {
-            return ViewModel.Name;
-        }
-
         private void AddManufacturerPage_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key.ToString() == "Enter" && ViewModel.IsValid)
+            if (e.Key.ToString() == "Enter" && viewModel.IsValid)
             {
                 AddItem();
             }
@@ -65,14 +60,14 @@ namespace LaptopPosApp.Views
 
         private void AddItem()
         {
-            ContentDialog.Hide();
-            Added = true;
+            ContentDialog?.Hide();
+            viewModel.WillAdd = true;
         }
 
         private void Cancel()
         {
-            ContentDialog.Hide();
-            Added = false;
+            ContentDialog?.Hide();
+            viewModel.WillAdd = false;
         }
     }
 }
