@@ -10,7 +10,7 @@ namespace LaptopPosApp.Dao
 {
     public class MockDao: IDao
     {
-        internal class IDComparer<T>: Comparer<T> where T: IHasId<T>
+        internal class IDComparer<T>: Comparer<T> where T: IHasId
         {
             public override int Compare(T? a, T? b)
             {

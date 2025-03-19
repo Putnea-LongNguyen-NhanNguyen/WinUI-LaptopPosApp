@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Model
 {
-    public class Category: IHasId<Category>
+    public class Category: IHasId
     {
         public required int ID { get; set; }
-        IComparable IHasId<Category>.ID => ID;
+        IComparable IHasId.ID => ID;
         public string Name { get; set; } = string.Empty;
+        public List<Product> Products { get; set; } = null!;
     }
 }

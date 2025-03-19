@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Model
 {
-    public interface IHasId<T>
+    public interface IHasId
     {
         public IComparable ID { get; }
     }
