@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    class AddManufacturerViewModel : INotifyPropertyChanged
+    public class AddManufacturerViewModel : INotifyPropertyChanged
     {
-        private readonly IQueryable<Manufacturer> _manufacturers;
-        public AddManufacturerViewModel(IQueryable<Manufacturer> manufacturers)
+        private IEnumerable<Manufacturer> manufacturers;
+        public AddManufacturerViewModel(IEnumerable<Manufacturer> manufacturers)
         {
-            _manufacturers = manufacturers;
+            this.manufacturers = manufacturers;
         }
 
         public string WarningMessage { get; private set; } = string.Empty;
@@ -27,13 +27,13 @@ namespace LaptopPosApp.ViewModels
                 field = value;
                 if (string.IsNullOrWhiteSpace(value))
                     WarningMessage = "Tên hãng không hợp lệ";
-                else if (_manufacturers.Any(manu => manu.Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase)))
+                else if (manufacturers.Any(manu => manu.Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase)))
                     WarningMessage = "Tên hãng đã tồn tại";
                 else
                     WarningMessage = string.Empty;
             }
         } = string.Empty;
-
+        public bool WillAdd { get; set; }
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

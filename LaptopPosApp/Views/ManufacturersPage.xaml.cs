@@ -43,21 +43,7 @@ namespace LaptopPosApp.Views
         
         private async void NewItemButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = new AddManufacturerPage(ViewModel.Dao.Manufacturers);
-            var contentDialog = new ContentDialog()
-            {
-                XamlRoot = this.XamlRoot,
-                Content = page,
-                Title = "Thêm hãng mới",
-            };
-            page.ContentDialog = contentDialog;
-            await contentDialog.ShowAsync();
-
-            if (page.Added)
-            {
-                string newName = page.GetNewManufacturerName();
-                ViewModel.Add(newName);
-            }
+            await ViewModel.StartAddFlow(this);
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)

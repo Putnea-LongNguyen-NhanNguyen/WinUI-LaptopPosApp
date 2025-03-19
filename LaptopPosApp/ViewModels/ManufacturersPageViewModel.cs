@@ -1,5 +1,6 @@
 ﻿using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
+using LaptopPosApp.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -60,8 +61,23 @@ namespace LaptopPosApp.ViewModels
             Refreshing = false;
         }
 
-        public void Add(string newName)
+        public async Task StartAddFlow(Page parent)
         {
+            var vm = new AddManufacturerViewModel(dbContext.Manufacturers.ToArray());
+            var page = new AddManufacturerPage(vm);
+            var contentDialog = new ContentDialog()
+            {
+                XamlRoot = parent.XamlRoot,
+                Content = page,
+                Title = "Thêm hãng mới",
+            };
+            page.ContentDialog = contentDialog;
+            await contentDialog.ShowAsync();
+
+            if (!vm.WillAdd)
+                return;
+
+            string newName = vm.Name;
             // add in DAO
             Debug.WriteLine("add manufacturer: " + newName);
             dbContext.Manufacturers.Add(new()
@@ -69,6 +85,7 @@ namespace LaptopPosApp.ViewModels
                 ID = 0, // temporary value for EF
                 Name = newName
             });
+            SaveChanges();
             Refresh();
         }
 
