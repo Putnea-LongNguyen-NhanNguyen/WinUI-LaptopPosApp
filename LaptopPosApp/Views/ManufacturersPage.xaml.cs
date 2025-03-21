@@ -36,7 +36,8 @@ namespace LaptopPosApp.Views
             Loaded += (_, args) =>
             {
                 ViewModel.Refresh();
-                CreatePageButtons();
+                ViewModel.PerPage = ViewModel.PerPageOptions.ElementAt(0);
+                PerPageComboBox.SelectedValue = ViewModel.PerPage;
             };
             Unloaded += (_, args) => ViewModel.SaveChanges();
         }
@@ -50,46 +51,62 @@ namespace LaptopPosApp.Views
         {
             var selected = MyTable.SelectedItems;
             ViewModel.Remove(selected.Cast<Manufacturer>());
-            CreatePageButtons();
+            PageNumberInputTextBox.Text = ViewModel.CurrentPage.ToString();
         }
 
-        private void CreatePageButtons()
+        private void LoadPage(int page)
         {
-            PageButtonContainer.Children.Clear();
-            for (int i = 1; i <= ViewModel.PageCount; i++)
+            if (page == ViewModel.CurrentPage)
+                return;
+
+            if (page >= 1 && page <= ViewModel.PageCount)
             {
-                Button button = CreateButton(i);
-                PageButtonContainer.Children.Add(button);
-                button.Click += PageButton_Click;
+                ViewModel.CurrentPage = page;
+
             }
-            PageButtonContainer.Children.OfType<Button>().First().IsEnabled = false;
+            PageNumberInputTextBox.Text = ViewModel.CurrentPage.ToString();
+        }
+
+        private void PageNumberInputTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key.ToString() == "Enter")
+            {
+                LoadPage(int.Parse(PageNumberInputTextBox.Text));
+            }
+        }
+
+        private void PageNumberInputTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            LoadPage(int.Parse(PageNumberInputTextBox.Text));
         }
 
         private void PageButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (sender as Button)!;
-            EnableAllButtons();
-            button.IsEnabled = false;
-            int pageNumber = (int)button.Tag;
-            ViewModel.CurrentPage = pageNumber;
-        }
-
-        private void EnableAllButtons()
-        {
-            foreach (Button child in PageButtonContainer.Children.OfType<Button>())
+            Button btn = (sender as Button)!;
+            string tag = (btn.Tag as string)!;
+            switch (tag)
             {
-                child.IsEnabled = true;
+                case "FirstPage":
+                    {
+                        LoadPage(1);
+                        break;
+                    }
+                case "PreviousPage":
+                    {
+                        LoadPage(ViewModel.CurrentPage - 1);
+                        break;
+                    }
+                case "NextPage":
+                    {
+                        LoadPage(ViewModel.CurrentPage + 1);
+                        break;
+                    }
+                case "LastPage":
+                    {
+                        LoadPage(ViewModel.PageCount);
+                        break;
+                    }
             }
-        }
-
-        private Button CreateButton(int number)
-        {
-            return new Button()
-            {
-                Content = number.ToString(),
-                Tag = number,
-                Margin = new Thickness(10, 5, 10, 5)
-            };
         }
     }
 }

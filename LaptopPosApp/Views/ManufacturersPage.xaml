@@ -18,8 +18,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
-            <Button Content="Thêm hãng" Click="NewItemButton_Click"/>
-            <Button Content="Xóa" Click="DeleteButton_Click"/>
+            <Button Content="Thêm hãng" Click="NewItemButton_Click" Style="{StaticResource AccentButtonStyle}"/>
+            <Button Content="Xóa" Click="DeleteButton_Click" Background="Red" Margin="10, 0, 0, 0"/>
         </StackPanel>
 
         <tableView:TableView 
@@ -39,10 +39,55 @@
             </tableView:TableView.Columns>
         </tableView:TableView>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Row="2">
-            <StackPanel Orientation="Horizontal" x:Name="PageButtonContainer">
-                
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="0"
+                        VerticalAlignment="Center">
+                <TextBlock Text="Items per page" VerticalAlignment="Center" Margin="0, 0, 10, 0"/>
+                <ComboBox SelectedValue="{x:Bind ViewModel.PerPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{x:Bind ViewModel.PerPageOptions}"
+                          x:Name="PerPageComboBox"/>
+
+                <TextBlock VerticalAlignment="Center" Margin="20, 0, 0, 0">
+                    <Run>Showing </Run>
+                    <Run Text="{x:Bind ViewModel.Items.Count, Mode=OneWay}"/>
+                    <Run> of </Run>
+                    <Run Text="{x:Bind ViewModel.Count, Mode=OneWay}"/>
+                    <Run> item(s)</Run>
+                </TextBlock>
             </StackPanel>
-        </ScrollViewer>
+
+            <StackPanel Orientation="Horizontal" x:Name="PageButtonContainer" Grid.Column="1" 
+                        VerticalAlignment="Center">
+                <Button Margin="0, 0, 10, 0" Tag="FirstPage" Click="PageButton_Click"
+                        IsEnabled="{x:Bind ViewModel.FirstPageBtnEnabled, Mode=OneWay}">
+                    <Image Source="/Assets/keyboard_double_arrow_left.png" Width="20" Height="20"/>
+                </Button>
+                <Button Margin="0, 0, 10, 0" Tag="PreviousPage" Click="PageButton_Click"
+                        IsEnabled="{x:Bind ViewModel.PreviousPageBtnEnabled, Mode=OneWay}">
+                    <Image Source="/Assets/chevron_left.png" Width="20" Height="20"/>
+                </Button>
+
+                <TextBox Text="1" KeyDown="PageNumberInputTextBox_KeyDown" LostFocus="PageNumberInputTextBox_LostFocus"
+                     x:Name="PageNumberInputTextBox" InputScope="TelephoneNumber"/>
+                <TextBlock VerticalAlignment="Center" Margin="10, 0, 0, 0">
+                    <Run>of </Run>
+                    <Run Text="{x:Bind ViewModel.PageCount, Mode=OneWay}"/>
+                </TextBlock>
+
+                <Button Margin="10, 0, 0, 0" Tag="NextPage" Click="PageButton_Click"
+                    IsEnabled="{x:Bind ViewModel.NextPageBtnEnabled, Mode=OneWay}">
+                    <Image Source="/Assets/chevron_right.png" Width="20" Height="20"/>
+                </Button>
+                <Button Margin="10, 0, 0, 0" Tag="LastPage" Click="PageButton_Click"
+                    IsEnabled="{x:Bind ViewModel.LastPageBtnEnabled, Mode=OneWay}">
+                    <Image Source="/Assets/keyboard_double_arrow_right.png" Width="20" Height="20"/>
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>
