@@ -27,10 +27,6 @@ namespace LaptopPosApp.Views
         public DashboardWindow()
         {
             this.InitializeComponent();
-        }
-
-        private void Window_Activated(object sender, WindowActivatedEventArgs e)
-        {
             Container.Navigate(typeof(DashboardPage));
         }
     }
