@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LaptopPosApp.Views"
+    xmlns:custom="using:LaptopPosApp.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -18,8 +19,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
-            <Button Content="Thêm hãng" Click="NewItemButton_Click"/>
-            <Button Content="Xóa" Click="DeleteButton_Click"/>
+            <Button Content="Thêm hãng" Click="NewItemButton_Click" Style="{StaticResource AccentButtonStyle}"/>
+            <Button Content="Xóa" Click="DeleteButton_Click" Background="Red" Margin="10, 0, 0, 0"/>
         </StackPanel>
 
         <tableView:TableView 
@@ -38,11 +39,12 @@
                     Binding="{Binding Products.Count, Mode=OneWay, FallbackValue=0}"/>
             </tableView:TableView.Columns>
         </tableView:TableView>
-
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Row="2">
-            <StackPanel Orientation="Horizontal" x:Name="PageButtonContainer">
-                
-            </StackPanel>
-        </ScrollViewer>
+        <custom:PaginationControl
+                Grid.Row="2"
+                CurrentPage="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}"
+                TotalPage="{x:Bind ViewModel.PageCount, Mode=OneWay}"
+                PerPage="{x:Bind ViewModel.PerPage, Mode=TwoWay}"
+            >
+        </custom:PaginationControl>
     </Grid>
 </Page>

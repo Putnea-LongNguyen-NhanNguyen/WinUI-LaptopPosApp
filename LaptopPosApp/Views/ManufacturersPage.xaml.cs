@@ -36,7 +36,6 @@ namespace LaptopPosApp.Views
             Loaded += (_, args) =>
             {
                 ViewModel.Refresh();
-                CreatePageButtons();
             };
             Unloaded += (_, args) => ViewModel.SaveChanges();
         }
@@ -50,46 +49,6 @@ namespace LaptopPosApp.Views
         {
             var selected = MyTable.SelectedItems;
             ViewModel.Remove(selected.Cast<Manufacturer>());
-            CreatePageButtons();
-        }
-
-        private void CreatePageButtons()
-        {
-            PageButtonContainer.Children.Clear();
-            for (int i = 1; i <= ViewModel.PageCount; i++)
-            {
-                Button button = CreateButton(i);
-                PageButtonContainer.Children.Add(button);
-                button.Click += PageButton_Click;
-            }
-            PageButtonContainer.Children.OfType<Button>().First().IsEnabled = false;
-        }
-
-        private void PageButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (sender as Button)!;
-            EnableAllButtons();
-            button.IsEnabled = false;
-            int pageNumber = (int)button.Tag;
-            ViewModel.CurrentPage = pageNumber;
-        }
-
-        private void EnableAllButtons()
-        {
-            foreach (Button child in PageButtonContainer.Children.OfType<Button>())
-            {
-                child.IsEnabled = true;
-            }
-        }
-
-        private Button CreateButton(int number)
-        {
-            return new Button()
-            {
-                Content = number.ToString(),
-                Tag = number,
-                Margin = new Thickness(10, 5, 10, 5)
-            };
         }
     }
 }
