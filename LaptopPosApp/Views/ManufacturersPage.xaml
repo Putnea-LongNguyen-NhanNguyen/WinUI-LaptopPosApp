@@ -36,7 +36,7 @@
                 <tableView:TableViewTextColumn Header="Tên hãng"
                     Binding="{Binding Name, Mode=TwoWay}"/>
                 <tableView:TableViewTextColumn Header="Số lượng sản phẩm" IsReadOnly="True"
-                    Binding="{Binding Products.Count, Mode=OneWay, FallbackValue=0}"/>
+                    Binding="{Binding Products.Count, Mode=OneWay}"/>
             </tableView:TableView.Columns>
         </tableView:TableView>
         <custom:PaginationControl
