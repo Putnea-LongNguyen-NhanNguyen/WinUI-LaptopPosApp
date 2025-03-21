@@ -15,50 +15,13 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    class ManufacturersPageViewModel : INotifyPropertyChanged
+    class ManufacturersPageViewModel : PaginatableViewModel<Manufacturer>
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public IList Items { get; private set; } = Array.Empty<Manufacturer>();
         private readonly DbContextBase dbContext;
 
-        public int Count { get; private set; }
-        public int PerPage
-        {
-            get;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Items per page must be positive");
-                field = value;
-                Refresh();
-            }
-        } = 5;
-        public int PageCount => (int)Math.Max(1, Math.Ceiling((double)Count / PerPage));
-        private int currentPage = 1;
-        public int CurrentPage
-        {
-            get => currentPage;
-            set
-            {
-                currentPage = value;
-                Refresh();
-            }
-        }
-        public bool Refreshing { get; private set; }
-        public ManufacturersPageViewModel(DbContextBase dbContext)
+        public ManufacturersPageViewModel(DbContextBase dbContext): base(dbContext.Manufacturers)
         {
             this.dbContext = dbContext;
-        }
-        public void Refresh()
-        {
-            Refreshing = true;
-            Count = dbContext.Manufacturers.Count();
-            currentPage = Math.Clamp(currentPage, 1, PageCount);
-            Items = dbContext.Manufacturers
-                .Skip((currentPage - 1) * PerPage)
-                .Take(PerPage)
-                .ToArray();
-            Refreshing = false;
         }
 
         public async Task StartAddFlow(Page parent)
