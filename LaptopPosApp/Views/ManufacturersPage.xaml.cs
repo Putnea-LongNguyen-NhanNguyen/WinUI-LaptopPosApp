@@ -36,8 +36,6 @@ namespace LaptopPosApp.Views
             Loaded += (_, args) =>
             {
                 ViewModel.Refresh();
-                ViewModel.PerPage = ViewModel.PerPageOptions.ElementAt(0);
-                PerPageComboBox.SelectedValue = ViewModel.PerPage;
             };
             Unloaded += (_, args) => ViewModel.SaveChanges();
         }
@@ -51,62 +49,6 @@ namespace LaptopPosApp.Views
         {
             var selected = MyTable.SelectedItems;
             ViewModel.Remove(selected.Cast<Manufacturer>());
-            PageNumberInputTextBox.Text = ViewModel.CurrentPage.ToString();
-        }
-
-        private void LoadPage(int page)
-        {
-            if (page == ViewModel.CurrentPage)
-                return;
-
-            if (page >= 1 && page <= ViewModel.PageCount)
-            {
-                ViewModel.CurrentPage = page;
-
-            }
-            PageNumberInputTextBox.Text = ViewModel.CurrentPage.ToString();
-        }
-
-        private void PageNumberInputTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key.ToString() == "Enter")
-            {
-                LoadPage(int.Parse(PageNumberInputTextBox.Text));
-            }
-        }
-
-        private void PageNumberInputTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            LoadPage(int.Parse(PageNumberInputTextBox.Text));
-        }
-
-        private void PageButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button btn = (sender as Button)!;
-            string tag = (btn.Tag as string)!;
-            switch (tag)
-            {
-                case "FirstPage":
-                    {
-                        LoadPage(1);
-                        break;
-                    }
-                case "PreviousPage":
-                    {
-                        LoadPage(ViewModel.CurrentPage - 1);
-                        break;
-                    }
-                case "NextPage":
-                    {
-                        LoadPage(ViewModel.CurrentPage + 1);
-                        break;
-                    }
-                case "LastPage":
-                    {
-                        LoadPage(ViewModel.PageCount);
-                        break;
-                    }
-            }
         }
     }
 }

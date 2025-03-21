@@ -22,7 +22,6 @@ namespace LaptopPosApp.ViewModels
         private readonly DbContextBase dbContext;
 
         public int Count { get; private set; }
-        public List<int> PerPageOptions = [5, 10, 15, 20, 50];
         public int PerPage
         {
             get;
@@ -45,10 +44,6 @@ namespace LaptopPosApp.ViewModels
                 Refresh();
             }
         }
-        public bool FirstPageBtnEnabled { get => currentPage > 1; }
-        public bool PreviousPageBtnEnabled { get => currentPage > 1; }
-        public bool NextPageBtnEnabled { get => currentPage < PageCount; }
-        public bool LastPageBtnEnabled { get => currentPage < PageCount; }
         public bool Refreshing { get; private set; }
         public ManufacturersPageViewModel(DbContextBase dbContext)
         {
