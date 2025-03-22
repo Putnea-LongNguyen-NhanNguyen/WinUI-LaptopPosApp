@@ -85,7 +85,8 @@ namespace LaptopPosApp.ViewModels
                     new NavigationItemLeaf()
                     {
                         Title = "Thống kê",
-                        Icon = new SymbolIcon(Symbol.Document)
+                        Icon = new SymbolIcon(Symbol.Document),
+                        CreatePage = () => new StatisticsPage(),
                     }
                 }
             },

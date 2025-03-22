@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="LaptopPosApp.Views.StatisticsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaptopPosApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel Orientation="Vertical" Grid.Row="0">
+        <StackPanel Orientation="Horizontal" Padding="10, 5, 10, 5">
+            <TextBlock HorizontalAlignment="Left" Margin="0, 0, 10, 0" Text="Doanh thu thuần theo" VerticalAlignment="Center"/>
+            <ComboBox ItemsSource="{x:Bind ViewModel.DataByRangeList, Mode=OneWay}" VerticalAlignment="Center"
+              SelectedIndex="{x:Bind ViewModel.TimeRangeIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title, Mode=OneWay}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+
+        <lvc:CartesianChart
+            Series="{x:Bind ViewModel.Series, Mode=OneWay}"
+            XAxes="{x:Bind ViewModel.XAxes, Mode=OneWay}"
+            YAxes="{x:Bind ViewModel.YAxes, Mode=OneWay}"
+            ZoomMode="X"
+            Width="900"
+            Height="500">
+        </lvc:CartesianChart>
+    </StackPanel>
+</Page>
