@@ -15,17 +15,21 @@ namespace LaptopPosApp.ViewModels
     class StatisticsPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-
-        public ISeries[] Series { get => DataByRangeList[TimeRangeIndex].Data; set; }
         private readonly List<DateTimePoint> _fakePoints;
-        public int TimeRangeIndex { get; set; } = 1;
-        public List<IDataByRange> DataByRangeList { get; private set; }
+        public ObservableCollection<ISeries> RevenueSeries =>
+            CurrentRevenueFormatter.FilterData(_fakePoints, StartDate.DateTime, EndDate.DateTime);
+        public string CurrentRevenueTimeSpanSum => CurrentRevenueFormatter.SumInCurrentTimeSpan(_fakePoints);
+        public int RevenueFormatterIndex { get; set; } = 2;
+        public List<RevenueFormatter> RevenueFormatters { get; set; }
+        public RevenueFormatter CurrentRevenueFormatter => RevenueFormatters[RevenueFormatterIndex];
+        public DateTimeOffset StartDate { get; set; } = new DateTimeOffset(DateTime.Today.AddDays(-365));
+        public DateTimeOffset EndDate { get; set; } = new DateTimeOffset(DateTime.Today);
 
-        private static List<DateTimePoint> GenerateFakePoints(DateTime startDate, int count)
+        private static List<DateTimePoint> GenerateFakePoints(DateTime startDate, DateTime endDate)
         {
             var random = new Random();
             var data = new List<DateTimePoint>();
-            for (int i = 1; i <= count; i++)
+            for (int i = 0; i <= (endDate - startDate).TotalDays; i++)
             {
                 data.Add(new DateTimePoint(startDate.AddDays(i), random.Next(40000000, 80000000)));
             }
@@ -34,22 +38,21 @@ namespace LaptopPosApp.ViewModels
 
         public StatisticsPageViewModel()
         {
-            _fakePoints = GenerateFakePoints(new DateTime(2023, 1, 1), 365);
-            DataByRangeList =
-            [
-                new DataByWeek(_fakePoints),
-                new DataByMonth(_fakePoints),
+            _fakePoints = GenerateFakePoints(new DateTime(2024, 1, 1), DateTime.Today);
+            RevenueFormatters = [
+                new DailyRevenueFormatter() { Title = "Ngày", TimeSpan = 1 },
+                new WeeklyRevenueFormatter() { Title = "Tuần", TimeSpan = 7 },
+                new MonthlyRevenueFormatter() { Title = "Tháng", TimeSpan = 30 },
             ];
-            Series = DataByRangeList.ElementAt(TimeRangeIndex).Data;
         }
 
-        public IEnumerable<ICartesianAxis> XAxes 
+        public IEnumerable<ICartesianAxis> XAxes
         {
             get =>
             [
                 new DateTimeAxis(
-                    TimeSpan.FromDays(DataByRangeList[TimeRangeIndex].TimeSpan), 
-                    date => DataByRangeList[TimeRangeIndex].FormatDateTime(date)
+                    TimeSpan.FromDays(RevenueFormatters[RevenueFormatterIndex].TimeSpan),
+                    date => date.ToString(RevenueFormatters[RevenueFormatterIndex].GetDateFormat())
                 )
             ];
         }
@@ -66,66 +69,70 @@ namespace LaptopPosApp.ViewModels
         }
     }
 
-    public class TimeRange
+    abstract class RevenueFormatter
     {
-        public string Title { get; set; } = "";
-        public int Spacing { get; set; } = 1;
+        public required string Title { get; set; }
+        public required int TimeSpan { get; set; }
+        public abstract string GetDateFormat();
+        public abstract string SumInCurrentTimeSpan(List<DateTimePoint> data);
+        public abstract ObservableCollection<ISeries> FilterData(List<DateTimePoint> data, DateTime startDate, DateTime endDate);
     }
 
-    interface IDataByRange
+    class MonthlyRevenueFormatter : RevenueFormatter
     {
-        string Title { get; }
-        ISeries[] Data { get; set; }
-        int TimeSpan { get; }
-        string FormatDateTime(DateTime dateTime);
-    }
-
-    class DataByMonth : IDataByRange
-    {
-        public string Title => "Tháng";
-        public int TimeSpan => 30;
-        public ISeries[] Data { get; set; }
-
-        public DataByMonth(List<DateTimePoint> dataPoints)
+        public MonthlyRevenueFormatter()
         {
-            Data =
-            [
-                new ColumnSeries<DateTimePoint>()
+            Title = "Tháng";
+            TimeSpan = 30;
+        }
+        public override string GetDateFormat()
+        {
+            return "MM/yyyy";
+        }
+
+        public override string SumInCurrentTimeSpan(List<DateTimePoint> data)
+        {
+            int currentMonth = DateTime.Today.Month;
+            int currentYear = DateTime.Today.Year;
+            var sum = data
+                .Where(dp => dp.DateTime.Month == currentMonth && dp.DateTime.Year == currentYear)
+                .Select(dp => dp)
+                .Sum(dp => dp.Value);
+            return $"Tổng doanh thu {Title.ToLower()} này: {(sum != null ? sum : 0):C}";
+        }
+
+        override public ObservableCollection<ISeries> FilterData(List<DateTimePoint> data, DateTime startDate, DateTime endDate)
+        {
+            return [
+                new LineSeries<DateTimePoint>()
                 {
-                    Values = [.. dataPoints
-                        .GroupBy(dp => new { dp.DateTime.Year, dp.DateTime.Month })
-                        .Select(g => new DateTimePoint(
-                            new DateTime(g.Key.Year, g.Key.Month, DateTime.DaysInMonth(g.Key.Year, g.Key.Month)), 
-                            g.Sum(dp => dp.Value))
-                        )
-                    ],
+                    Values = data.Where(dp => dp.DateTime >= startDate && dp.DateTime <= endDate)
+                    .GroupBy(dp => new {dp.DateTime.Year, dp.DateTime.Month})
+                    .Select(g => new DateTimePoint(new DateTime(g.Key.Year, g.Key.Month, 1), g.Sum(dp => dp.Value))),
                 }
             ];
         }
-
-        public string FormatDateTime(DateTime dateTime)
-        {
-            return $"T{dateTime.Month}";
-        }
     }
 
-    class DataByWeek : IDataByRange
+    class WeeklyRevenueFormatter : RevenueFormatter
     {
-        public string Title => "Tuần";
-        public int TimeSpan => 7;
-        public ISeries[] Data { get; set; }
-
-        public DataByWeek(List<DateTimePoint> dataPoints)
+        public WeeklyRevenueFormatter()
         {
-            Data =
-            [
-                new ColumnSeries<DateTimePoint>()
-                {
-                    Values = [.. dataPoints
-                        .GroupBy(dp => StartOfWeek(dp.DateTime, DayOfWeek.Monday))
-                        .Select(g => new DateTimePoint(g.Key, g.Sum(dp => dp.Value)))],
-                }
-            ];
+            Title = "Tuần";
+            TimeSpan = 7;
+        }
+        public override string GetDateFormat()
+        {
+            return "dd/MM/yyyy";
+        }
+
+        public override string SumInCurrentTimeSpan(List<DateTimePoint> data)
+        {
+            DateTime startOfWeek = StartOfWeek(DateTime.Today, DayOfWeek.Monday);
+            DateTime endOfWeek = startOfWeek.AddDays(6);
+            var sum = data.Where(dp => dp.DateTime >= startOfWeek && dp.DateTime <= endOfWeek)
+                .Sum(dp => dp.Value);
+            return $"Tổng doanh thu {Title.ToLower()} này: {(sum != null ? sum : 0):C}";
         }
 
         private static DateTime StartOfWeek(DateTime dt, DayOfWeek startOfWeek)
@@ -133,9 +140,47 @@ namespace LaptopPosApp.ViewModels
             int diff = (7 + (dt.DayOfWeek - startOfWeek)) % 7;
             return dt.AddDays(-diff).Date;
         }
-        public string FormatDateTime(DateTime dateTime)
+
+        override public ObservableCollection<ISeries> FilterData(List<DateTimePoint> data, DateTime startDate, DateTime endDate)
         {
-            return dateTime.ToString("dd MM");
+            return [
+                new LineSeries<DateTimePoint>()
+                {
+                    Values = data.Where(dp => dp.DateTime >= startDate && dp.DateTime <= endDate)
+                    .GroupBy(dp => StartOfWeek(dp.DateTime, DayOfWeek.Monday))
+                    .Select(g => new DateTimePoint(g.Key, g.Sum(dp => dp.Value))),
+                }
+            ];
+        }
+    }
+
+    class DailyRevenueFormatter : RevenueFormatter
+    {
+        public DailyRevenueFormatter()
+        {
+            Title = "Ngày";
+            TimeSpan = 1;
+        }
+
+        public override string GetDateFormat()
+        {
+            return "dd/MM/yyyy";
+        }
+
+        public override string SumInCurrentTimeSpan(List<DateTimePoint> data)
+        {
+            var sum = data.First(dp => dp.DateTime == DateTime.Today).Value;
+            return $"Tổng doanh thu ngày hôm nay: {(sum != null ? sum : 0):C}";
+        }
+
+        override public ObservableCollection<ISeries> FilterData(List<DateTimePoint> data, DateTime startDate, DateTime endDate)
+        {
+            return [
+                new LineSeries<DateTimePoint>()
+                {
+                    Values = data.Where(dp => dp.DateTime >= startDate && dp.DateTime <= endDate),
+                }
+            ];
         }
     }
 }

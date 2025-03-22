@@ -10,26 +10,48 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel Orientation="Vertical" Grid.Row="0">
-        <StackPanel Orientation="Horizontal" Padding="10, 5, 10, 5">
-            <TextBlock HorizontalAlignment="Left" Margin="0, 0, 10, 0" Text="Doanh thu thuần theo" VerticalAlignment="Center"/>
-            <ComboBox ItemsSource="{x:Bind ViewModel.DataByRangeList, Mode=OneWay}" VerticalAlignment="Center"
-              SelectedIndex="{x:Bind ViewModel.TimeRangeIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Title, Mode=OneWay}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
 
-        <lvc:CartesianChart
-            Series="{x:Bind ViewModel.Series, Mode=OneWay}"
-            XAxes="{x:Bind ViewModel.XAxes, Mode=OneWay}"
-            YAxes="{x:Bind ViewModel.YAxes, Mode=OneWay}"
-            ZoomMode="X"
-            Width="900"
-            Height="500">
-        </lvc:CartesianChart>
-    </StackPanel>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Vertical" Padding="10, 5, 10, 5" Grid.Row="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock HorizontalAlignment="Left" Margin="0, 0, 10, 0" Text="Doanh thu thuần theo" VerticalAlignment="Center" FontSize="16"/>
+                    <ComboBox ItemsSource="{x:Bind ViewModel.RevenueFormatters, Mode=OneWay}" VerticalAlignment="Center"
+                            SelectedIndex="{x:Bind ViewModel.RevenueFormatterIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Title, Mode=OneWay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <DatePicker Header="Từ ngày" Margin="0, 0, 10, 0"
+                        Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <DatePicker Header="Tới ngày"
+                        Date="{x:Bind ViewModel.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <TextBlock Text="{x:Bind ViewModel.CurrentRevenueTimeSpanSum, Mode=OneWay}" Margin="0, 10, 0, 0"
+                           FontSize="20"/>
+            </StackPanel>
+
+            <lvc:CartesianChart Grid.Row="1" x:Name="RevenueChart"
+                Series="{x:Bind ViewModel.RevenueSeries, Mode=OneWay}"
+                XAxes="{x:Bind ViewModel.XAxes, Mode=OneWay}"
+                YAxes="{x:Bind ViewModel.YAxes, Mode=OneWay}"
+                ZoomMode="X"/>
+        </Grid>
+    </Grid>
 </Page>
