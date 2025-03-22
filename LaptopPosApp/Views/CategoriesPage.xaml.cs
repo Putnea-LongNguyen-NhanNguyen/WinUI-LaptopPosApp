@@ -26,13 +26,13 @@ namespace LaptopPosApp.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ManufacturersPage : Page
+    public sealed partial class CategoriesPage : Page
     {
-        private ManufacturersPageViewModel ViewModel { get; }
-        public ManufacturersPage()
+        private CategoriesPageViewModel ViewModel { get; }
+        public CategoriesPage()
         {
             this.InitializeComponent();
-            ViewModel = (Application.Current as App)!.Services.GetRequiredService<ManufacturersPageViewModel>();
+            ViewModel = (Application.Current as App)!.Services.GetRequiredService<CategoriesPageViewModel>();
             Loaded += (_, args) =>
             {
                 ViewModel.Refresh();
@@ -48,7 +48,7 @@ namespace LaptopPosApp.Views
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var selected = MyTable.SelectedItems;
-            ViewModel.Remove(selected.Cast<Manufacturer>());
+            ViewModel.Remove(selected.Cast<Category>());
         }
     }
 }

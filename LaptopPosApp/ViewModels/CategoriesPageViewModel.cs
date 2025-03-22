@@ -15,24 +15,24 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    class ManufacturersPageViewModel : PaginatableViewModel<Manufacturer>
+    class CategoriesPageViewModel : PaginatableViewModel<Category>
     {
         private readonly DbContextBase dbContext;
 
-        public ManufacturersPageViewModel(DbContextBase dbContext): base(dbContext.Manufacturers)
+        public CategoriesPageViewModel(DbContextBase dbContext): base(dbContext.Categories)
         {
             this.dbContext = dbContext;
         }
 
         public async Task StartAddFlow(Page parent)
         {
-            var vm = new AddManufacturerViewModel(dbContext.Manufacturers.ToArray());
-            var page = new AddManufacturerPage(vm);
+            var vm = new AddCategoryViewModel(dbContext.Categories.ToArray());
+            var page = new AddCategoryPage(vm);
             var contentDialog = new ContentDialog()
             {
                 XamlRoot = parent.XamlRoot,
                 Content = page,
-                Title = "Thêm hãng mới",
+                Title = "Thêm danh mục mới",
             };
             page.ContentDialog = contentDialog;
             await contentDialog.ShowAsync();
@@ -42,8 +42,8 @@ namespace LaptopPosApp.ViewModels
 
             string newName = vm.Name;
             // add in DAO
-            Debug.WriteLine("add manufacturer: " + newName);
-            dbContext.Manufacturers.Add(new()
+            Debug.WriteLine("add category: " + newName);
+            dbContext.Categories.Add(new()
             {
                 ID = 0, // temporary value for EF
                 Name = newName
@@ -52,12 +52,12 @@ namespace LaptopPosApp.ViewModels
             Refresh();
         }
 
-        public void Remove(IEnumerable<Manufacturer> items)
+        public void Remove(IEnumerable<Category> items)
         {
             var deleted = false;
             foreach (var item in items)
             {
-                dbContext.Manufacturers.Remove(item);
+                dbContext.Categories.Remove(item);
                 deleted = true;
             }
             if (deleted)

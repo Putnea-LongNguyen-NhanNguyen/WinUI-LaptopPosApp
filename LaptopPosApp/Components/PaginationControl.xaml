@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="LaptopPosApp.Components.PaginationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaptopPosApp.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal" x:Name="PageButtonContainer" 
+        VerticalAlignment="Center" HorizontalAlignment="Right" Padding="0, 0, 20, 0">
+        <Button Margin="0, 0, 10, 0" Tag="FirstPage" Click="PageButton_Click"
+            IsEnabled="{x:Bind PrevPageBtnEnabled, Mode=OneWay}">
+            <Image Source="/Assets/keyboard_double_arrow_left.png" Width="20" Height="20"/>
+        </Button>
+        <Button Margin="0, 0, 10, 0" Tag="PreviousPage" Click="PageButton_Click"
+            IsEnabled="{x:Bind PrevPageBtnEnabled, Mode=OneWay}">
+            <Image Source="/Assets/chevron_left.png" Width="20" Height="20"/>
+        </Button>
+        <NumberBox
+            Value="{x:Bind CurrentPage, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+            Minimum="1"
+            Maximum="{x:Bind TotalPage, Mode=OneWay}"
+            KeyDown="NumberBox_KeyDown">
+        </NumberBox>
+        <TextBlock VerticalAlignment="Center" Margin="10, 0, 0, 0">
+        <Run>of </Run>
+        <Run Text="{x:Bind TotalPage, Mode=OneWay}"/>
+        </TextBlock>
+
+        <Button Margin="10, 0, 0, 0" Tag="NextPage" Click="PageButton_Click"
+            IsEnabled="{x:Bind NextPageBtnEnabled, Mode=OneWay}">
+            <Image Source="/Assets/chevron_right.png" Width="20" Height="20"/>
+        </Button>
+        <Button Margin="10, 0, 0, 0" Tag="LastPage" Click="PageButton_Click"
+            IsEnabled="{x:Bind NextPageBtnEnabled, Mode=OneWay}">
+            <Image Source="/Assets/keyboard_double_arrow_right.png" Width="20" Height="20"/>
+        </Button>
+
+        <ComboBox Margin="10, 0, 0, 0"
+            SelectedValue="{x:Bind PerPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{x:Bind PerPageOptions}"
+            x:Name="PerPageComboBox"/>
+    </StackPanel>
+</UserControl>

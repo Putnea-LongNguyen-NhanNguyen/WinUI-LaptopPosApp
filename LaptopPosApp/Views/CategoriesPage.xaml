@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="LaptopPosApp.Views.ManufacturersPage"
+    x:Class="LaptopPosApp.Views.CategoriesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LaptopPosApp.Views"
@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
-            <Button Content="Thêm hãng" Click="NewItemButton_Click" Style="{StaticResource AccentButtonStyle}"/>
+            <Button Content="Thêm" Click="NewItemButton_Click" Style="{StaticResource AccentButtonStyle}"/>
             <Button Content="Xóa" Click="DeleteButton_Click" Background="Red" Margin="10, 0, 0, 0"/>
         </StackPanel>
 
@@ -33,7 +33,7 @@
             <tableView:TableView.Columns>
                 <tableView:TableViewTextColumn Header="ID" IsReadOnly="True"
                     Binding="{Binding ID, Mode=OneWay}"/>
-                <tableView:TableViewTextColumn Header="Tên hãng"
+                <tableView:TableViewTextColumn Header="Tên danh mục"
                     Binding="{Binding Name, Mode=TwoWay}"/>
                 <tableView:TableViewTextColumn Header="Số lượng sản phẩm" IsReadOnly="True"
                     Binding="{Binding Products.Count, Mode=OneWay}"/>

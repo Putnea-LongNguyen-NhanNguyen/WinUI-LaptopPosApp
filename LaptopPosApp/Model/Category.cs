@@ -11,6 +11,6 @@ namespace LaptopPosApp.Model
         public required int ID { get; set; }
         IComparable IHasId.ID => ID;
         public string Name { get; set; } = string.Empty;
-        public List<Product> Products { get; set; } = null!;
+        public List<Product> Products { get; set; } = new();
     }
 }
