@@ -64,6 +64,16 @@
     <PackageReference Include="WinUI.TableView" Version="1.2.2" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\AddProductPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\ProductsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\AddManufacturerPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
