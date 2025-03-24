@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using LaptopPosApp.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,7 +29,7 @@ namespace LaptopPosApp.Views
         public StatisticsPage()
         {
             this.InitializeComponent();
-            ViewModel = new StatisticsPageViewModel();
+            ViewModel = (Application.Current as App)!.Services.GetRequiredService<StatisticsPageViewModel>();
         }
     }
 }
