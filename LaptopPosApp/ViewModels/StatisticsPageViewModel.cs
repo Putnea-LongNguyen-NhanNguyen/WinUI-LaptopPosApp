@@ -17,11 +17,11 @@ namespace LaptopPosApp.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         private readonly List<DateTimePoint> _fakePoints;
         public ObservableCollection<ISeries> RevenueSeries =>
-            CurrentRevenueFormatter.FilterData(_fakePoints, StartDate.DateTime, EndDate.DateTime);
-        public string CurrentRevenueTimeSpanSum => CurrentRevenueFormatter.SumInCurrentTimeSpan(_fakePoints);
-        public int RevenueFormatterIndex { get; set; } = 2;
-        public List<RevenueFormatter> RevenueFormatters { get; set; }
-        public RevenueFormatter CurrentRevenueFormatter => RevenueFormatters[RevenueFormatterIndex];
+            RevenueFilters[RevenueFilterIndex].FilterData(_fakePoints, StartDate.DateTime, EndDate.DateTime);
+        public string CurrentRevenueTimeSpanSum => RevenueFilters[RevenueFilterIndex].SumInCurrentTimeSpan(_fakePoints);
+        public int RevenueFilterIndex { get; set; } = 2;
+        public List<RevenueFilter> RevenueFilters { get; set; }
+        //public RevenueFilter CurrentRevenueFilter => RevenueFilters[RevenueFilterIndex];
         public DateTimeOffset StartDate { get; set; } = new DateTimeOffset(DateTime.Today.AddDays(-365));
         public DateTimeOffset EndDate { get; set; } = new DateTimeOffset(DateTime.Today);
 
@@ -39,10 +39,10 @@ namespace LaptopPosApp.ViewModels
         public StatisticsPageViewModel()
         {
             _fakePoints = GenerateFakePoints(new DateTime(2024, 1, 1), DateTime.Today);
-            RevenueFormatters = [
-                new DailyRevenueFormatter() { Title = "Ngày", TimeSpan = 1 },
-                new WeeklyRevenueFormatter() { Title = "Tuần", TimeSpan = 7 },
-                new MonthlyRevenueFormatter() { Title = "Tháng", TimeSpan = 30 },
+            RevenueFilters = [
+                new DailyRevenueFilter() { Title = "Ngày", TimeSpan = 1 },
+                new WeeklyRevenueFilter() { Title = "Tuần", TimeSpan = 7 },
+                new MonthlyRevenueFilter() { Title = "Tháng", TimeSpan = 30 },
             ];
         }
 
@@ -51,8 +51,8 @@ namespace LaptopPosApp.ViewModels
             get =>
             [
                 new DateTimeAxis(
-                    TimeSpan.FromDays(RevenueFormatters[RevenueFormatterIndex].TimeSpan),
-                    date => date.ToString(RevenueFormatters[RevenueFormatterIndex].GetDateFormat())
+                    TimeSpan.FromDays(RevenueFilters[RevenueFilterIndex].TimeSpan),
+                    date => date.ToString(RevenueFilters[RevenueFilterIndex].GetDateFormat())
                 )
             ];
         }
@@ -69,7 +69,7 @@ namespace LaptopPosApp.ViewModels
         }
     }
 
-    abstract class RevenueFormatter
+    abstract class RevenueFilter
     {
         public required string Title { get; set; }
         public required int TimeSpan { get; set; }
@@ -78,9 +78,9 @@ namespace LaptopPosApp.ViewModels
         public abstract ObservableCollection<ISeries> FilterData(List<DateTimePoint> data, DateTime startDate, DateTime endDate);
     }
 
-    class MonthlyRevenueFormatter : RevenueFormatter
+    class MonthlyRevenueFilter : RevenueFilter
     {
-        public MonthlyRevenueFormatter()
+        public MonthlyRevenueFilter()
         {
             Title = "Tháng";
             TimeSpan = 30;
@@ -114,9 +114,9 @@ namespace LaptopPosApp.ViewModels
         }
     }
 
-    class WeeklyRevenueFormatter : RevenueFormatter
+    class WeeklyRevenueFilter : RevenueFilter
     {
-        public WeeklyRevenueFormatter()
+        public WeeklyRevenueFilter()
         {
             Title = "Tuần";
             TimeSpan = 7;
@@ -154,9 +154,9 @@ namespace LaptopPosApp.ViewModels
         }
     }
 
-    class DailyRevenueFormatter : RevenueFormatter
+    class DailyRevenueFilter : RevenueFilter
     {
-        public DailyRevenueFormatter()
+        public DailyRevenueFilter()
         {
             Title = "Ngày";
             TimeSpan = 1;

@@ -26,8 +26,8 @@
             <StackPanel Orientation="Vertical" Padding="10, 5, 10, 5" Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock HorizontalAlignment="Left" Margin="0, 0, 10, 0" Text="Doanh thu thuần theo" VerticalAlignment="Center" FontSize="16"/>
-                    <ComboBox ItemsSource="{x:Bind ViewModel.RevenueFormatters, Mode=OneWay}" VerticalAlignment="Center"
-                            SelectedIndex="{x:Bind ViewModel.RevenueFormatterIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBox ItemsSource="{x:Bind ViewModel.RevenueFilters, Mode=OneWay}" VerticalAlignment="Center"
+                            SelectedIndex="{x:Bind ViewModel.RevenueFilterIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Title, Mode=OneWay}"/>
@@ -38,7 +38,7 @@
 
                 <StackPanel Orientation="Horizontal">
                     <DatePicker Header="Từ ngày" Margin="0, 0, 10, 0"
-                        Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <DatePicker Header="Tới ngày"
                         Date="{x:Bind ViewModel.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
