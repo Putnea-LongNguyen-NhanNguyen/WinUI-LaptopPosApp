@@ -1,4 +1,5 @@
-﻿using LaptopPosApp.Dao;
+﻿using Bogus;
+using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
 using LaptopPosApp.Views;
 using Microsoft.UI.Xaml;
@@ -46,12 +47,13 @@ namespace LaptopPosApp.ViewModels
             string newDescription = vm.Description;
             Category? newCategory = vm.Category;
             Manufacturer? newManufacturer = vm.Manufacturer;
+            string newID = Guid.NewGuid().ToString();
 
             // add in DAO
             Debug.WriteLine("add product: " + newName);
             dbContext.Products.Add(new()
             {
-                ID = "Prod0", // temporary value for EF
+                ID = newID,
                 Name = newName,
                 Price = newPrice,
                 Quantity = newQuantity,
