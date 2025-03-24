@@ -45,6 +45,8 @@ namespace LaptopPosApp.ViewModels
         public async Task Refresh()
         {
             Refreshing = true;
+            PropertyChanged?.Invoke(this, new(nameof(Count)));
+            PropertyChanged?.Invoke(this, new(nameof(PageCount)));
             currentPage = Math.Clamp(currentPage, 1, PageCount);
             Items = await allItems
                 .Skip((currentPage - 1) * PerPage)

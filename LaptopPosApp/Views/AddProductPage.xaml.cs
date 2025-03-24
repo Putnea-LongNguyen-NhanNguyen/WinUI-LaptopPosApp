@@ -24,15 +24,15 @@ namespace LaptopPosApp.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddManufacturerPage : Page
+    public sealed partial class AddProductPage : Page
     {
-        public AddManufacturerViewModel ViewModel { get; }
+        public AddProductViewModel ViewModel { get; }
         public ContentDialog? ContentDialog { get; set; }
 
-        public AddManufacturerPage()
+        public AddProductPage()
         {
             this.InitializeComponent();
-            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<AddManufacturerViewModel>();
+            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<AddProductViewModel>();
         }
 
         private void AddItem(object sender, EventArgs e)

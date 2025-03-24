@@ -45,8 +45,14 @@ namespace LaptopPosApp
             var appBuilder = Host.CreateApplicationBuilder();
             if (UseMockDatabase)
                 appBuilder.Services.AddDbContext<DbContextBase, DbContextInMemoryMock>();
+
+            appBuilder.Services.AddTransient<AddCategoryViewModel>();
+            appBuilder.Services.AddTransient<AddManufacturerViewModel>();
+            appBuilder.Services.AddTransient<AddProductViewModel>();
             appBuilder.Services.AddTransient<CategoriesPageViewModel>();
             appBuilder.Services.AddTransient<ManufacturersPageViewModel>();
+            appBuilder.Services.AddTransient<ProductPageViewModel>();
+
             AppHost = appBuilder.Build();
             Services = AppHost.Services;
 

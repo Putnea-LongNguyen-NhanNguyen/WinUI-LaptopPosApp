@@ -38,6 +38,13 @@ namespace LaptopPosApp.Components
             this.InitializeComponent();
             PerPageOptions = [5, 10, 15, 20, 50];
             PerPageComboBox.SelectedIndex = 0;
+            PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(TotalPage))
+                {
+                    PropertyChanged?.Invoke(sender, new(nameof(NextPageBtnEnabled)));
+                }
+            };
         }
 
         private void NumberBox_KeyDown(object sender, KeyRoutedEventArgs e)

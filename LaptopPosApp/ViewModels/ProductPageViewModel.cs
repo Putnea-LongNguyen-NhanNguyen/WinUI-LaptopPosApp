@@ -1,4 +1,5 @@
-﻿using LaptopPosApp.Dao;
+﻿using Bogus;
+using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
 using LaptopPosApp.Views;
 using Microsoft.UI.Xaml;
@@ -15,35 +16,35 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    class ManufacturersPageViewModel : PaginatableViewModel<Manufacturer>
+    class ProductPageViewModel : PaginatableViewModel<Product>
     {
         private readonly DbContextBase dbContext;
 
-        public ManufacturersPageViewModel(DbContextBase dbContext): base(dbContext.Manufacturers)
+        public ProductPageViewModel(DbContextBase dbContext) : base(dbContext.Products)
         {
             this.dbContext = dbContext;
         }
 
         public async Task StartAddFlow(Page parent)
         {
-            var page = new AddManufacturerPage();
+            var page = new AddProductPage();
             var contentDialog = new ContentDialog()
             {
                 XamlRoot = parent.XamlRoot,
                 Content = page,
-                Title = "Thêm hãng mới",
+                Title = "Thêm sản phẩm mới",
             };
             page.ContentDialog = contentDialog;
             await contentDialog.ShowAsync();
             Refresh();
         }
 
-        public void Remove(IEnumerable<Manufacturer> items)
+        public void Remove(IEnumerable<Product> items)
         {
             var deleted = false;
             foreach (var item in items)
             {
-                dbContext.Manufacturers.Remove(item);
+                dbContext.Products.Remove(item);
                 deleted = true;
             }
             if (deleted)
