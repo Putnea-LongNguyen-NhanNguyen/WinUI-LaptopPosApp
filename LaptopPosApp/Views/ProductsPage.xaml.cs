@@ -14,6 +14,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using LaptopPosApp.ViewModels;
 using LaptopPosApp.Model;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -24,26 +26,29 @@ namespace LaptopPosApp.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddManufacturerPage : Page
+    public sealed partial class ProductsPage : Page
     {
-        public AddManufacturerViewModel ViewModel { get; }
-        public ContentDialog? ContentDialog { get; set; }
-
-        public AddManufacturerPage()
+        private ProductPageViewModel ViewModel { get; }
+        public ProductsPage()
         {
             this.InitializeComponent();
-            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<AddManufacturerViewModel>();
+            ViewModel = (Application.Current as App)!.Services.GetRequiredService<ProductPageViewModel>();
+            Loaded += (_, args) =>
+            {
+                ViewModel.Refresh();
+            };
+            Unloaded += (_, args) => ViewModel.SaveChanges();
         }
 
-        private void AddItem(object sender, EventArgs e)
+        private async void NewItemButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.Submit())
-                ContentDialog?.Hide();
+            await ViewModel.StartAddFlow(this);
         }
 
-        private void Cancel(object sender, EventArgs e)
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialog?.Hide();
+            var selected = MyTable.SelectedItems;
+            ViewModel.Remove(selected.Cast<Product>());
         }
     }
 }

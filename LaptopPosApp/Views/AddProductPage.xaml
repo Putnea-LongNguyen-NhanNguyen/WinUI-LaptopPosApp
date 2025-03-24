@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="LaptopPosApp.Views.AddProductPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaptopPosApp.Views"
+    xmlns:layouts="using:LaptopPosApp.Layouts"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <layouts:AddItemLayout Add="AddItem" Cancel="Cancel">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TextBox Header="Nhập tên sản phẩm"
+                     Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="{x:Bind ViewModel.NameValidationMessage, Mode=OneWay}" Foreground="Red" Margin="0, 5, 0, 5"/>
+                <NumberBox Header="Nhập giá sản phẩm"
+                     Text="{x:Bind ViewModel.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="{x:Bind ViewModel.PriceValidationMessage, Mode=OneWay}" Foreground="Red" Margin="0, 5, 0, 5"/>
+                <TextBox Header="Nhập mô tả sản phẩm"
+                     Text="{x:Bind ViewModel.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <NumberBox  Header="Nhập số lượng sản phẩm"
+                     Text="{x:Bind ViewModel.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="{x:Bind ViewModel.QuantityValidationMessage, Mode=OneWay}" Foreground="Red" Margin="0, 5, 0, 5"/>
+                <ComboBox
+                    Name="CategoryComboBox"
+                    Header="Chọn phân loại"
+                    ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
+                    DisplayMemberPath="Name"
+                    SelectedItem="{x:Bind ViewModel.Category, Mode=TwoWay}"/>
+                <TextBlock Text="{x:Bind ViewModel.CategoryValidationMessage, Mode=OneWay}" Foreground="Red" Margin="0, 5, 0, 5"/>
+                <ComboBox 
+                    Name="ManufacturerComboBox"
+                    Header="Chọn nhà sản xuất"
+                    ItemsSource="{x:Bind ViewModel.Manufacturers, Mode=OneWay}"
+                    DisplayMemberPath="Name"
+                    SelectedItem="{x:Bind ViewModel.Manufacturer, Mode=TwoWay}"/>
+                <TextBlock Text="{x:Bind ViewModel.ManufacturerValidationMessage, Mode=OneWay}" Foreground="Red" Margin="0, 5, 0, 5"/>
+            </StackPanel>
+        </ScrollViewer>
+    </layouts:AddItemLayout>
+</Page>

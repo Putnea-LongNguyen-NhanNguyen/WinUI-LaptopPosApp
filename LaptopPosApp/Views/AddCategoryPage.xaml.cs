@@ -26,48 +26,26 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class AddCategoryPage : Page
     {
-        private readonly AddCategoryViewModel viewModel;
+        public AddCategoryViewModel ViewModel { get; }
         public ContentDialog? ContentDialog { get; set; }
 
-        public AddCategoryPage(AddCategoryViewModel viewModel)
+        public AddCategoryPage()
         {
             this.InitializeComponent();
-            this.viewModel = viewModel;
-            KeyDown += AddCategoryPage_KeyDown;
+            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<AddCategoryViewModel>();
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private void AddItem(object sender, EventArgs e)
         {
-            Cancel();
-        }
-
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            AddItem();
-        }
-
-        private void AddCategoryPage_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key.ToString() == "Enter" && viewModel.IsValid)
+            if (ViewModel.Submit())
             {
-                AddItem();
-            }
-            else if (e.Key.ToString() == "Esc")
-            {
-                Cancel();
+                ContentDialog?.Hide();
             }
         }
 
-        private void AddItem()
+        private void Cancel(object sender, EventArgs e)
         {
             ContentDialog?.Hide();
-            viewModel.WillAdd = true;
-        }
-
-        private void Cancel()
-        {
-            ContentDialog?.Hide();
-            viewModel.WillAdd = false;
         }
     }
 }

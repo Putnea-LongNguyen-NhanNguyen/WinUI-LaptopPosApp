@@ -105,7 +105,9 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
                     .RuleFor(o => o.Price, f => (ulong)f.Finance.Amount(1000000, 20000000, 0))
                     .RuleFor(o => o.Category, f => f.PickRandom(_seedCategories.AsEnumerable()))
-                    .RuleFor(o => o.Manufacturer, f => f.PickRandom(_seedManufacturers.AsEnumerable()));
+                    .RuleFor(o => o.Manufacturer, f => f.PickRandom(_seedManufacturers.AsEnumerable()))
+                    .RuleFor(o => o.Quantity, f => (ulong)f.Random.Int(1, 100))
+                    .RuleFor(o => o.TemporaryPrices, f => new List<ProductTemporaryPrice>());
                 Products.AddRange(productGen.GenerateBetween(10, 50));
                 context.ChangeTracker.AutoDetectChangesEnabled = true;
                 context.ChangeTracker.DetectChanges();
