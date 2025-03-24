@@ -26,48 +26,24 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class AddManufacturerPage : Page
     {
-        private readonly AddManufacturerViewModel viewModel;
+        public AddManufacturerViewModel ViewModel { get; }
         public ContentDialog? ContentDialog { get; set; }
 
-        public AddManufacturerPage(AddManufacturerViewModel viewModel)
+        public AddManufacturerPage()
         {
             this.InitializeComponent();
-            this.viewModel = viewModel;
-            KeyDown += AddManufacturerPage_KeyDown;
+            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<AddManufacturerViewModel>();
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private void AddItem(object sender, EventArgs e)
         {
-            Cancel();
+            if (ViewModel.Submit())
+                ContentDialog?.Hide();
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            AddItem();
-        }
-
-        private void AddManufacturerPage_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key.ToString() == "Enter" && viewModel.IsValid)
-            {
-                AddItem();
-            }
-            else if (e.Key.ToString() == "Esc")
-            {
-                Cancel();
-            }
-        }
-
-        private void AddItem()
+        private void Cancel(object sender, EventArgs e)
         {
             ContentDialog?.Hide();
-            viewModel.WillAdd = true;
-        }
-
-        private void Cancel()
-        {
-            ContentDialog?.Hide();
-            viewModel.WillAdd = false;
         }
     }
 }

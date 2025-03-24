@@ -1,4 +1,6 @@
-﻿using LaptopPosApp.Model;
+﻿using Bogus.Bson;
+using LaptopPosApp.Dao;
+using LaptopPosApp.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,56 +11,42 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    public class AddProductViewModel : INotifyPropertyChanged
+    public class AddProductViewModel : AddItemViewModel, INotifyPropertyChanged
     {
-        private IEnumerable<Product> products;
-        public IEnumerable<Category> categories { get ; private set; }
-        public IEnumerable<Manufacturer> manufacturers{get ; private set; }
-        public AddProductViewModel(IEnumerable<Product> products, IEnumerable<Category> categories, IEnumerable<Manufacturer> manufacturers)
+        private DbContextBase dbContext;
+        private IEnumerable<Product> Products => dbContext.Products.AsEnumerable();
+        public IEnumerable<Manufacturer> Manufacturers { get; private set; }
+        public IEnumerable<Category> Categories { get; private set; }
+        public AddProductViewModel(DbContextBase dbContext)
         {
-            this.products = products;
-            this.categories = categories;
-            this.manufacturers = manufacturers;
+            this.dbContext = dbContext;
+            updateEnumerables();
+        }
+        private void updateEnumerables()
+        {
+            Manufacturers = dbContext.Manufacturers.AsEnumerable();
+            Categories = dbContext.Categories.AsEnumerable();
         }
 
-        public string NameWarningMessage { get; private set; } = string.Empty;
-        public string QuantityWarningMessage { get; private set; } = string.Empty;
-        public string PriceWarningMessage { get; private set; } = string.Empty;
-        public string DescriptionWarningMessage { get; private set; } = string.Empty;
-        public string ManufacturerWarningMessage { get; private set; } = string.Empty;
-        public string CategoryWarningMessage { get; private set; } = string.Empty;
-        public bool IsValid =>
-            string.IsNullOrWhiteSpace(NameWarningMessage) &&
-            string.IsNullOrWhiteSpace(QuantityWarningMessage) &&
-            string.IsNullOrWhiteSpace(PriceWarningMessage) &&
-            string.IsNullOrWhiteSpace(DescriptionWarningMessage) &&
-            string.IsNullOrWhiteSpace(ManufacturerWarningMessage) &&
-            string.IsNullOrWhiteSpace(CategoryWarningMessage);
+        public string NameValidationMessage { get; private set; } = string.Empty;
+        public string QuantityValidationMessage { get; private set; } = string.Empty;
+        public string PriceValidationMessage { get; private set; } = string.Empty;
+        public string ManufacturerValidationMessage { get; private set; } = string.Empty;
+        public string CategoryValidationMessage { get; private set; } = string.Empty;
+
         public string Name
         {
             get;
             set
             {
                 field = value;
-                if (string.IsNullOrWhiteSpace(value))
-                    NameWarningMessage = "Tên sản phẩm không hợp lệ";
-                else if (products.Any(prod => prod.Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase)))
-                    NameWarningMessage = "Tên sản phẩm đã tồn tại";
-                else
-                    NameWarningMessage = string.Empty;
+                NameValidationMessage = string.Empty;
             }
         } = string.Empty;
         public string Description 
         { 
-            get; 
-            set
-            {
-                field = value;
-                if (string.IsNullOrWhiteSpace(value))
-                    DescriptionWarningMessage = "Vui lòng nhập mô tả sản phẩm";
-                else
-                    DescriptionWarningMessage = string.Empty;
-            }
+            get;
+            set;
         } = string.Empty;
         public ulong Price 
         { 
@@ -66,10 +54,7 @@ namespace LaptopPosApp.ViewModels
             set
             {
                 field = value;
-                if ((int)value < 0)
-                    PriceWarningMessage = "Giá sản phẩm không hợp lệ (phải >= 0)";
-                else
-                    PriceWarningMessage = string.Empty;
+                PriceValidationMessage = string.Empty;
             }
         } = 0;
         public ulong Quantity 
@@ -78,10 +63,7 @@ namespace LaptopPosApp.ViewModels
             set
             {
                 field = value;
-                if ((int)value < 0)
-                    QuantityWarningMessage = "Số lượng sản phẩm không hợp lệ (phải >= 0)";
-                else
-                    QuantityWarningMessage = string.Empty;
+                QuantityValidationMessage = string.Empty;
             }
         } = 0;
         public Manufacturer? Manufacturer 
@@ -90,10 +72,7 @@ namespace LaptopPosApp.ViewModels
             set
             {
                 field = value;
-                if (value == null)
-                    ManufacturerWarningMessage = "Vui lòng chọn nhà sản xuất";
-                else
-                    ManufacturerWarningMessage = string.Empty;
+                ManufacturerValidationMessage = string.Empty;
             }
         }
         public Category? Category
@@ -102,23 +81,86 @@ namespace LaptopPosApp.ViewModels
             set
             {
                 field = value;
-                if (value == null)
-                    CategoryWarningMessage = "Vui lòng chọn phân loại";
-                else
-                    CategoryWarningMessage = string.Empty;
+                CategoryValidationMessage = string.Empty;
             }
         }
-        public bool WillAdd { get; set; }
-        public void CategoryWarningMessageTrigger()
-        {
-            CategoryWarningMessage = "Vui lòng chọn phân loại";
-        }
-        public void ManufacturerWarningMessageTrigger()
-        {
-            ManufacturerWarningMessage = "Vui lòng chọn nhà sản xuất";
-        }
 
+        protected override bool DoValidate()
+        {
+            updateEnumerables();
+            var isValid = true;
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                NameValidationMessage = "Tên sản phẩm không hợp lệ";
+                isValid = false;
+            }
+            else if (Products.Any(prod => prod.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                NameValidationMessage = "Tên sản phẩm đã tồn tại";
+                isValid = false;
+            }
+            else
+            {
+                NameValidationMessage = string.Empty;
+            }
+
+            if (Price <= 0)
+            {
+                PriceValidationMessage = "Giá sản phẩm không hợp lệ";
+                isValid = false;
+            }
+            else
+            {
+                PriceValidationMessage = string.Empty;
+            }
+
+            if (Quantity < 0)
+            {
+                QuantityValidationMessage = "Số lượng sản phẩm không hợp lệ";
+                isValid = false;
+            }
+            else
+            {
+                QuantityValidationMessage = string.Empty;
+            }
+
+            if (Manufacturer is null)
+            {
+                ManufacturerValidationMessage = "Vui lòng chọn nhà sản xuất";
+                isValid = false;
+            }
+            else
+            {
+                ManufacturerValidationMessage = string.Empty;
+            }
+
+            if (Category is null)
+            {
+                CategoryValidationMessage = "Vui lòng chọn phân loại";
+                isValid = false;
+            }
+            else
+            {
+                CategoryValidationMessage = string.Empty;
+            }
+
+            return isValid;
+        }
+        protected override bool DoSubmit()
+        {
+            dbContext.Products.Add(new()
+            {
+                ID = Guid.NewGuid().ToString(),
+                Name = Name,
+                Price = Price,
+                Quantity = Quantity,
+                Description = Description,
+                Category = Category,
+                Manufacturer = Manufacturer
+            });
+            dbContext.SaveChanges();
+            return true;
+        }
         public event PropertyChangedEventHandler? PropertyChanged;
-        
     }
 }

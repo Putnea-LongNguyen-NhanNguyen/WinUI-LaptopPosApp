@@ -1,4 +1,5 @@
-﻿using LaptopPosApp.Model;
+﻿using LaptopPosApp.Dao;
+using LaptopPosApp.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,31 +10,54 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    public class AddCategoryViewModel : INotifyPropertyChanged
+    public class AddCategoryViewModel : AddItemViewModel, INotifyPropertyChanged
     {
-        private IEnumerable<Category> categories;
-        public AddCategoryViewModel(IEnumerable<Category> categories)
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private DbContextBase dbContext;
+        public AddCategoryViewModel(DbContextBase dbContext)
         {
-            this.categories = categories;
+            this.dbContext = dbContext;
         }
 
-        public string WarningMessage { get; private set; } = string.Empty;
-        public bool IsValid => string.IsNullOrWhiteSpace(WarningMessage);
-        public string Name
-        {
+        public string Name {
             get;
             set
             {
                 field = value;
-                if (string.IsNullOrWhiteSpace(value))
-                    WarningMessage = "Tên danh mục không hợp lệ";
-                else if (categories.Any(manu => manu.Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase)))
-                    WarningMessage = "Tên danh mục đã tồn tại";
-                else
-                    WarningMessage = string.Empty;
+                NameValidationMessage = string.Empty;
             }
         } = string.Empty;
-        public bool WillAdd { get; set; }
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public string NameValidationMessage { get; set; } = string.Empty;
+
+        protected override bool DoValidate()
+        {
+            var isValid = true;
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                NameValidationMessage = "Tên danh mục không hợp lệ";
+                isValid = false;
+            }
+            else if (dbContext.Categories.AsEnumerable().Any(manu => manu.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                NameValidationMessage = "Tên danh mục đã tồn tại";
+                isValid = false;
+            }
+            else
+            {
+                NameValidationMessage = string.Empty;
+            }
+            return isValid;
+        }
+        protected override bool DoSubmit()
+        {
+            Category category = new()
+            {
+                ID = 0,
+                Name = Name
+            };
+            dbContext.Categories.Add(category);
+            dbContext.SaveChanges();
+            return true;
+        }
     }
 }

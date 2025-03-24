@@ -27,8 +27,7 @@ namespace LaptopPosApp.ViewModels
 
         public async Task StartAddFlow(Page parent)
         {
-            var vm = new AddProductViewModel(dbContext.Products.ToArray(), dbContext.Categories.ToArray(), dbContext.Manufacturers.ToArray());
-            var page = new AddProductPage(vm);
+            var page = new AddProductPage();
             var contentDialog = new ContentDialog()
             {
                 XamlRoot = parent.XamlRoot,
@@ -37,31 +36,6 @@ namespace LaptopPosApp.ViewModels
             };
             page.ContentDialog = contentDialog;
             await contentDialog.ShowAsync();
-
-            if (!vm.WillAdd)
-                return;
-
-            string newName = vm.Name;
-            ulong newPrice = vm.Price;
-            ulong newQuantity = vm.Quantity;
-            string newDescription = vm.Description;
-            Category? newCategory = vm.Category;
-            Manufacturer? newManufacturer = vm.Manufacturer;
-            string newID = Guid.NewGuid().ToString();
-
-            // add in DAO
-            Debug.WriteLine("add product: " + newName);
-            dbContext.Products.Add(new()
-            {
-                ID = newID,
-                Name = newName,
-                Price = newPrice,
-                Quantity = newQuantity,
-                Description = newDescription,
-                Category = newCategory,
-                Manufacturer = newManufacturer
-            });
-            SaveChanges();
             Refresh();
         }
 
