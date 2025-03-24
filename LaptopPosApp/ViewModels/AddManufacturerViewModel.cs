@@ -1,4 +1,5 @@
-﻿using LaptopPosApp.Model;
+﻿using LaptopPosApp.Dao;
+using LaptopPosApp.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,31 +10,55 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    public class AddManufacturerViewModel : INotifyPropertyChanged
+    public class AddManufacturerViewModel : AddItemViewModel, INotifyPropertyChanged
     {
-        private IEnumerable<Manufacturer> manufacturers;
-        public AddManufacturerViewModel(IEnumerable<Manufacturer> manufacturers)
+        private DbContextBase dbContext;
+        public AddManufacturerViewModel(DbContextBase dbContext)
         {
-            this.manufacturers = manufacturers;
+            this.dbContext = dbContext;
         }
 
-        public string WarningMessage { get; private set; } = string.Empty;
-        public bool IsValid => string.IsNullOrWhiteSpace(WarningMessage);
         public string Name
         {
             get;
             set
             {
                 field = value;
-                if (string.IsNullOrWhiteSpace(value))
-                    WarningMessage = "Tên hãng không hợp lệ";
-                else if (manufacturers.Any(manu => manu.Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase)))
-                    WarningMessage = "Tên hãng đã tồn tại";
-                else
-                    WarningMessage = string.Empty;
+                NameValidationMessage = string.Empty;
             }
         } = string.Empty;
-        public bool WillAdd { get; set; }
+        public string NameValidationMessage { get; private set; } = string.Empty;
+
+        protected override bool DoValidate()
+        {
+            var isValid = true;
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                NameValidationMessage = "Tên hãng không hợp lệ";
+                isValid = false;
+            }
+            else if (dbContext.Manufacturers.AsEnumerable().Any(manu => manu.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                NameValidationMessage = "Tên hãng đã tồn tại";
+                isValid = false;
+            }
+            else
+            {
+                NameValidationMessage = string.Empty;
+            }
+            return isValid;
+        }
+        protected override bool DoSubmit()
+        {
+            Manufacturer manufacturer = new()
+            {
+                ID = 0,
+                Name = Name
+            };
+            dbContext.Manufacturers.Add(manufacturer);
+            dbContext.SaveChanges();
+            return true;
+        }
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentControl
+    x:Class="LaptopPosApp.Layouts.AddItemLayout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaptopPosApp.Layouts"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <ContentControl.Template>
+        <ControlTemplate TargetType="local:AddItemLayout">
+            <controls:DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <ContentPresenter controls:DockPanel.Dock="Top" />
+                <Grid controls:DockPanel.Dock="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0, 0, 10, 0">
+                        <Button Content="Thêm" x:Name="AddButton" HorizontalAlignment="Stretch"
+                                Style="{StaticResource AccentButtonStyle}" Grid.Column="0"
+                                Click="AddButton_Click"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="10, 0, 0, 0">
+                        <Button Content="Hủy" x:Name="CancelButton" Grid.Column="1" HorizontalAlignment="Stretch"
+                                Click="CancelButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </controls:DockPanel>
+        </ControlTemplate>
+    </ContentControl.Template>
+</ContentControl>

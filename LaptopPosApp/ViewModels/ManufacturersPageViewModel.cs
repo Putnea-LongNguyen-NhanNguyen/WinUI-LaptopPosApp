@@ -26,8 +26,7 @@ namespace LaptopPosApp.ViewModels
 
         public async Task StartAddFlow(Page parent)
         {
-            var vm = new AddManufacturerViewModel(dbContext.Manufacturers.ToArray());
-            var page = new AddManufacturerPage(vm);
+            var page = new AddManufacturerPage();
             var contentDialog = new ContentDialog()
             {
                 XamlRoot = parent.XamlRoot,
@@ -36,19 +35,6 @@ namespace LaptopPosApp.ViewModels
             };
             page.ContentDialog = contentDialog;
             await contentDialog.ShowAsync();
-
-            if (!vm.WillAdd)
-                return;
-
-            string newName = vm.Name;
-            // add in DAO
-            Debug.WriteLine("add manufacturer: " + newName);
-            dbContext.Manufacturers.Add(new()
-            {
-                ID = 0, // temporary value for EF
-                Name = newName
-            });
-            SaveChanges();
             Refresh();
         }
 

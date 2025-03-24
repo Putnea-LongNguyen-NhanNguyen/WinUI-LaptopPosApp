@@ -26,58 +26,24 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class AddProductPage : Page
     {
-        private readonly AddProductViewModel viewModel;
+        public AddProductViewModel ViewModel { get; }
         public ContentDialog? ContentDialog { get; set; }
 
-        public AddProductPage(AddProductViewModel viewModel)
+        public AddProductPage()
         {
             this.InitializeComponent();
-            this.viewModel = viewModel;
-            KeyDown += AddProductPage_KeyDown;
+            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<AddProductViewModel>();
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private void AddItem(object sender, EventArgs e)
         {
-            Cancel();
+            if (ViewModel.Submit())
+                ContentDialog?.Hide();
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            AddItem();
-        }
-
-        private void AddProductPage_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key.ToString() == "Enter" && viewModel.IsValid)
-            {
-                AddItem();
-            }
-            else if (e.Key.ToString() == "Esc")
-            {
-                Cancel();
-            }
-        }
-
-        private void AddItem()
-        {
-            if (CategoryComboBox.SelectedItem == null)
-            {
-                viewModel.CategoryWarningMessageTrigger();
-                return;
-            }
-            if (ManufacturerComboBox.SelectedItem == null)
-            {
-                viewModel.ManufacturerWarningMessageTrigger();
-                return;
-            }
-            ContentDialog?.Hide();
-            viewModel.WillAdd = true;
-        }
-
-        private void Cancel()
+        private void Cancel(object sender, EventArgs e)
         {
             ContentDialog?.Hide();
-            viewModel.WillAdd = false;
         }
     }
 }

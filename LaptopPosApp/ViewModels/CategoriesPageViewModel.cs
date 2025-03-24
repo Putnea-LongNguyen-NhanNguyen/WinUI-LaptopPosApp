@@ -26,8 +26,7 @@ namespace LaptopPosApp.ViewModels
 
         public async Task StartAddFlow(Page parent)
         {
-            var vm = new AddCategoryViewModel(dbContext.Categories.ToArray());
-            var page = new AddCategoryPage(vm);
+            var page = new AddCategoryPage();
             var contentDialog = new ContentDialog()
             {
                 XamlRoot = parent.XamlRoot,
@@ -36,19 +35,6 @@ namespace LaptopPosApp.ViewModels
             };
             page.ContentDialog = contentDialog;
             await contentDialog.ShowAsync();
-
-            if (!vm.WillAdd)
-                return;
-
-            string newName = vm.Name;
-            // add in DAO
-            Debug.WriteLine("add category: " + newName);
-            dbContext.Categories.Add(new()
-            {
-                ID = 0, // temporary value for EF
-                Name = newName
-            });
-            SaveChanges();
             Refresh();
         }
 
