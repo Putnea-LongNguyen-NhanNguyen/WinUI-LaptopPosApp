@@ -1,4 +1,5 @@
-﻿using LaptopPosApp.Dao;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LaptopPosApp.Dao;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Sketches;
@@ -17,22 +18,36 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    class StatisticsPageViewModel : INotifyPropertyChanged
+    partial class StatisticsPageViewModel : ObservableObject
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
         private readonly DbContextBase _context;
 
-        public DateTimeOffset StartDate { get; set; } = new DateTimeOffset(DateTime.Today.AddDays(-700));
-        public DateTimeOffset EndDate { get; set; } = new DateTimeOffset(DateTime.Today);
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TimeRevenueSeries))]
+        [NotifyPropertyChangedFor(nameof(CurrentTimeSpanRevenueSum))]
+        [NotifyPropertyChangedFor(nameof(TimeXAxes))]
+        [NotifyPropertyChangedFor(nameof(TimeYAxes))]
+        [NotifyPropertyChangedFor(nameof(CatePieSeries))]
+        [NotifyPropertyChangedFor(nameof(ManuPieSeries))]
+        public partial DateTimeOffset StartDate { get; set; } = new DateTimeOffset(DateTime.Today.AddDays(-700));
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TimeRevenueSeries))]
+        [NotifyPropertyChangedFor(nameof(CurrentTimeSpanRevenueSum))]
+        [NotifyPropertyChangedFor(nameof(TimeXAxes))]
+        [NotifyPropertyChangedFor(nameof(TimeYAxes))]
+        [NotifyPropertyChangedFor(nameof(CatePieSeries))]
+        [NotifyPropertyChangedFor(nameof(ManuPieSeries))]
+        public partial DateTimeOffset EndDate { get; set; } = new DateTimeOffset(DateTime.Today);
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TimeRevenueSeries))]
+        public partial int TimeFilterIndex { get; set; } = 0;
 
         private readonly TimeRevenueViewModel _timeRevenuesVM;
         public ObservableCollection<ISeries> TimeRevenueSeries => _timeRevenuesVM.GetSeries(TimeFilterIndex, StartDate.DateTime, EndDate.DateTime);
         public List<RevenueFilter> RevenueFilters => _timeRevenuesVM.RevenueFilters;
         public string CurrentTimeSpanRevenueSum => _timeRevenuesVM.SumInTimeSpan(StartDate.DateTime, EndDate.DateTime).ToString("C");
-        public int TimeFilterIndex { get; set; } = 0;
         public IEnumerable<ICartesianAxis> TimeXAxes => _timeRevenuesVM.XAxes;
         public IEnumerable<ICartesianAxis> TimeYAxes => _timeRevenuesVM.YAxes;
-
 
         private readonly CategoriesRevenueViewModel _cateRevenueVM;
         public ObservableCollection<ISeries> CatePieSeries => _cateRevenueVM.GetSeries(StartDate.DateTime, EndDate.DateTime);

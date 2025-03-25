@@ -1,4 +1,5 @@
 ﻿using Bogus.Bson;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
 using System;
@@ -11,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    public class AddProductViewModel : AddItemViewModel, INotifyPropertyChanged
+    public partial class AddProductViewModel : AddItemViewModel
     {
         private DbContextBase dbContext;
         private IEnumerable<Product> Products => dbContext.Products.AsEnumerable();
-        public IEnumerable<Manufacturer> Manufacturers { get; private set; }
-        public IEnumerable<Category> Categories { get; private set; }
+        public IEnumerable<Manufacturer> Manufacturers { get; private set; } = null!;
+        public IEnumerable<Category> Categories { get; private set; } = null!;
         public AddProductViewModel(DbContextBase dbContext)
         {
             this.dbContext = dbContext;
@@ -28,61 +29,49 @@ namespace LaptopPosApp.ViewModels
             Categories = dbContext.Categories.AsEnumerable();
         }
 
-        public string NameValidationMessage { get; private set; } = string.Empty;
-        public string QuantityValidationMessage { get; private set; } = string.Empty;
-        public string PriceValidationMessage { get; private set; } = string.Empty;
-        public string ManufacturerValidationMessage { get; private set; } = string.Empty;
-        public string CategoryValidationMessage { get; private set; } = string.Empty;
+        [ObservableProperty]
+        public partial string NameValidationMessage { get; private set; } = string.Empty;
+        [ObservableProperty]
+        public partial string QuantityValidationMessage { get; private set; } = string.Empty;
+        [ObservableProperty]
+        public partial string PriceValidationMessage { get; private set; } = string.Empty;
+        [ObservableProperty]
+        public partial string ManufacturerValidationMessage { get; private set; } = string.Empty;
+        [ObservableProperty]
+        public partial string CategoryValidationMessage { get; private set; } = string.Empty;
 
-        public string Name
+        [ObservableProperty]
+        public partial string Name { get; set; } = string.Empty;
+        [ObservableProperty]
+        public partial string Description { get; set; } = string.Empty;
+        [ObservableProperty]
+        public partial ulong Price { get; set; } = 0;
+        [ObservableProperty]
+        public partial ulong Quantity { get; set; } = 0;
+        [ObservableProperty]
+        public partial Manufacturer? Manufacturer { get; set; }
+        [ObservableProperty]
+        public partial Category? Category { get; set; }
+
+        partial void OnNameChanged(string value)
         {
-            get;
-            set
-            {
-                field = value;
-                NameValidationMessage = string.Empty;
-            }
-        } = string.Empty;
-        public string Description 
-        { 
-            get;
-            set;
-        } = string.Empty;
-        public ulong Price 
-        { 
-            get;
-            set
-            {
-                field = value;
-                PriceValidationMessage = string.Empty;
-            }
-        } = 0;
-        public ulong Quantity 
-        { 
-            get; 
-            set
-            {
-                field = value;
-                QuantityValidationMessage = string.Empty;
-            }
-        } = 0;
-        public Manufacturer? Manufacturer 
-        { 
-            get; 
-            set
-            {
-                field = value;
-                ManufacturerValidationMessage = string.Empty;
-            }
+            NameValidationMessage = string.Empty;
         }
-        public Category? Category
+        partial void OnPriceChanged(ulong value)
         {
-            get; 
-            set
-            {
-                field = value;
-                CategoryValidationMessage = string.Empty;
-            }
+            PriceValidationMessage = string.Empty;
+        }
+        partial void OnQuantityChanged(ulong value)
+        {
+            QuantityValidationMessage = string.Empty;
+        }
+        partial void OnManufacturerChanged(Manufacturer? value)
+        {
+            ManufacturerValidationMessage = string.Empty;
+        }
+        partial void OnCategoryChanged(Category? value)
+        {
+            CategoryValidationMessage = string.Empty;
         }
 
         protected override bool DoValidate()
@@ -161,6 +150,5 @@ namespace LaptopPosApp.ViewModels
             dbContext.SaveChanges();
             return true;
         }
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

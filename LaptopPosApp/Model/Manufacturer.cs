@@ -4,15 +4,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace LaptopPosApp.Model
 {
-    public partial class Manufacturer: IHasId, INotifyPropertyChanged
+    public partial class Manufacturer: ObservableObject, IHasId
     {
-        public required int ID { get; set; }
+        [ObservableProperty]
+        public required partial int ID { get; set; }
         IComparable IHasId.ID => ID;
-        public string Name { get; set; } = string.Empty;
-        public List<Product> Products { get; set; } = new();
-        public event PropertyChangedEventHandler? PropertyChanged;
+
+        [ObservableProperty]
+        public partial string Name { get; set; } = string.Empty;
+
+        [ObservableProperty]
+        public partial List<Product> Products { get; set; } = new();
     }
 }
