@@ -1,4 +1,5 @@
-﻿using LaptopPosApp.Dao;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
 using System;
 using System.Collections.Generic;
@@ -10,24 +11,22 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    public class AddCategoryViewModel : AddItemViewModel, INotifyPropertyChanged
+    public partial class AddCategoryViewModel : AddItemViewModel
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
         private DbContextBase dbContext;
         public AddCategoryViewModel(DbContextBase dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        public string Name {
-            get;
-            set
-            {
-                field = value;
-                NameValidationMessage = string.Empty;
-            }
-        } = string.Empty;
-        public string NameValidationMessage { get; set; } = string.Empty;
+        [ObservableProperty]
+        public partial string Name { get; set; } = string.Empty;
+        [ObservableProperty]
+        public partial string NameValidationMessage { get; set; } = string.Empty;
+        partial void OnNameChanged(string value)
+        {
+            NameValidationMessage = string.Empty;
+        }
 
         protected override bool DoValidate()
         {

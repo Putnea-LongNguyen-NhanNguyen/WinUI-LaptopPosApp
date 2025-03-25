@@ -8,6 +8,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using LaptopPosApp.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace LaptopPosApp.ViewModels
 {
@@ -37,9 +38,10 @@ namespace LaptopPosApp.ViewModels
             return base.SelectTemplateCore(item);
         }
     }
-    public partial class DashboardPageViewModel: INotifyPropertyChanged
+    public partial class DashboardPageViewModel: ObservableObject
     {
-        public Page? CurrentPage { get; private set; } = null;
+        [ObservableProperty]
+        public partial Page? CurrentPage { get; private set; } = null;
         public List<NavigationItemBase> NavigationItems = new()
         {
             new NavigationItemWithChildren()

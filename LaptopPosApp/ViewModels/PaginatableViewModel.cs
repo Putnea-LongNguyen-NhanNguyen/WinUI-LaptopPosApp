@@ -5,38 +5,46 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace LaptopPosApp.ViewModels
 {
-    public partial class PaginatableViewModel<T>: INotifyPropertyChanged
+    public partial class PaginatableViewModel<T>: ObservableObject
     {
-        public IList Items { get; private set; } = Array.Empty<T>();
-        protected IQueryable<T> allItems;
-        public int Count => allItems.Count();
-        public int PerPage
+        [ObservableProperty]
+        public partial IList Items { get; private set; } = Array.Empty<T>();
+
+        protected IQueryable<T> allItems { get; set; }
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(PageCount))]
+        public partial int Count { get; private set; }
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(PageCount))]
+        public partial int PerPage { get; set; } = 5;
+        partial void OnPerPageChanging(int value)
         {
-            get;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Items per page must be positive");
-                field = value;
-                Refresh();
-            }
-        } = 5;
-        public int PageCount => (int)Math.Max(1, Math.Ceiling((double)Count / PerPage));
-        private int currentPage = 1;
-        public int CurrentPage
-        {
-            get => currentPage;
-            set
-            {
-                currentPage = value;
-                Refresh();
-            }
+            if (value <= 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Items per page must be positive");
         }
-        public bool Refreshing { get; private set; }
+        partial void OnPerPageChanged(int value)
+        {
+            Refresh();
+        }
+
+        public int PageCount => (int)Math.Max(1, Math.Ceiling((double)Count / PerPage));
+
+        [ObservableProperty]
+        public partial int CurrentPage { get; set; } = 1;
+        partial void OnCurrentPageChanged(int value)
+        {
+            Refresh();
+        }
+
+        [ObservableProperty]
+        public partial bool Refreshing { get; private set; }
         public PaginatableViewModel(IQueryable<T> allItems)
         {
             this.allItems = allItems;
@@ -45,11 +53,10 @@ namespace LaptopPosApp.ViewModels
         public async Task Refresh()
         {
             Refreshing = true;
-            PropertyChanged?.Invoke(this, new(nameof(Count)));
-            PropertyChanged?.Invoke(this, new(nameof(PageCount)));
-            currentPage = Math.Clamp(currentPage, 1, PageCount);
+            Count = await allItems.CountAsync();
+            CurrentPage = Math.Clamp(CurrentPage, 1, PageCount);
             Items = await allItems
-                .Skip((currentPage - 1) * PerPage)
+                .Skip((CurrentPage - 1) * PerPage)
                 .Take(PerPage)
                 .ToArrayAsync();
             Refreshing = false;

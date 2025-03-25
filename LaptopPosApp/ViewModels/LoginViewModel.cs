@@ -4,16 +4,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace LaptopPosApp.ViewModels
 {
-    class LoginViewModel : INotifyPropertyChanged
+    partial class LoginViewModel : ObservableObject
     {
-        public string Username { get; set; } = "";
-        public string Password { get; set; } = "";
-        public bool RememberMe { get; set; } = false;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
+        [ObservableProperty]
+        public partial string Username { get; set; } = "";
+        [ObservableProperty]
+        public partial string Password { get; set; } = "";
+        [ObservableProperty]
+        public partial bool RememberMe { get; set; } = false;
 
         public bool CanLogin()
         {

@@ -1,4 +1,5 @@
-﻿using LaptopPosApp.Dao;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    public class AddManufacturerViewModel : AddItemViewModel, INotifyPropertyChanged
+    public partial class AddManufacturerViewModel : AddItemViewModel
     {
         private DbContextBase dbContext;
         public AddManufacturerViewModel(DbContextBase dbContext)
@@ -18,16 +19,14 @@ namespace LaptopPosApp.ViewModels
             this.dbContext = dbContext;
         }
 
-        public string Name
+        [ObservableProperty]
+        public partial string Name { get; set; } = string.Empty;
+        [ObservableProperty]
+        public partial string NameValidationMessage { get; private set; } = string.Empty;
+        partial void OnNameChanged(string value)
         {
-            get;
-            set
-            {
-                field = value;
-                NameValidationMessage = string.Empty;
-            }
-        } = string.Empty;
-        public string NameValidationMessage { get; private set; } = string.Empty;
+            NameValidationMessage = string.Empty;
+        }
 
         protected override bool DoValidate()
         {
@@ -59,6 +58,5 @@ namespace LaptopPosApp.ViewModels
             dbContext.SaveChanges();
             return true;
         }
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
