@@ -22,17 +22,12 @@ using System.Diagnostics;
 
 namespace LaptopPosApp.Components
 {
-    public sealed partial class PaginationControl : UserControl, INotifyPropertyChanged
+    public sealed partial class PaginationControl : UserControl
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         [GeneratedDependencyProperty(DefaultValue = 0)]
-        [NotifyPropertyChangedFor(nameof(NextPageBtnEnabled))]
-        [NotifyPropertyChangedFor(nameof(PrevPageBtnEnabled))]
         public partial int CurrentPage { get; set; }
 
         [GeneratedDependencyProperty(DefaultValue = 0)]
-        [NotifyPropertyChangedFor(nameof(NextPageBtnEnabled))]
         public partial int TotalPage { get; set; }
 
         [GeneratedDependencyProperty]
@@ -41,20 +36,11 @@ namespace LaptopPosApp.Components
         [GeneratedDependencyProperty(DefaultValue = null!)]
         public partial IList<int> PerPageOptions { get; set; }
 
-        private bool NextPageBtnEnabled => CurrentPage < TotalPage;
-        private bool PrevPageBtnEnabled => CurrentPage > 1;
         public PaginationControl()
         {
             this.InitializeComponent();
             PerPageOptions = [5, 10, 15, 20, 50];
             PerPageComboBox.SelectedIndex = 0;
-            PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == nameof(TotalPage))
-                {
-                    PropertyChanged?.Invoke(sender, new(nameof(NextPageBtnEnabled)));
-                }
-            };
         }
 
         private void NumberBox_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -96,6 +82,15 @@ namespace LaptopPosApp.Components
                         break;
                     }
             }
+        }
+        partial void OnCurrentPageChanged(int newValue)
+        {
+            PageButtonFirst.IsEnabled = PageButtonPrev.IsEnabled = CurrentPage > 1;
+            PageButtonNext.IsEnabled = PageButtonLast.IsEnabled = CurrentPage < TotalPage;
+        }
+        partial void OnTotalPageChanged(int newValue)
+        {
+            PageButtonNext.IsEnabled = PageButtonLast.IsEnabled = CurrentPage < TotalPage;
         }
     }
 }

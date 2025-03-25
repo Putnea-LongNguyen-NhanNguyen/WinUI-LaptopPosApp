@@ -10,12 +10,10 @@
 
     <StackPanel Orientation="Horizontal" x:Name="PageButtonContainer" 
         VerticalAlignment="Center" HorizontalAlignment="Right" Padding="0, 0, 20, 0">
-        <Button Margin="0, 0, 10, 0" Tag="FirstPage" Click="PageButton_Click"
-            IsEnabled="{x:Bind PrevPageBtnEnabled, Mode=OneWay}">
+        <Button x:Name="PageButtonFirst" Margin="0, 0, 10, 0" Tag="FirstPage" Click="PageButton_Click">
             <Image Source="/Assets/keyboard_double_arrow_left.png" Width="20" Height="20"/>
         </Button>
-        <Button Margin="0, 0, 10, 0" Tag="PreviousPage" Click="PageButton_Click"
-            IsEnabled="{x:Bind PrevPageBtnEnabled, Mode=OneWay}">
+        <Button x:Name="PageButtonPrev" Margin="0, 0, 10, 0" Tag="PreviousPage" Click="PageButton_Click">
             <Image Source="/Assets/chevron_left.png" Width="20" Height="20"/>
         </Button>
         <NumberBox
@@ -29,12 +27,10 @@
         <Run Text="{x:Bind TotalPage, Mode=OneWay}"/>
         </TextBlock>
 
-        <Button Margin="10, 0, 0, 0" Tag="NextPage" Click="PageButton_Click"
-            IsEnabled="{x:Bind NextPageBtnEnabled, Mode=OneWay}">
+        <Button x:Name="PageButtonNext" Margin="10, 0, 0, 0" Tag="NextPage" Click="PageButton_Click">
             <Image Source="/Assets/chevron_right.png" Width="20" Height="20"/>
         </Button>
-        <Button Margin="10, 0, 0, 0" Tag="LastPage" Click="PageButton_Click"
-            IsEnabled="{x:Bind NextPageBtnEnabled, Mode=OneWay}">
+        <Button x:Name="PageButtonLast" Margin="10, 0, 0, 0" Tag="LastPage" Click="PageButton_Click">
             <Image Source="/Assets/keyboard_double_arrow_right.png" Width="20" Height="20"/>
         </Button>
 
