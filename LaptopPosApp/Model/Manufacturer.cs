@@ -19,5 +19,9 @@ namespace LaptopPosApp.Model
 
         [ObservableProperty]
         public partial List<Product> Products { get; set; } = new();
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
