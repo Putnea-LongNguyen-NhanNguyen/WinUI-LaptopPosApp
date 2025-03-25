@@ -100,7 +100,7 @@ namespace LaptopPosApp.Dao
                 Manufacturers.AddRange(_seedManufacturers);
                 var productGen = new Faker<Product>()
                     .StrictMode(true)
-                    .RuleFor(o => o.ID, f => f.Random.String(15, 'A', 'Z'))
+                    .RuleFor(o => o.ID, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                     .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
                     .RuleFor(o => o.Price, f => (ulong)f.Finance.Amount(1000000, 20000000, 0))

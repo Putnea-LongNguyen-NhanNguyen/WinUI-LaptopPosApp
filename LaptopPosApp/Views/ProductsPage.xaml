@@ -7,50 +7,112 @@
     xmlns:custom="using:LaptopPosApp.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:LaptopPosApp.Views.Converter"
     mc:Ignorable="d"
     xmlns:tableView="using:WinUI.TableView"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition
+                Height="100" />
+            <RowDefinition
+                Height="*" />
+            <RowDefinition
+                Height="50" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
-            <Button Content="Thêm" Click="NewItemButton_Click" Style="{StaticResource AccentButtonStyle}"/>
-            <Button Content="Xóa" Click="DeleteButton_Click" Background="Red" Margin="10, 0, 0, 0"/>
+        <StackPanel
+            Orientation="Horizontal"
+            Grid.Row="0"
+            VerticalAlignment="Center">
+            <Button
+                Content="Thêm"
+                Click="NewItemButton_Click"
+                Style="{StaticResource AccentButtonStyle}" />
+            <Button
+                Content="Xóa"
+                Click="DeleteButton_Click"
+                Background="Red"
+                Margin="10, 0, 0, 0" />
         </StackPanel>
 
-        <tableView:TableView 
+        <tableView:TableView
             x:Name="MyTable"
-            Grid.Row="1" 
+            Grid.Row="1"
             ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
             SelectionUnit="Row"
             SelectionMode="Extended"
             AutoGenerateColumns="False">
+            <tableView:TableView.Resources>
+                <converter:CurrencyConverter
+                    x:Key="currency" />
+                <converter:QuantityConverter
+                    x:Key="quantity" />
+            </tableView:TableView.Resources>
             <tableView:TableView.Columns>
-                <tableView:TableViewTextColumn Header="ID" IsReadOnly="True"
-                    Binding="{Binding ID, Mode=OneWay}"/>
-                <tableView:TableViewTextColumn Header="Tên sản phẩm"
-                    Binding="{Binding Name, Mode=TwoWay}"/>
-                <tableView:TableViewTextColumn Header="Số lượng sản phẩm"
-                    Binding="{Binding Quantity, Mode=OneWay}"/>
-                <tableView:TableViewTextColumn Header="Giá"
-                    Binding="{Binding Price, Mode=TwoWay}"/>
-                <tableView:TableViewTextColumn Header="Phân loại"
-                    Binding="{Binding Category.Name, Mode=TwoWay}"/>
-                <tableView:TableViewTextColumn Header="Nhà sx"
-                    Binding="{Binding Manufacturer.Name, Mode=TwoWay}"/>
+                <tableView:TableViewTextColumn
+                    Header="ID"
+                    IsReadOnly="True"
+                    Binding="{Binding ID, Mode=OneWay}" />
+                <tableView:TableViewTextColumn
+                    Header="Tên sản phẩm"
+                    Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <tableView:TableViewTextColumn
+                    Header="Mô tả sản phẩm"
+                    Binding="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <tableView:TableViewTemplateColumn
+                    Header="Số lượng">
+                    <tableView:TableViewTemplateColumn.CellTemplate>
+                        <!--I don't know why the text alignment is useless-->
+                        <DataTemplate>
+                            <TextBlock
+                                TextAlignment="End"
+                                Text="{Binding Quantity, Converter={StaticResource quantity}}" />
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.CellTemplate>
+                    <tableView:TableViewTemplateColumn.EditingTemplate>
+                        <DataTemplate>
+                            <NumberBox
+                                Value="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.EditingTemplate>
+                </tableView:TableViewTemplateColumn>
+                <tableView:TableViewTemplateColumn
+                    Header="Giá sản phẩm">
+                    <tableView:TableViewTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Text="{Binding Price, Converter={StaticResource currency}}" />
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.CellTemplate>
+                    <tableView:TableViewTemplateColumn.EditingTemplate>
+                        <DataTemplate>
+                            <NumberBox
+                                Value="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.EditingTemplate>
+                </tableView:TableViewTemplateColumn>
+                <tableView:TableViewComboBoxColumn
+                    IsEditable="True"
+                    Header="Phân loại sản phẩm"
+                    ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
+                    Binding="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <tableView:TableViewComboBoxColumn
+                    IsEditable="True"
+                    Header="Nhà sản xuất"
+                    ItemsSource="{x:Bind ViewModel.Manufacturers, Mode=OneWay}"
+                    Binding="{Binding Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </tableView:TableView.Columns>
         </tableView:TableView>
+
         <custom:PaginationControl
-                Grid.Row="2"
-                CurrentPage="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}"
-                TotalPage="{x:Bind ViewModel.PageCount, Mode=OneWay}"
-                PerPage="{x:Bind ViewModel.PerPage, Mode=TwoWay}"
-            >
+            Grid.Row="2"
+            CurrentPage="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}"
+            TotalPage="{x:Bind ViewModel.PageCount, Mode=OneWay}"
+            PerPage="{x:Bind ViewModel.PerPage, Mode=TwoWay}">
         </custom:PaginationControl>
+
     </Grid>
+
 </Page>
