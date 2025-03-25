@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace LaptopPosApp.ViewModels
 {
-    public abstract class AddItemViewModel
+    public abstract partial class AddItemViewModel: ObservableObject
     {
-        public bool? IsValid { get; private set; }
+        [ObservableProperty]
+        public partial bool? IsValid { get; private set; }
         protected abstract bool DoValidate();
         protected abstract bool DoSubmit();
         protected bool? Validate()

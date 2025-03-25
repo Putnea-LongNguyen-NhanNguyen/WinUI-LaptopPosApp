@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using CommunityToolkit.WinUI;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -23,14 +24,23 @@ namespace LaptopPosApp.Components
 {
     public sealed partial class PaginationControl : UserControl, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         [GeneratedDependencyProperty(DefaultValue = 0)]
+        [NotifyPropertyChangedFor(nameof(NextPageBtnEnabled))]
+        [NotifyPropertyChangedFor(nameof(PrevPageBtnEnabled))]
         public partial int CurrentPage { get; set; }
+
         [GeneratedDependencyProperty(DefaultValue = 0)]
+        [NotifyPropertyChangedFor(nameof(NextPageBtnEnabled))]
         public partial int TotalPage { get; set; }
+
         [GeneratedDependencyProperty]
         public partial int PerPage { get; set; }
+
         [GeneratedDependencyProperty(DefaultValue = null!)]
         public partial IList<int> PerPageOptions { get; set; }
+
         private bool NextPageBtnEnabled => CurrentPage < TotalPage;
         private bool PrevPageBtnEnabled => CurrentPage > 1;
         public PaginationControl()

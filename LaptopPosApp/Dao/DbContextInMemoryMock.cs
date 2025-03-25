@@ -109,6 +109,59 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.Quantity, f => (ulong)f.Random.Int(1, 100))
                     .RuleFor(o => o.TemporaryPrices, f => new List<ProductTemporaryPrice>());
                 Products.AddRange(productGen.GenerateBetween(10, 50));
+
+                var voucherFixedGen = new Faker<Voucher>()
+                    .StrictMode(true)
+                    .RuleFor(o => o.Code, f => f.Random.String(15, 'A', 'z'))
+                    .RuleFor(o => o.Type, f => VoucherType.Fixed)
+                    .RuleFor(o => o.Value, f => f.Random.ULong(300000, 3000000))
+                    .RuleFor(o => o.Quantity, f => f.Random.ULong(2, 10))
+                    .RuleFor(o => o.StartDate, f => f.Date.Recent(10))
+                    .RuleFor(o => o.EndDate, f => f.Date.Future(90))
+                    .RuleFor(o => o.Orders, f => new());
+                Vouchers.AddRange(voucherFixedGen.GenerateBetween(10, 50));
+
+                var customerGen = new Faker<Customer>()
+                    .StrictMode(true)
+                    .RuleFor(o => o.ID, f => 0)
+                    .RuleFor(o => o.Name, f => f.Name.FullName())
+                    .RuleFor(o => o.Address, f => f.Address.FullAddress())
+                    .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
+                    .RuleFor(o => o.Email, f => f.Internet.Email())
+                    .RuleFor(o => o.Orders, f => new());
+                Customers.AddRange(customerGen.GenerateBetween(10, 50));
+
+                var orderGen = new Faker<Order>()
+                    .RuleFor(o => o.ID, f => 0)
+                    .RuleFor(o => o.Timestamp, f => f.Date.Between(DateTime.Today.AddDays(-700), DateTime.Today))
+                    .RuleFor(o => o.Customer, f => f.PickRandom(Customers.Local.AsEnumerable()))
+                    .RuleFor(o => o.Vouchers, f => [f.PickRandom(Vouchers.Local.AsEnumerable())])
+                    .RuleFor(o => o.Vouchers, f => new());
+                var orders = orderGen.GenerateBetween(10, 50);
+                orders.ForEach(o =>
+                {
+                    Faker faker = new Faker();
+                    var product = faker.PickRandom(Products.Local.AsEnumerable());
+
+                    var orderProductGen = new Faker<OrderProduct>()
+                        .RuleFor(op => op.OrderID, f => o.ID)
+                        .RuleFor(op => op.ProductID, f => product.ID)
+                        .RuleFor(op => op.Quantity, f => f.Random.Int(1, 3))
+                        .RuleFor(op => op.Order, f => o)
+                        .RuleFor(op => op.Product, f => product);
+                    var orderProduct = orderProductGen.Generate();
+                    o.Products.Add(orderProduct);
+                    o.Vouchers.ForEach(v =>
+                    {
+                        if (v.Type == VoucherType.Fixed)
+                            o.TotalPrice = product.Price - v.Quantity;
+                        else o.TotalPrice = product.Price * (ulong)((double)(100 - v.Quantity) / 100);
+                    });
+                    if (o.TotalPrice == 0)
+                        o.TotalPrice = product.Price;
+                });
+                Orders.AddRange(orders);
+
                 context.ChangeTracker.AutoDetectChangesEnabled = true;
                 context.ChangeTracker.DetectChanges();
                 context.SaveChanges();
