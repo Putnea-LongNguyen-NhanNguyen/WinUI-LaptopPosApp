@@ -16,6 +16,24 @@ namespace LaptopPosApp.Model
         public ulong Quantity { get; set; } = 0;
         public Manufacturer? Manufacturer { get; set; }
         public Category? Category { get; set; }
-        public List<ProductTemporaryPrice> TemporaryPrices { get; set; } = new();
+        public SortedSet<ProductTemporaryPrice> TemporaryPrices { get; set; } = new(
+            Comparer<ProductTemporaryPrice>.Create((a, b) =>
+            {
+                var result = a.StartDate.CompareTo(b.StartDate);
+                if (result != 0)
+                {
+                    return result;
+                }
+                if (a.EndDate is null)
+                {
+                    return b.EndDate is null ? 0 : 1;
+                }
+                if (b.EndDate is null)
+                {
+                    return -1;
+                }
+                return a.EndDate.Value.CompareTo(b.EndDate.Value);
+            })
+        );
     }
 }
