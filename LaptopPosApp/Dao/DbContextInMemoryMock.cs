@@ -100,7 +100,7 @@ namespace LaptopPosApp.Dao
                 Manufacturers.AddRange(_seedManufacturers);
                 var productGen = new Faker<Product>()
                     .StrictMode(true)
-                    .RuleFor(o => o.ID, f => f.Random.String(15, 'A', 'Z'))
+                    .RuleFor(o => o.ID, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                     .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
                     .RuleFor(o => o.Price, f => (ulong)f.Finance.Amount(1000000, 20000000, 0))
@@ -112,14 +112,24 @@ namespace LaptopPosApp.Dao
 
                 var voucherFixedGen = new Faker<Voucher>()
                     .StrictMode(true)
-                    .RuleFor(o => o.Code, f => f.Random.String(15, 'A', 'z'))
+                    .RuleFor(o => o.Code, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Type, f => VoucherType.Fixed)
                     .RuleFor(o => o.Value, f => f.Random.ULong(300000, 3000000))
                     .RuleFor(o => o.Quantity, f => f.Random.ULong(2, 10))
                     .RuleFor(o => o.StartDate, f => f.Date.Recent(10))
-                    .RuleFor(o => o.EndDate, f => f.Date.Future(90))
+                    .RuleFor(o => o.EndDate, f => f.Date.Soon(90))
                     .RuleFor(o => o.Orders, f => new());
                 Vouchers.AddRange(voucherFixedGen.GenerateBetween(10, 50));
+                var voucherPercentageGen = new Faker<Voucher>()
+                    .StrictMode(true)
+                    .RuleFor(o => o.Code, f => Guid.NewGuid().ToString())
+                    .RuleFor(o => o.Type, f => VoucherType.Percentage)
+                    .RuleFor(o => o.Value, f => f.Random.ULong(5, 20))
+                    .RuleFor(o => o.Quantity, f => f.Random.ULong(2, 10))
+                    .RuleFor(o => o.StartDate, f => f.Date.Recent(10))
+                    .RuleFor(o => o.EndDate, f => f.Date.Soon(90))
+                    .RuleFor(o => o.Orders, f => new());
+                Vouchers.AddRange(voucherPercentageGen.GenerateBetween(10, 50));
 
                 var customerGen = new Faker<Customer>()
                     .StrictMode(true)

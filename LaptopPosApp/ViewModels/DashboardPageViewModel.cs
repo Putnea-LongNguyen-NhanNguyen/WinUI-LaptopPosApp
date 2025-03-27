@@ -83,6 +83,12 @@ namespace LaptopPosApp.ViewModels
                     },
                     new NavigationItemLeaf()
                     {
+                        Title = "Mã khuyến mãi",
+                        Icon = new SymbolIcon(Symbol.Page),
+                        CreatePage = () => new VouchersPage()
+                    },
+                    new NavigationItemLeaf()
+                    {
                         Title = "Thông tin khách hàng",
                         Icon = new SymbolIcon(Symbol.ContactInfo)
                     },
