@@ -103,10 +103,10 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.ID, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                     .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
-                    .RuleFor(o => o.Price, f => (ulong)f.Finance.Amount(1000000, 20000000, 0))
+                    .RuleFor(o => o.Price, f => f.Finance.Amount(1000000, 20000000, 0))
                     .RuleFor(o => o.Category, f => f.PickRandom(_seedCategories.AsEnumerable()))
                     .RuleFor(o => o.Manufacturer, f => f.PickRandom(_seedManufacturers.AsEnumerable()))
-                    .RuleFor(o => o.Quantity, f => (ulong)f.Random.Int(1, 100))
+                    .RuleFor(o => o.Quantity, f => f.Random.Long(1, 100))
                     .RuleFor(o => o.TemporaryPrices, f => new List<ProductTemporaryPrice>());
                 Products.AddRange(productGen.GenerateBetween(10, 50));
 
@@ -114,8 +114,8 @@ namespace LaptopPosApp.Dao
                     .StrictMode(true)
                     .RuleFor(o => o.Code, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Type, f => VoucherType.Fixed)
-                    .RuleFor(o => o.Value, f => f.Random.ULong(300000, 3000000))
-                    .RuleFor(o => o.Quantity, f => f.Random.ULong(2, 10))
+                    .RuleFor(o => o.Value, f => f.Random.Long(300000, 3000000))
+                    .RuleFor(o => o.Quantity, f => f.Random.Long(2, 10))
                     .RuleFor(o => o.StartDate, f => f.Date.Recent(10))
                     .RuleFor(o => o.EndDate, f => f.Date.Soon(90))
                     .RuleFor(o => o.Orders, f => new());
@@ -124,8 +124,8 @@ namespace LaptopPosApp.Dao
                     .StrictMode(true)
                     .RuleFor(o => o.Code, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Type, f => VoucherType.Percentage)
-                    .RuleFor(o => o.Value, f => f.Random.ULong(5, 20))
-                    .RuleFor(o => o.Quantity, f => f.Random.ULong(2, 10))
+                    .RuleFor(o => o.Value, f => f.Random.Long(5, 20))
+                    .RuleFor(o => o.Quantity, f => f.Random.Long(2, 10))
                     .RuleFor(o => o.StartDate, f => f.Date.Recent(10))
                     .RuleFor(o => o.EndDate, f => f.Date.Soon(90))
                     .RuleFor(o => o.Orders, f => new());
@@ -165,7 +165,7 @@ namespace LaptopPosApp.Dao
                     {
                         if (v.Type == VoucherType.Fixed)
                             o.TotalPrice = product.Price - v.Quantity;
-                        else o.TotalPrice = product.Price * (ulong)((double)(100 - v.Quantity) / 100);
+                        else o.TotalPrice = product.Price * (long)((double)(100 - v.Quantity) / 100);
                     });
                     if (o.TotalPrice == 0)
                         o.TotalPrice = product.Price;

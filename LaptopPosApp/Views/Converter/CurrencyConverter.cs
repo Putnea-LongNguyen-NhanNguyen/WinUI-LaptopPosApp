@@ -14,7 +14,7 @@ namespace LaptopPosApp.Views.Converter
         {
             if (value == null) return "";
 
-            ulong amount = (ulong)value;
+            long amount = (long)value;
             CultureInfo culture = CultureInfo.GetCultureInfo("vi-VN");  // en-US /en-UK
             string formatted = amount.ToString("#,### đ", culture.NumberFormat);
             return formatted;
