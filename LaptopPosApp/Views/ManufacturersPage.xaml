@@ -27,7 +27,7 @@
             x:Name="MyTable"
             Grid.Row="1" 
             ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
-            SelectionUnit="Row"
+            SelectionUnit="CellOrRow"
             SelectionMode="Extended"
             AutoGenerateColumns="False">
             <tableView:TableView.Columns>

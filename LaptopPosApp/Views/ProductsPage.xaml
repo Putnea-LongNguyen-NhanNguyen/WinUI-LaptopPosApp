@@ -41,7 +41,7 @@
             x:Name="MyTable"
             Grid.Row="1"
             ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
-            SelectionUnit="Row"
+            SelectionUnit="CellOrRow"
             SelectionMode="Extended"
             AutoGenerateColumns="False">
             <tableView:TableView.Resources>
@@ -94,12 +94,10 @@
                     </tableView:TableViewTemplateColumn.EditingTemplate>
                 </tableView:TableViewTemplateColumn>
                 <tableView:TableViewComboBoxColumn
-                    IsEditable="True"
                     Header="Phân loại sản phẩm"
                     ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
                     Binding="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <tableView:TableViewComboBoxColumn
-                    IsEditable="True"
                     Header="Nhà sản xuất"
                     ItemsSource="{x:Bind ViewModel.Manufacturers, Mode=OneWay}"
                     Binding="{Binding Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
