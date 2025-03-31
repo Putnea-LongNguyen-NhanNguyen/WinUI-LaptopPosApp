@@ -26,9 +26,9 @@ namespace LaptopPosApp.ViewModels
         [ObservableProperty]
         public partial VoucherType Type { get; set; } = VoucherType.Fixed;
         [ObservableProperty]
-        public partial ulong Value { get; set; } = 0;
+        public partial long Value { get; set; } = 0;
         [ObservableProperty]
-        public partial ulong Quantity { get; set; } = 0;
+        public partial long Quantity { get; set; } = 0;
         [ObservableProperty]
         public partial DateTimeOffset StartDate { get; set; } = DateTimeOffset.Now;
         [ObservableProperty]
@@ -46,12 +46,12 @@ namespace LaptopPosApp.ViewModels
 
         }
 
-        partial void OnValueChanged(ulong value) 
+        partial void OnValueChanged(long value) 
         { 
             ValueValidationMessage = string.Empty;
         }
 
-        partial void OnQuantityChanged(ulong value)
+        partial void OnQuantityChanged(long value)
         {
             QuantityValidationMessage = string.Empty;
         }

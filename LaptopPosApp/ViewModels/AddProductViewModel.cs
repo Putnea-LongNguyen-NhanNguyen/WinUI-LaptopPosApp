@@ -45,9 +45,9 @@ namespace LaptopPosApp.ViewModels
         [ObservableProperty]
         public partial string Description { get; set; } = string.Empty;
         [ObservableProperty]
-        public partial ulong Price { get; set; } = 0;
+        public partial long Price { get; set; } = 0;
         [ObservableProperty]
-        public partial ulong Quantity { get; set; } = 0;
+        public partial long Quantity { get; set; } = 0;
         [ObservableProperty]
         public partial Manufacturer? Manufacturer { get; set; }
         [ObservableProperty]
@@ -57,11 +57,11 @@ namespace LaptopPosApp.ViewModels
         {
             NameValidationMessage = string.Empty;
         }
-        partial void OnPriceChanged(ulong value)
+        partial void OnPriceChanged(long value)
         {
             PriceValidationMessage = string.Empty;
         }
-        partial void OnQuantityChanged(ulong value)
+        partial void OnQuantityChanged(long value)
         {
             QuantityValidationMessage = string.Empty;
         }
