@@ -42,7 +42,7 @@
             Grid.Row="1"
             ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
             SelectionUnit="CellOrRow"
-            SelectionMode="Extended"
+            SelectionMode="Multiple"
             AutoGenerateColumns="False">
             <tableView:TableView.Resources>
                 <converter:CurrencyConverter
