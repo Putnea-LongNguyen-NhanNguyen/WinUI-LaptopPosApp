@@ -12,5 +12,9 @@ namespace LaptopPosApp.Model
         IComparable IHasId.ID => ID;
         public string Name { get; set; } = string.Empty;
         public List<Product> Products { get; set; } = new();
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

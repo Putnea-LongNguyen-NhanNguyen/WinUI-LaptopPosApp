@@ -19,10 +19,14 @@ namespace LaptopPosApp.ViewModels
     class ProductPageViewModel : PaginatableViewModel<Product>
     {
         private readonly DbContextBase dbContext;
+        public IEnumerable<Category> Categories { get; private set; }
+        public IEnumerable<Manufacturer> Manufacturers { get; private set; }
 
         public ProductPageViewModel(DbContextBase dbContext) : base(dbContext.Products)
         {
             this.dbContext = dbContext;
+            Categories = dbContext.Categories.AsEnumerable();
+            Manufacturers = dbContext.Manufacturers.AsEnumerable();
         }
 
         public async Task StartAddFlow(Page parent)
