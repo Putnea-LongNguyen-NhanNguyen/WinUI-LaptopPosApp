@@ -9,14 +9,13 @@ namespace LaptopPosApp.Model
 {
     public partial class ProductTemporaryPrice: ObservableObject
     {
-        [ObservableProperty]
-        public required partial string ProductID { get; set; }
+        public required string ProductID { get; set; }
         [ObservableProperty]
         public partial DateTime StartDate { get; set; }
         [ObservableProperty]
-        public partial DateTime? EndDate { get; set; }
+        public partial DateTime EndDate { get; set; }
         [ObservableProperty]
-        public required partial ulong Price { get; set; }
+        public required partial long Price { get; set; }
         public Product Product { get; set; } = null!;
     }
 }

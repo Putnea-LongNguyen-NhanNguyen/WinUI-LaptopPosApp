@@ -27,7 +27,6 @@ namespace LaptopPosApp.ViewModels
                 .Sum(dp => dp.Value);
             return sum != null ? (double)sum : 0;
         }
-        public int RevenueFilterIndex { get; set; } = 2;
         public List<RevenueFilter> RevenueFilters { get; private set; }
 
         public TimeRevenueViewModel(List<Order> orders)
@@ -42,20 +41,20 @@ namespace LaptopPosApp.ViewModels
             ];
         }
 
-        public IEnumerable<ICartesianAxis> XAxes
+        public IEnumerable<ICartesianAxis> XAxes(int TimeFilterIndex)
         {
-            get =>
+            return
             [
                 new DateTimeAxis(
-                    TimeSpan.FromDays(RevenueFilters[RevenueFilterIndex].TimeSpan),
-                    date => date.ToString(RevenueFilters[RevenueFilterIndex].GetDateFormat())
+                    TimeSpan.FromDays(RevenueFilters[TimeFilterIndex].TimeSpan),
+                    date => date.ToString(RevenueFilters[TimeFilterIndex].GetDateFormat())
                 )
             ];
         }
 
-        public IEnumerable<ICartesianAxis> YAxes
+        public IEnumerable<ICartesianAxis> YAxes(int TimeFilterIndex)
         {
-            get =>
+            return
             [
                 new Axis
                 {

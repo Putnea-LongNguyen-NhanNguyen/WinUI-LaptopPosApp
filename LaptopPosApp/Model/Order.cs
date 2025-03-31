@@ -14,6 +14,6 @@ namespace LaptopPosApp.Model
         public required Customer Customer { get; set; }
         public List<OrderProduct> Products { get; set; } = new();
         public List<Voucher> Vouchers { get; set; } = new();
-        public required ulong TotalPrice { get; set; }
+        public required long TotalPrice { get; set; }
     }
 }

@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="LaptopPosApp.Views.ProductsPage"
+    x:Class="LaptopPosApp.Views.VouchersPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LaptopPosApp.Views"
-    xmlns:custom="using:LaptopPosApp.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converter="using:LaptopPosApp.Views.Converter"
     mc:Ignorable="d"
     xmlns:tableView="using:WinUI.TableView"
+    xmlns:converter="using:LaptopPosApp.Views.Converters"
+    xmlns:custom="using:LaptopPosApp.Components"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.Resources>
+            <converter:DateTimeConverter
+                x:Key="DateTimeConverter" />
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="100" />
@@ -28,11 +33,13 @@
             VerticalAlignment="Center">
             <Button
                 Content="Thêm"
-                Click="NewItemButton_Click"
+                x:Name="NewItemBtn"
+                Click="NewItemBtn_Click"
                 Style="{StaticResource AccentButtonStyle}" />
             <Button
                 Content="Xóa"
-                Click="DeleteButton_Click"
+                x:Name="DeleteItemBtn"
+                Click="DeleteItemBtn_Click"
                 Background="Red"
                 Margin="10, 0, 0, 0" />
         </StackPanel>
@@ -44,73 +51,62 @@
             SelectionUnit="CellOrRow"
             SelectionMode="Extended"
             AutoGenerateColumns="False">
-            <tableView:TableView.Resources>
-                <converter:CurrencyConverter
-                    x:Key="currency" />
-                <converter:QuantityConverter
-                    x:Key="quantity" />
-            </tableView:TableView.Resources>
             <tableView:TableView.Columns>
                 <tableView:TableViewTextColumn
                     Header="ID"
                     IsReadOnly="True"
-                    Binding="{Binding ID, Mode=OneWay}" />
+                    Binding="{Binding Code, Mode=OneWay}" />
+                <tableView:TableViewComboBoxColumn
+                    Header="Loại khuyến mãi"
+                    ItemsSource="{x:Bind ViewModel.VoucherTypes, Mode=OneWay}"
+                    Binding="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <tableView:TableViewTextColumn
-                    Header="Tên sản phẩm"
-                    Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    Header="Giá trị giảm"
+                    Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <tableView:TableViewTextColumn
-                    Header="Mô tả sản phẩm"
-                    Binding="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    Header="Số lượng"
+                    Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <tableView:TableViewTemplateColumn
-                    Header="Số lượng">
+                    Header="Ngày ban hành">
                     <tableView:TableViewTemplateColumn.CellTemplate>
-                        <!--I don't know why the text alignment is useless-->
                         <DataTemplate>
-                            <TextBlock
-                                TextAlignment="End"
-                                Text="{Binding Quantity, Converter={StaticResource quantity}}" />
+                            <CalendarDatePicker
+                                DateFormat="{}{day.integer}/{month.integer}/{year.full}"
+                                Date="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                     <tableView:TableViewTemplateColumn.EditingTemplate>
                         <DataTemplate>
-                            <NumberBox
-                                Value="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CalendarDatePicker
+                                DateFormat="{}{day.integer}/{month.integer}/{year.full}"
+                                Date="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.EditingTemplate>
                 </tableView:TableViewTemplateColumn>
                 <tableView:TableViewTemplateColumn
-                    Header="Giá sản phẩm">
+                    Header="Hạn sử dụng">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock
-                                Text="{Binding Price, Converter={StaticResource currency}}" />
+                            <CalendarDatePicker
+                                DateFormat="{}{day.integer}/{month.integer}/{year.full}"
+                                Date="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                     <tableView:TableViewTemplateColumn.EditingTemplate>
                         <DataTemplate>
-                            <NumberBox
-                                Value="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CalendarDatePicker
+                                DateFormat="{}{day.integer}/{month.integer}/{year.full}"
+                                Date="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DateTimeConverter}}" />
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.EditingTemplate>
                 </tableView:TableViewTemplateColumn>
-                <tableView:TableViewComboBoxColumn
-                    Header="Phân loại sản phẩm"
-                    ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
-                    Binding="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <tableView:TableViewComboBoxColumn
-                    Header="Nhà sản xuất"
-                    ItemsSource="{x:Bind ViewModel.Manufacturers, Mode=OneWay}"
-                    Binding="{Binding Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </tableView:TableView.Columns>
         </tableView:TableView>
-
         <custom:PaginationControl
             Grid.Row="2"
             CurrentPage="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}"
             TotalPage="{x:Bind ViewModel.PageCount, Mode=OneWay}"
             PerPage="{x:Bind ViewModel.PerPage, Mode=TwoWay}">
         </custom:PaginationControl>
-
     </Grid>
-
 </Page>

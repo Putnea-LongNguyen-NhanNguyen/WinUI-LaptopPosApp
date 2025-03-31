@@ -46,8 +46,8 @@ namespace LaptopPosApp.ViewModels
         public ObservableCollection<ISeries> TimeRevenueSeries => _timeRevenuesVM.GetSeries(TimeFilterIndex, StartDate.DateTime, EndDate.DateTime);
         public List<RevenueFilter> RevenueFilters => _timeRevenuesVM.RevenueFilters;
         public string CurrentTimeSpanRevenueSum => _timeRevenuesVM.SumInTimeSpan(StartDate.DateTime, EndDate.DateTime).ToString("C");
-        public IEnumerable<ICartesianAxis> TimeXAxes => _timeRevenuesVM.XAxes;
-        public IEnumerable<ICartesianAxis> TimeYAxes => _timeRevenuesVM.YAxes;
+        public IEnumerable<ICartesianAxis> TimeXAxes => _timeRevenuesVM.XAxes(TimeFilterIndex);
+        public IEnumerable<ICartesianAxis> TimeYAxes => _timeRevenuesVM.YAxes(TimeFilterIndex);
 
         private readonly CategoriesRevenueViewModel _cateRevenueVM;
         public ObservableCollection<ISeries> CatePieSeries => _cateRevenueVM.GetSeries(StartDate.DateTime, EndDate.DateTime);
