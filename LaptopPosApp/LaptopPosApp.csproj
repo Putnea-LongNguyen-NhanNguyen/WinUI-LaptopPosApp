@@ -18,6 +18,7 @@
 	<None Remove="Views\AddCustomerPage.xaml" />
     <None Remove="Views\AddManufacturerPage.xaml" />
     <None Remove="Views\AddVouchersPage.xaml" />
+    <None Remove="Views\CustomerOrderHistoryWindow.xaml" />
     <None Remove="Views\CustomersPage.xaml" />
     <None Remove="Views\DashboardPage.xaml" />
     <None Remove="Views\DashboardWindow.xaml" />
@@ -66,6 +67,11 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250228001" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.3" />
     <PackageReference Include="WinUI.TableView" Version="1.2.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\CustomerOrderHistoryWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\AddCustomerPage.xaml">

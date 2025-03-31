@@ -1,9 +1,11 @@
 ﻿using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
 using LaptopPosApp.Views;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +48,20 @@ namespace LaptopPosApp.ViewModels
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public void OpenHistoryWindow(int customerId)
+        {
+            var customer = _context.Customers.AsEnumerable().FirstOrDefault(c => c.ID == customerId);
+            if (customer == null)
+            {
+                Debug.WriteLine("CustomersPage, how is customer null here");
+                return;
+            }
+
+            // i like prop drilling
+            var window = new CustomerOrderHistoryWindow(new CustomerOrderHistoryViewModel(customer, _context));
+            window.Activate();
         }
     }
 }

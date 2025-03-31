@@ -45,10 +45,10 @@ namespace LaptopPosApp.Views
             ViewModel.Remove(selected.Cast<Customer>());
         }
 
-        private void SendMailBtn_Click(object sender, RoutedEventArgs e)
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = (sender as Button)!;
-            Debug.WriteLine(btn.Tag);
+            Button btn = ((Button)sender)!;
+            ViewModel.OpenHistoryWindow((int)btn.Tag);
         }
     }
 }

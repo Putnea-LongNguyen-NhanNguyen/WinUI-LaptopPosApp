@@ -34,8 +34,8 @@
         <tableView:TableView x:Name="MyTable"
                              Grid.Row="1"
                              ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
-                             SelectionUnit="Row"
-                             SelectionMode="Extended"
+                             SelectionUnit="CellOrRow"
+                             SelectionMode="Multiple"
                              AutoGenerateColumns="False">
             <tableView:TableView.Columns>
                 <tableView:TableViewTextColumn Header="ID"
@@ -53,10 +53,10 @@
                                                    IsReadOnly="True">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Gửi email"
+                            <Button Content="Xem lịch sử mua hàng"
                                     Tag="{Binding ID, Mode=OneWay}"
-                                    x:Name="SendMailBtn"
-                                    Click="SendMailBtn_Click" />
+                                    x:Name="HistoryButton"
+                                    Click="HistoryButton_Click" />
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                 </tableView:TableViewTemplateColumn>
