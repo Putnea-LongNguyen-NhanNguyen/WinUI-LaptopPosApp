@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LaptopPosApp.Views.Converter
+namespace LaptopPosApp.Views.Converters
 {
     public class CurrencyConverter : IValueConverter
     {

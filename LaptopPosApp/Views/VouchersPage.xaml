@@ -8,13 +8,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:tableView="using:WinUI.TableView"
-    xmlns:converter="using:LaptopPosApp.Views.Converters"
+    xmlns:converters="using:LaptopPosApp.Views.Converters"
     xmlns:custom="using:LaptopPosApp.Components"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
         <Grid.Resources>
-            <converter:DateTimeConverter
+            <converters:DateTimeConverter
                 x:Key="DateTimeConverter" />
         </Grid.Resources>
 
