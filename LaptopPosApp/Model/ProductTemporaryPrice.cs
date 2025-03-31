@@ -11,7 +11,7 @@ namespace LaptopPosApp.Model
         public required string ProductID { get; set; }
         public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public required ulong Price { get; set; }
+        public required long Price { get; set; }
         public Product Product { get; set; } = null!;
     }
 }

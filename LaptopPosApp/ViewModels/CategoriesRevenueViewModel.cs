@@ -20,7 +20,7 @@ namespace LaptopPosApp.ViewModels
         public ObservableCollection<ISeries> GetSeries(DateTime startDate, DateTime endDate)
         {
             // i am stupid
-            Dictionary<Category, ulong> dict = [];
+            Dictionary<Category, long> dict = [];
             _orders
                 .Where(order => order.Timestamp >= startDate && order.Timestamp <= endDate)
                 .ToList()

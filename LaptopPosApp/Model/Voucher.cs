@@ -15,8 +15,8 @@ namespace LaptopPosApp.Model
     {
         public required string Code { get; set; }
         public required VoucherType Type { get; set; }
-        public required ulong Value { get; set; }
-        public required ulong Quantity { get; set; }
+        public required long Value { get; set; }
+        public required long Quantity { get; set; }
         public required DateTime StartDate { get; set; }
         public required DateTime EndDate { get; set; }
         public List<Order> Orders { get; set; } = new();
