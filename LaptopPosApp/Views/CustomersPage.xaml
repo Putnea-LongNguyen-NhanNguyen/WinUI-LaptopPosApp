@@ -49,6 +49,17 @@
                                                Binding="{Binding Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <tableView:TableViewTextColumn Header="Email"
                                                Binding="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <tableView:TableViewTemplateColumn Header=""
+                                                   IsReadOnly="True">
+                    <tableView:TableViewTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Gửi email"
+                                    Tag="{Binding ID, Mode=OneWay}"
+                                    x:Name="SendMailBtn"
+                                    Click="SendMailBtn_Click" />
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.CellTemplate>
+                </tableView:TableViewTemplateColumn>
             </tableView:TableView.Columns>
         </tableView:TableView>
         <custom:PaginationControl Grid.Row="2"

@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -42,6 +43,12 @@ namespace LaptopPosApp.Views
         {
             var selected = MyTable.SelectedItems;
             ViewModel.Remove(selected.Cast<Customer>());
+        }
+
+        private void SendMailBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = (sender as Button)!;
+            Debug.WriteLine(btn.Tag);
         }
     }
 }
