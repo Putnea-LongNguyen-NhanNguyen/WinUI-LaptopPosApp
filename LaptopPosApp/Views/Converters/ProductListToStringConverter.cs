@@ -15,7 +15,9 @@ namespace LaptopPosApp.Views.Converters
             string result = "";
             //TODO: change to temporary price
             products.ForEach(product =>  result += $"{product.Product.Name} - {product.Product.Price:C}\n");
-            return result[..^1];
+            if (result.Length > 0)
+                result = result[..^1];
+            return result;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

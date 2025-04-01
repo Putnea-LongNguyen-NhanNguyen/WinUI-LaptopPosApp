@@ -23,7 +23,7 @@ namespace LaptopPosApp.ViewModels
 
         public async Task StartAddFlow(Page parent)
         {
-            var page = new AddCustomerPage();
+            var page = new AddVouchersPage();
             var contentDialog = new ContentDialog()
             {
                 XamlRoot = parent.XamlRoot,
