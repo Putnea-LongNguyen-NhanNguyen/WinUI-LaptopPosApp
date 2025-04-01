@@ -39,7 +39,7 @@ namespace LaptopPosApp.Components
         public PaginationControl()
         {
             this.InitializeComponent();
-            PerPageOptions = [5, 10, 15, 20, 50];
+            PerPageOptions = [5, 10, 12, 15, 20, 50];
             PerPageComboBox.SelectedIndex = 0;
         }
 

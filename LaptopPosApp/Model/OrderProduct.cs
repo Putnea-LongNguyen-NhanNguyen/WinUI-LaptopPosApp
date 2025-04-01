@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Model
 {
-    public class OrderProduct
+    public partial class OrderProduct: ObservableObject
     {
         public required int OrderID { get; set; }
         public required string ProductID { get; set; }
-        public required int Quantity { get; set; }
+        [ObservableProperty]
+        public partial int Quantity { get; set; } = 1;
         public Order Order { get; set; } = null!;
         public Product Product { get; set; } = null!;
     }

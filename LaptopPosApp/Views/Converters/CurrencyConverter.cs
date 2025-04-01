@@ -6,15 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LaptopPosApp.Views.Converter
+namespace LaptopPosApp.Views.Converters
 {
-    public class QuantityConverter : IValueConverter
+    public class CurrencyConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value == null) return "";
 
-            string formatted = $"{value} cái";
+            long amount = (long)value;
+            CultureInfo culture = CultureInfo.GetCultureInfo("vi-VN");  // en-US /en-UK
+            string formatted = amount.ToString("#,### đ", culture.NumberFormat);
             return formatted;
         }
 

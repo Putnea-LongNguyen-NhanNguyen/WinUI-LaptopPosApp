@@ -106,7 +106,8 @@ namespace LaptopPosApp.ViewModels
             new NavigationItemLeaf()
             {
                 Title = "Tạo đơn hàng",
-                Icon = new SymbolIcon(Symbol.Placeholder)
+                Icon = new SymbolIcon(Symbol.Placeholder),
+                CreatePage = () => new CreateOrderPage(),
             }
         };
         public void NavigateTo(Page? page)

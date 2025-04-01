@@ -13,10 +13,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Views\Converter\QuantityConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Components\PaginationControl.xaml" />
 	<None Remove="Layouts\AddItemLayout.xaml" />
     <None Remove="Views\AddManufacturerPage.xaml" />
-    <None Remove="Views\AddVouchersPage.xaml" />
     <None Remove="Views\DashboardPage.xaml" />
     <None Remove="Views\DashboardWindow.xaml" />
     <None Remove="Views\ManufacturersPage.xaml" />
@@ -64,16 +66,6 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250228001" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.3" />
     <PackageReference Include="WinUI.TableView" Version="1.2.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\AddVouchersPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\VouchersPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\AddProductPage.xaml">

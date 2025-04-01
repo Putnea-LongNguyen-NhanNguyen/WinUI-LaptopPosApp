@@ -103,7 +103,7 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.ID, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                     .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
-                    .RuleFor(o => o.Price, f => f.Finance.Amount(1000000, 20000000, 0))
+                    .RuleFor(o => o.Price, f => (long)f.Finance.Amount(1000000, 20000000, 0))
                     .RuleFor(o => o.Category, f => f.PickRandom(_seedCategories.AsEnumerable()))
                     .RuleFor(o => o.Manufacturer, f => f.PickRandom(_seedManufacturers.AsEnumerable()))
                     .RuleFor(o => o.Quantity, f => f.Random.Long(1, 100))
