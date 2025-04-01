@@ -147,7 +147,7 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.Customer, f => f.PickRandom(Customers.Local.AsEnumerable()))
                     .RuleFor(o => o.Vouchers, f => [f.PickRandom(Vouchers.Local.AsEnumerable())])
                     .RuleFor(o => o.Vouchers, f => new());
-                var orders = orderGen.GenerateBetween(10, 50);
+                var orders = orderGen.GenerateBetween(20, 100);
                 orders.ForEach(o =>
                 {
                     Faker faker = new Faker();
