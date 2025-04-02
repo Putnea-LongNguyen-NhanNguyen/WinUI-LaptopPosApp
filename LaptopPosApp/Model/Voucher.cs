@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,14 +12,19 @@ namespace LaptopPosApp.Model
         Fixed,
         Percentage
     }
-    public class Voucher
+    public partial class Voucher: ObservableObject
     {
         public required string Code { get; set; }
-        public required VoucherType Type { get; set; }
-        public required long Value { get; set; }
-        public required long Quantity { get; set; }
-        public required DateTime StartDate { get; set; }
-        public required DateTime EndDate { get; set; }
+        [ObservableProperty]
+        public required partial VoucherType Type { get; set; }
+        [ObservableProperty]
+        public required partial long Value { get; set; }
+        [ObservableProperty]
+        public required partial long Quantity { get; set; }
+        [ObservableProperty]
+        public required partial DateTime StartDate { get; set; }
+        [ObservableProperty]
+        public required partial DateTime EndDate { get; set; }
         public List<Order> Orders { get; set; } = new();
     }
 }
