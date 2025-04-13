@@ -58,5 +58,11 @@ namespace LaptopPosApp.Views
             var product = button.DataContext as OrderProduct;
             ViewModel.Remove1FromOrder(product);
         }
+
+        public void CreateOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var orderDetailWindow = OrderDetailWindow.CreateInstance(ViewModel.CurrentOrder);
+            orderDetailWindow.Activate();
+        }
     }
 }
