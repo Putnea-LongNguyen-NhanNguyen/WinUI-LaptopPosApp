@@ -36,6 +36,11 @@
                     Click="DeleteItemBtn_Click"
                     Background="Red"
                     Margin="10, 0, 0, 0" />
+            <Button Content="Gửi mã qua Email"
+                    x:Name="SendEmailBtn"
+                    Click="SendEmailBtn_Click"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Margin="10, 0, 0, 0" />
         </StackPanel>
 
         <tableView:TableView x:Name="MyTable"

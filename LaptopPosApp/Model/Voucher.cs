@@ -25,6 +25,26 @@ namespace LaptopPosApp.Model
         public required partial DateTime StartDate { get; set; }
         [ObservableProperty]
         public required partial DateTime EndDate { get; set; }
-        public List<Order> Orders { get; set; } = new();
+        public List<Order> Orders { get; set; } = [];
+
+        partial void OnTypeChanged(VoucherType value)
+        {
+            if (value == VoucherType.Percentage && Value > 90)
+            {
+                Value = 90;
+            }
+            else if (value == VoucherType.Fixed && Value < 100000)
+            {
+                Value = 100000;
+            }
+                OnPropertyChanged(nameof(ValueString));
+        }
+
+        partial void OnValueChanged(long value)
+        {
+            OnPropertyChanged(nameof(ValueString));
+        }
+
+        public string ValueString => Type == VoucherType.Fixed ? Value.ToString("#,### đ") : $"{Value}%";
     }
 }

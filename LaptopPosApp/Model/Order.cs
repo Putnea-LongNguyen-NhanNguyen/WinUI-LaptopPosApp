@@ -12,8 +12,8 @@ namespace LaptopPosApp.Model
         IComparable IHasId.ID => ID;
         public required DateTime Timestamp { get; set; }
         public required Customer Customer { get; set; }
-        public List<OrderProduct> Products { get; set; } = new();
-        public List<Voucher> Vouchers { get; set; } = new();
+        public List<OrderProduct> Products { get; set; } = [];
+        public List<Voucher> Vouchers { get; set; } = [];
         public required long TotalPrice { get; set; }
     }
 }
