@@ -66,7 +66,10 @@ namespace LaptopPosApp.Views
                 Title = "Thay đổi giá tạm thời",
             };
             window.Activate();
-
+            window.Closed += (_, args) =>
+            {
+                ViewModel.Refresh();
+            };
         }
     }
 }
