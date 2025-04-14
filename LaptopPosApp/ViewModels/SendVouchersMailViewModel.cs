@@ -108,7 +108,6 @@ namespace LaptopPosApp.ViewModels
                     dict[item.Customer].Add(item.Voucher);
                 }
 
-                SendMailService.SendOrderEmail(_context.Customers.First(), _context.Orders.Where(o => o.Vouchers.Count > 0).First());
                 SendMailService.SendVoucherEmail(dict);
             });
         }

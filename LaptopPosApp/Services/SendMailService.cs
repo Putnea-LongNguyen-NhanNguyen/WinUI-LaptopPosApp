@@ -125,9 +125,12 @@ namespace LaptopPosApp.Services
             }
         }
 
-        public static void SendOrderEmail(Customer customer, Order order)
+        public static void SendOrderEmail(Order order)
         {
-            string customerEmail = "tinnhan1806@gmail.com";
+            // get customer mail here
+            string customerEmail = order.Customer.Email;
+            // change to this to demonstrate
+            customerEmail = "tinnhan1806@gmail.com";
             string orderProductTableRows = "";
 
             int i = 1;
@@ -203,7 +206,7 @@ namespace LaptopPosApp.Services
                 </table>
             ";
 
-            string emailBody = emailBodyTemplate(customer.Name, orderEmailDescription, orderTableString);
+            string emailBody = emailBodyTemplate(order.Customer.Name, orderEmailDescription, orderTableString);
             SendEmail(customerEmail, orderEmailSubject, emailBody);
         }
 
