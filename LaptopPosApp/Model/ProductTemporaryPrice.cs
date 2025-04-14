@@ -11,9 +11,9 @@ namespace LaptopPosApp.Model
     {
         public required string ProductID { get; set; }
         [ObservableProperty]
-        public partial DateTime StartDate { get; set; }
+        public partial DateTimeOffset StartDate { get; set; }
         [ObservableProperty]
-        public partial DateTime EndDate { get; set; }
+        public partial DateTimeOffset EndDate { get; set; }
         [ObservableProperty]
         public required partial long Price { get; set; }
         public Product Product { get; set; } = null!;

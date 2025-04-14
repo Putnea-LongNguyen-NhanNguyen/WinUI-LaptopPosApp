@@ -49,8 +49,12 @@ namespace LaptopPosApp.ViewModels
 
         [ObservableProperty]
         public partial ProductTemporaryPrice? SelectedTemporaryPrice { get; set; }
-        partial void OnSelectedTemporaryPriceChanged(ProductTemporaryPrice value)
+        partial void OnSelectedTemporaryPriceChanged(ProductTemporaryPrice? value)
         {
+            if (value is null)
+            {
+                return;
+            }
             NewTemporaryPrice = new()
             {
                 ProductID = Product.ID,

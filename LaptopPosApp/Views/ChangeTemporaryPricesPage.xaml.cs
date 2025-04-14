@@ -38,7 +38,8 @@ namespace LaptopPosApp.Views
                 return;
             ViewModel.NewTemporaryPrice.StartDate = new(
                 newDate.Value.Year, newDate.Value.Month, newDate.Value.Day,
-                currentTime.Hour, currentTime.Minute, currentTime.Second
+                currentTime.Hour, currentTime.Minute, currentTime.Second,
+                currentTime.Offset
             );
         }
         private void StartDate_TimeChanged(object sender, TimePickerValueChangedEventArgs args)
@@ -46,7 +47,8 @@ namespace LaptopPosApp.Views
             var currentTime = ViewModel.NewTemporaryPrice.StartDate;
             ViewModel.NewTemporaryPrice.StartDate = new(
                 currentTime.Year, currentTime.Month, currentTime.Day,
-                args.NewTime.Hours, args.NewTime.Minutes, args.NewTime.Seconds
+                args.NewTime.Hours, args.NewTime.Minutes, args.NewTime.Seconds,
+                currentTime.Offset
             );
         }
         private void EndDate_DateChanged(object sender, CalendarDatePickerDateChangedEventArgs args)
@@ -57,7 +59,8 @@ namespace LaptopPosApp.Views
                 return;
             ViewModel.NewTemporaryPrice.EndDate = new(
                 newDate.Value.Year, newDate.Value.Month, newDate.Value.Day,
-                currentTime.Hour, currentTime.Minute, currentTime.Second
+                currentTime.Hour, currentTime.Minute, currentTime.Second,
+                currentTime.Offset
             );
         }
         private void EndDate_TimeChanged(object sender, TimePickerValueChangedEventArgs args)
@@ -65,7 +68,8 @@ namespace LaptopPosApp.Views
             var currentTime = ViewModel.NewTemporaryPrice.EndDate;
             ViewModel.NewTemporaryPrice.EndDate = new(
                 currentTime.Year, currentTime.Month, currentTime.Day,
-                args.NewTime.Hours, args.NewTime.Minutes, args.NewTime.Seconds
+                args.NewTime.Hours, args.NewTime.Minutes, args.NewTime.Seconds,
+                currentTime.Offset
             );
         }
     }
