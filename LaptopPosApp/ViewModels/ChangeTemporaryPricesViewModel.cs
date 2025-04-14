@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +20,9 @@ namespace LaptopPosApp.ViewModels
     {
         readonly Product Product;
 
+        [ObservableProperty]
+        public partial IList TemporaryPrices { get; private set; } = null!;
+
         public ChangeTemporaryPricesViewModel(Product product)
         {
             this.Product = product;
@@ -28,8 +31,17 @@ namespace LaptopPosApp.ViewModels
                 ProductID = product.ID,
                 Price = product.Price,
                 StartDate = DateTime.Now,
-                EndDate = null
+                EndDate = DateTime.Now
             };
+            Refresh();
+        }
+
+        private void Refresh()
+        {
+            TemporaryPrices = Product.TemporaryPrices
+                .OrderBy(p => p.StartDate)
+                .ThenBy(p => p.EndDate)
+                .ToList();
         }
 
         [ObservableProperty]

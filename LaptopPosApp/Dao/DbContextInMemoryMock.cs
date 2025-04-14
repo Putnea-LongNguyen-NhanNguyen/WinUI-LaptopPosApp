@@ -99,15 +99,21 @@ namespace LaptopPosApp.Dao
                 Categories.AddRange(_seedCategories);
                 Manufacturers.AddRange(_seedManufacturers);
                 var productGen = new Faker<Product>()
-                    .StrictMode(true)
                     .RuleFor(o => o.ID, f => f.Random.String(15, 'A', 'Z'))
                     .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                     .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
-                    .RuleFor(o => o.Price, f => f.Finance.Amount(1000000, 20000000, 0))
+                    .RuleFor(o => o.Price, f => (long)f.Finance.Amount(1000000, 20000000, 0))
                     .RuleFor(o => o.Category, f => f.PickRandom(_seedCategories))
                     .RuleFor(o => o.Manufacturer, f => f.PickRandom(_seedManufacturers))
                     .RuleFor(o => o.Quantity, f => f.Random.Long(1, 100));
                 var products = productGen.GenerateBetween(10, 50);
+                products[0].TemporaryPrices.Add(new ProductTemporaryPrice()
+                {
+                    ProductID = products[0].ID,
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today.AddDays(10),
+                    Price = 1
+                });
                 Products.AddRange(products);
 
                 var voucherFixedGen = new Faker<Voucher>()
