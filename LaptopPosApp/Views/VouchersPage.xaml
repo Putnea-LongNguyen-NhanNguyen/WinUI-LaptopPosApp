@@ -59,7 +59,7 @@
                 <tableView:TableViewTemplateColumn Header="Giá trị giảm">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Value, Mode=OneWay}" />
+                            <TextBlock Text="{Binding ValueString, Mode=OneWay}" />
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                     <tableView:TableViewTemplateColumn.EditingTemplate>
