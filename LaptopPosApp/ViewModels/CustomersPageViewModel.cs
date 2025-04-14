@@ -1,46 +1,41 @@
 ﻿using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
 using LaptopPosApp.Views;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    class VouchersPageViewModel(DbContextBase context) : PaginatableViewModel<Voucher>(context.Vouchers)
+    class CustomersPageViewModel(DbContextBase context) : PaginatableViewModel<Customer>(context.Customers)
     {
-        private readonly DbContextBase _context = context;
-        public List<VoucherType> VoucherTypes { get; set; } = new()
-        {
-            VoucherType.Fixed,
-            VoucherType.Percentage,
-        };
+        private DbContextBase _context = context;
 
         public async Task StartAddFlow(Page parent)
         {
-            var page = new AddVouchersPage();
+            var page = new AddCustomerPage();
             var contentDialog = new ContentDialog()
             {
                 XamlRoot = parent.XamlRoot,
                 Content = page,
-                Title = "Thêm khách hàng mới",
+                Title = "Thêm mã giảm mới",
             };
             page.ContentDialog = contentDialog;
             await contentDialog.ShowAsync();
             Refresh();
         }
 
-        public void Remove(IEnumerable<Voucher> items)
+        public void Remove(IEnumerable<Customer> items)
         {
             var deleted = false;
             foreach (var item in items)
             {
-                _context.Vouchers.Remove(item);
+                _context.Customers.Remove(item);
                 deleted = true;
             }
             if (deleted)
@@ -53,6 +48,20 @@ namespace LaptopPosApp.ViewModels
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public void OpenHistoryWindow(int customerId)
+        {
+            var customer = _context.Customers.AsEnumerable().FirstOrDefault(c => c.ID == customerId);
+            if (customer == null)
+            {
+                Debug.WriteLine("CustomersPage, how is customer null here");
+                return;
+            }
+
+            // i like prop drilling
+            var window = new CustomerOrderHistoryWindow(new CustomerOrderHistoryViewModel(customer, _context));
+            window.Activate();
         }
     }
 }

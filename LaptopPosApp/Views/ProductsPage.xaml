@@ -7,7 +7,7 @@
     xmlns:custom="using:LaptopPosApp.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converter="using:LaptopPosApp.Views.Converter"
+    xmlns:converters="using:LaptopPosApp.Views.Converters"
     mc:Ignorable="d"
     xmlns:tableView="using:WinUI.TableView"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -45,12 +45,12 @@
             Grid.Row="1"
             ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
             SelectionUnit="CellOrRow"
-            SelectionMode="Extended"
+            SelectionMode="Multiple"
             AutoGenerateColumns="False">
             <tableView:TableView.Resources>
-                <converter:CurrencyConverter
+                <converters:CurrencyConverter
                     x:Key="currency" />
-                <converter:QuantityConverter
+                <converters:QuantityConverter
                     x:Key="quantity" />
             </tableView:TableView.Resources>
             <tableView:TableView.Columns>
