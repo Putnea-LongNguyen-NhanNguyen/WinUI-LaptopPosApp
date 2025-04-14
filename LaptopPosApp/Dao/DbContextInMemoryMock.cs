@@ -145,8 +145,7 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.ID, f => 0)
                     .RuleFor(o => o.Timestamp, f => f.Date.Between(DateTime.Today.AddDays(-700), DateTime.Today))
                     .RuleFor(o => o.Customer, f => f.PickRandom(Customers.Local.AsEnumerable()))
-                    .RuleFor(o => o.Vouchers, f => [f.PickRandom(Vouchers.Local.AsEnumerable())])
-                    .RuleFor(o => o.Vouchers, f => new());
+                    .RuleFor(o => o.Vouchers, f => [f.PickRandom(Vouchers.Local.AsEnumerable())]);
                 var orders = orderGen.GenerateBetween(20, 100);
                 orders.ForEach(o =>
                 {

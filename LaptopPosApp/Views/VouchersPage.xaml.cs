@@ -1,5 +1,6 @@
 using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
+using LaptopPosApp.Services;
 using LaptopPosApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -43,6 +45,11 @@ namespace LaptopPosApp.Views
         private async void NewItemBtn_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.StartAddFlow(this);
+        }
+
+        private void SendEmailBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OpenVouchersMailWindow(this);
         }
     }
 }
