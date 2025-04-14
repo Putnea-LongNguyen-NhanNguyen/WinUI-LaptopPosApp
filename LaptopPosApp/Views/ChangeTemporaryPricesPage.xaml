@@ -4,11 +4,15 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:LaptopPosApp.Views"
+    xmlns:converters="using:LaptopPosApp.Views.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tableView="using:WinUI.TableView"
     mc:Ignorable="d"
 >
+    <Page.Resources>
+        <converters:LongToDoubleConverter x:Key="LongToDoubleConverter" />
+    </Page.Resources>
     <Grid RowSpacing="10" Padding="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -19,7 +23,7 @@
         <tableView:TableView
             ItemsSource="{x:Bind ViewModel.TemporaryPrices}"
             SelectionUnit="Row"
-            SelectionMode="Extended"
+            SelectionMode="Single"
             AutoGenerateColumns="False"
             Grid.Row="0"
         >
@@ -36,11 +40,14 @@
             </tableView:TableView.Columns>
         </tableView:TableView>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Spacing="5">
-            <Button>
-                <SymbolIcon Symbol="Add" />
+            <Button Click="Add_Click">
+                Thêm
             </Button>
-            <Button>
-                <SymbolIcon Symbol="Remove" />
+            <Button Click="Change_Click">
+                Chỉnh sửa
+            </Button>
+            <Button Click="Remove_Click">
+                Xoá
             </Button>
         </StackPanel>
         <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="2">
@@ -49,16 +56,16 @@
         <StackPanel Orientation="Vertical" Spacing="10" Grid.Row="3">
             <TextBlock>Thời gian bắt đầu</TextBlock>
             <StackPanel Orientation="Horizontal" Spacing="5">
-                <CalendarDatePicker DateChanged="StartDate_DateChanged" Date="{Binding ViewModel.NewTemporaryPrice.StartDate, Mode=OneWay}" />
-                <TimePicker TimeChanged="StartDate_TimeChanged" Time="{Binding ViewModel.NewTemporaryPrice.StartDate.TimeOfDay, Mode=OneWay}" />
+                <CalendarDatePicker DateChanged="StartDate_DateChanged" Date="{x:Bind ViewModel.NewTemporaryPrice.StartDate, Mode=OneWay}" />
+                <TimePicker ClockIdentifier="24HourClock" TimeChanged="StartDate_TimeChanged" Time="{x:Bind ViewModel.NewTemporaryPrice.StartDate.TimeOfDay, Mode=OneWay}" />
             </StackPanel>
             <TextBlock>Thời gian kết thúc</TextBlock>
             <StackPanel Orientation="Horizontal" Spacing="5">
-                <CalendarDatePicker DateChanged="EndDate_DateChanged" Date="{Binding ViewModel.NewTemporaryPrice.EndDate, Mode=OneWay}" />
-                <TimePicker TimeChanged="EndDate_TimeChanged" Time="{Binding ViewModel.NewTemporaryPrice.EndDate.TimeOfDay, Mode=OneWay}" />
+                <CalendarDatePicker DateChanged="EndDate_DateChanged" Date="{x:Bind ViewModel.NewTemporaryPrice.EndDate, Mode=OneWay}" />
+                <TimePicker ClockIdentifier="24HourClock" TimeChanged="EndDate_TimeChanged" Time="{x:Bind ViewModel.NewTemporaryPrice.EndDate.TimeOfDay, Mode=OneWay}" />
             </StackPanel>
             <TextBlock>Giá</TextBlock>
-            <NumberBox Value="{Binding ViewModel.NewTemporaryPrice.Price, Mode=TwoWay}" Minimum="0" />
+            <NumberBox Value="{x:Bind ViewModel.NewTemporaryPrice.Price, Mode=TwoWay, Converter={StaticResource LongToDoubleConverter}}" Minimum="0" />
         </StackPanel>
     </Grid>
 </Page>

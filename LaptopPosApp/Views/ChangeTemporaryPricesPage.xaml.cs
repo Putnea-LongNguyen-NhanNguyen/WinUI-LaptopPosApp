@@ -72,5 +72,20 @@ namespace LaptopPosApp.Views
                 currentTime.Offset
             );
         }
+
+        private void Add_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddOrChange(false);
+        }
+
+        private void Change_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddOrChange(true);
+        }
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Remove();
+        }
     }
 }

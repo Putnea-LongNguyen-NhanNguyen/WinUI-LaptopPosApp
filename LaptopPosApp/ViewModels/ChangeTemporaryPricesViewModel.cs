@@ -81,7 +81,7 @@ namespace LaptopPosApp.ViewModels
             {
                 return (AddTemporaryPriceResult.EndTimeBeforeStartTime, null);
             }
-            var overlapping = Product.TemporaryPrices.First(p =>
+            var overlapping = Product.TemporaryPrices.FirstOrDefault(p =>
                 (p.StartDate <= StartTime && StartTime <= p.EndDate) ||
                 (p.StartDate <= EndTime && EndTime <= p.EndDate)
             );
@@ -97,6 +97,7 @@ namespace LaptopPosApp.ViewModels
                 EndDate = EndTime
             };
             Product.TemporaryPrices.Add(temporaryPrice);
+            Refresh();
             return (AddTemporaryPriceResult.Success, temporaryPrice);
         }
         public (AddTemporaryPriceResult, ProductTemporaryPrice?) AddOrChange(bool change)
