@@ -69,7 +69,8 @@
             </Grid.RowDefinitions>
 
             <!--Header-->
-            <Grid Row="0" Background="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}">
+            <Grid Row="0"
+                  Background="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -100,6 +101,7 @@
                       Grid.Row="1"
                       ShowsScrollingPlaceholders="True"
                       BorderThickness="1"
+                      SelectionMode="Multiple"
                       ItemsSource="{x:Bind ViewModel.MailList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

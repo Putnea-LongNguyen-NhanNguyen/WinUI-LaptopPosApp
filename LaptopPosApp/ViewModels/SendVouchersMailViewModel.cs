@@ -2,6 +2,8 @@
 using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
 using LaptopPosApp.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -105,6 +107,8 @@ namespace LaptopPosApp.ViewModels
                         dict.Add(item.Customer, []);
                     dict[item.Customer].Add(item.Voucher);
                 }
+
+                SendMailService.SendOrderEmail(_context.Customers.First(), _context.Orders.Where(o => o.Vouchers.Count > 0).First());
                 SendMailService.SendVoucherEmail(dict);
             });
         }

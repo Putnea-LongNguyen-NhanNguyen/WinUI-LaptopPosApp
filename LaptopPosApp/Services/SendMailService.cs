@@ -1,4 +1,5 @@
-﻿using LaptopPosApp.Model;
+﻿using LaptopPosApp.Dao;
+using LaptopPosApp.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,7 @@ namespace LaptopPosApp.Services
 {
     public sealed class SendMailService
     {
+
         private static void SendEmail(string to, string subject, string body, bool isBodyHtml = true)
         {
             if (!Regex.IsMatch(to, @"^\w+([-+.']\w+)*@(\[*\w+)([-.]\w+)*\.\w+([-.]\w+\])*$"))
@@ -70,7 +72,39 @@ namespace LaptopPosApp.Services
                     continue;
                 }
 
-                string voucherTableString = @"
+                string voucherTableRows = "";
+
+                var i = 1;
+                foreach (var voucher in vouchers)
+                {
+                    if (voucher.Type == VoucherType.Percentage)
+                    {
+                        voucherTableRows += $@"
+                            <tr>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{i}</td>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Code}</td>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Value}%</td>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.StartDate}</td>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.EndDate}</td>
+                            </tr>
+                        ";
+                    }
+                    else
+                    {
+                        voucherTableRows += $@"
+                            <tr>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{i}</td>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Code}</td>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Value:#,### đ}</td>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.StartDate}</td>
+                                <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.EndDate}</td>
+                            </tr>
+                        ";
+                    }
+                    i++;
+                }
+
+                string voucherTableString = @$"
                     <table class=""voucher-table"" style=""width: 100%; border-collapse: collapse;"">
                         <thead>
                             <tr style=""background-color: #f2f2f2;"">
@@ -82,82 +116,131 @@ namespace LaptopPosApp.Services
                             </tr>
                         </thead>
                         <tbody>
-                            <Replace-Table-Rows-Here>
+                            {voucherTableRows}
                         </tbody>
                     </table>
                 ";
-                string voucherTableRows = "";
-
-                var i = 1;
-                foreach (var voucher in vouchers)
-                {
-                    voucherTableRows += $@"
-                        <tr>
-                            <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{i}</td>
-                            <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Code}</td>
-                    ";
-                    if (voucher.Type == VoucherType.Percentage)
-                    {
-                        voucherTableRows += $@"
-                            <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Value}%</td>
-                    ";
-                    }
-                    else
-                    {
-                        voucherTableRows += $@"
-                            <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Value:#,### đ}</td>
-                    ";
-                    }
-                    voucherTableRows += $@"
-                            <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.StartDate}</td>
-                            <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.EndDate}</td>
-                        </tr>
-                    ";
-                    i++;
-                }
-
-                voucherTableString = voucherTableString.Replace("<Replace-Table-Rows-Here>", voucherTableRows);
-                string emailBody = emailBodyTemplate.Replace("<Replace-Customer-Name-Here>", customer.Name)
-                    .Replace("<Replace-Description-Here>", voucherEmailDescription)
-                    .Replace("<Replace-Content-Here>", voucherTableString);
-                SendEmail(customerEmail, "LmaoPosApp", emailBody);
+                string emailBody = emailBodyTemplate(customer.Name, voucherEmailDescription, voucherTableString);
+                SendEmail(customerEmail, voucherEmailSubject, emailBody);
             }
         }
 
         public static void SendOrderEmail(Customer customer, Order order)
         {
-            string emailBody = emailBodyTemplate.Replace("<Replace-Customer-Name-Here>", customer.Name)
-                .Replace("<Replace-Description-Here", orderEmailDescription);
+            string customerEmail = "tinnhan1806@gmail.com";
+            string orderProductTableRows = "";
+
+            int i = 1;
+            order.Products.ForEach(op =>
+            {
+                var tempPrice = op.Product.TemporaryPrices
+                    .Where(p => op.Order.Timestamp >= p.StartDate && op.Order.Timestamp <= p.EndDate)
+                    .FirstOrDefault();
+                orderProductTableRows += $@"
+                    <tr style=""background-color: #f2f2f2;"">
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{i}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{op.Product.Name}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{op.Quantity}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{tempPrice?.Price ?? op.Product.Price}</td>
+                    </tr>
+                ";
+                i++;
+            });
+
+            i = 1;
+            string? voucherTableRows = null;
+            string? voucherRows = null;
+            order.Vouchers.ForEach(v =>
+            {
+                voucherRows += $@"
+                    <tr style=""background-color: #f2f2f2;"">
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{i}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"" colspan=""2"">{v.Code}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{v.ValueString}</td>
+                    </tr>
+                ";
+                i++;
+            });
+
+            if (voucherRows != null)
+            {
+                voucherTableRows = $@"
+                    <thead>
+                        <tr style=""background-color: #f2f2f2;"">
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">STT mã giảm</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"" colspan=""2"">Mã giảm</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Giá trị giảm</th>
+                        </tr>
+                    </thead>
+                    <tbody style=""border-bottom: 1rem; border-top: 0.5rem;"">
+                        {voucherRows}
+                    </tbody>
+                ";
+            }
+
+            string orderTableString = $@"
+                <table class=""voucher-table"" style=""width: 100%; border-collapse: collapse;"">
+                    <thead>
+                        <tr style=""background-color: #f2f2f2;"">
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">STT hàng</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Tên hàng</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Số lượng</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Giá</th>
+                        </tr>
+                    </thead>
+                    <tbody style=""border-bottom: 1rem; border-top: 0.5rem;"">
+                        {orderProductTableRows}
+                    </tbody>
+                    
+                    {voucherTableRows ?? ""}
+
+                    <tbody style=""border-bottom: 1rem; border-top: 0.5rem;"">
+                        <tr style=""background-color: #f2f2f2;"">
+                            <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Tổng giá trị hóa đơn</td>
+                            <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"" colspan=""3"">{order.TotalPrice:###,# đồng}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            ";
+
+            string emailBody = emailBodyTemplate(customer.Name, orderEmailDescription, orderTableString);
+            SendEmail(customerEmail, orderEmailSubject, emailBody);
         }
 
-        private static readonly string emailBodyTemplate = @"
-            <!DOCTYPE html>
-            <html lang=""en"">
+        private static string emailBodyTemplate(string customerName, string description, string content)
+        {
+            return @$"
+                <!DOCTYPE html>
+                <html lang=""en"">
 
-            <head>
-                <meta charset=""UTF-8"">
-                <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-                <title>Voucher Email</title>
-            </head>
+                <head>
+                    <meta charset=""UTF-8"">
+                    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+                    <title>Voucher Email</title>
+                </head>
 
-            <body>
-                <div style=""font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0;"">
-                    <div style=""border-radius: 1rem; padding: 1rem;"">
-                        <div style=""background-color: red; padding: 1rem; text-align: center;"">
-                            <h1 style=""margin: 0; color: white;"">Lmao Pos App</h1>
-                        </div>
-                        <h4 style=""margin-bottom: 0.5rem;"">Thân gửi <Replace-Customer-Name-Here></h4>
+                <body>
+                    <div style=""font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0;"">
+                        <div style=""border-radius: 1rem; padding: 1rem;"">
+                            <div style=""background-color: red; padding: 1rem; text-align: center;"">
+                                <h1 style=""margin: 0; color: white;"">Lmao Pos App</h1>
+                            </div>
+                            <h4 style=""margin-bottom: 0.5rem;"">Thân gửi {customerName}</h4>
 
-                        <Replace-Description-Here>
+                            {description}
 
-                        <Replace-Content-Here>
-                    </div>          
-                </div>
-            </body>
-            </html>
-        ";
+                            {content}
+                        </div>          
+                    </div>
+                </body>
+                </html>
+            ";
+        }
+
+        private static readonly string voucherEmailSubject = "Kính gửi voucher";
+        private static readonly string orderEmailSubject = "Kính gửi order";
 
         private static readonly string voucherEmailDescription = "<p>Làm miếng voucher?</p>";
-        private static readonly string orderEmailDescription = "<p>Cảm ơn bạn đã mua sắm tạo LmaoPos, đây là hóa đơn của bạn</p>";
+        private static readonly string orderEmailDescription = "<p>Làm miếng hóa đơn?</p>";
     }
 }
