@@ -28,13 +28,16 @@ namespace LaptopPosApp.ViewModels
                 {
                     order.Products.ForEach(orderProduct =>
                     {
-                        if (!dict.ContainsKey(orderProduct.Product.Manufacturer!))
+                        if (orderProduct.Product.Manufacturer != null)
                         {
-                            dict[orderProduct.Product.Manufacturer!] = 0;
+                            if (!dict.ContainsKey(orderProduct.Product.Manufacturer))
+                            {
+                                dict[orderProduct.Product.Manufacturer] = 0;
+                            }
+                            // get price in price history here
+                            // temporary price
+                            dict[orderProduct.Product.Manufacturer!] += orderProduct.Product.Price;
                         }
-                        // get price in price history here
-                        // temporary price
-                        dict[orderProduct.Product.Manufacturer!] += orderProduct.Product.Price;
                     });
                 });
 

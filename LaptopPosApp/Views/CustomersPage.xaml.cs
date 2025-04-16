@@ -1,6 +1,4 @@
-using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
-using LaptopPosApp.Services;
 using LaptopPosApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -12,10 +10,10 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -27,19 +25,13 @@ namespace LaptopPosApp.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class VouchersPage : Page
+    public sealed partial class CustomersPage : Page
     {
-        private VouchersPageViewModel ViewModel { get; set; }
-        public VouchersPage()
+        private CustomersPageViewModel ViewModel { get; set; }
+        public CustomersPage()
         {
             this.InitializeComponent();
-            ViewModel = (Application.Current as App)!.Services.GetRequiredService<VouchersPageViewModel>();
-        }
-
-        private void DeleteItemBtn_Click(object sender, RoutedEventArgs e)
-        {
-            var selected = MyTable.SelectedItems;
-            ViewModel.Remove(selected.Cast<Voucher>());
+            ViewModel = (Application.Current as App)!.Services.GetRequiredService<CustomersPageViewModel>();
         }
 
         private async void NewItemBtn_Click(object sender, RoutedEventArgs e)
@@ -47,9 +39,16 @@ namespace LaptopPosApp.Views
             await ViewModel.StartAddFlow(this);
         }
 
-        private void SendEmailBtn_Click(object sender, RoutedEventArgs e)
+        private void DeleteItemBtn_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.OpenVouchersMailWindow(this);
+            var selected = MyTable.SelectedItems;
+            ViewModel.Remove(selected.Cast<Customer>());
+        }
+
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = ((Button)sender)!;
+            ViewModel.OpenHistoryWindow((int)btn.Tag);
         }
     }
 }

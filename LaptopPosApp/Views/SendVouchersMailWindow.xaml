@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="LaptopPosApp.Views.SendVouchersMailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:LaptopPosApp.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Gửi voucher qua email">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    Padding="20, 0, 20, 0"
+                    HorizontalAlignment="Stretch">
+
+            <AutoSuggestBox PlaceholderText="Tìm tên khách hàng"
+                            Width="300"
+                            Name="CustomerAutoSuggestBox"
+                            TextChanged="CustomerAutoSuggestBox_TextChanged"
+                            SuggestionChosen="CustomerAutoSuggestBox_SuggestionChosen"
+                            QuerySubmitted="CustomerAutoSuggestBox_QuerySubmitted"
+                            ItemsSource="{x:Bind ViewModel.FilteredCustomers, Mode=OneWay}"
+                            DisplayMemberPath="Name"
+                            TextMemberPath="Name"
+                            QueryIcon="Find">
+            </AutoSuggestBox>
+
+            <TextBlock Text="Chọn mã giảm"
+                       Margin="30, 0, 10, 0"
+                       VerticalAlignment="Center" />
+            <ComboBox MinWidth="320"
+                      ItemsSource="{x:Bind ViewModel.Vouchers, Mode=OneWay}"
+                      SelectedItem="{x:Bind ViewModel.SelectedVoucher, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Run Text="{Binding Code, Mode=OneWay}" /> - Giảm <Run Text="{Binding Value, Mode=OneWay}" /> - Còn <Run Text="{Binding Quantity, Mode=OneWay}" /> mã
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Button Content="Thêm vào danh sách gửi mail"
+                    Margin="30, 0, 0, 0"
+                    IsEnabled="{x:Bind ViewModel.CanAddToMailList, Mode=OneWay}"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Name="AddToMailListBtn"
+                    Click="AddToMailListBtn_Click" />
+
+            <Button Content="Gửi"
+                    Margin="30, 0, 0, 0"
+                    IsEnabled="{x:Bind ViewModel.CanSend, Mode=OneWay}"
+                    Background="{StaticResource AccentAAFillColorTertiaryBrush}"
+                    Name="SendBtn"
+                    Click="SendBtn_Click" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--Header-->
+            <Grid Row="0"
+                  Background="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="Tên khách hàng"
+                           VerticalAlignment="Center"
+                           Margin="15, 0, 0, 0" />
+                <TextBlock Grid.Column="1"
+                           Text="Địa chỉ mail"
+                           VerticalAlignment="Center"
+                           Margin="15, 0, 0, 0" />
+                <TextBlock Grid.Column="2"
+                           Text="Mã giảm giá"
+                           VerticalAlignment="Center"
+                           Margin="15, 0, 0, 0" />
+                <TextBlock Grid.Column="3"
+                           Text="Giá trị giảm"
+                           VerticalAlignment="Center"
+                           Margin="15, 0, 0, 0" />
+            </Grid>
+
+            <!--Body-->
+            <ListView Name="MailListView"
+                      Grid.Row="1"
+                      ShowsScrollingPlaceholders="True"
+                      BorderThickness="1"
+                      SelectionMode="Multiple"
+                      ItemsSource="{x:Bind ViewModel.MailList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Xóa"
+                                                    Name="DeleteFromMailListBtn"
+                                                    Click="DeleteFromMailListBtn_Click" />
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0"
+                                       Text="{Binding Customer.Name, Mode=OneWay}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Customer.Email, Mode=OneWay}" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding Voucher.Code, Mode=OneWay}" />
+                            <TextBlock Grid.Column="3"
+                                       Text="{Binding Voucher.ValueString, Mode=OneWay}" />
+
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Window>

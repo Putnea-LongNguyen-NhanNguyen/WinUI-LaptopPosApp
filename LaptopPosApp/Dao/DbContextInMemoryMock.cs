@@ -99,7 +99,7 @@ namespace LaptopPosApp.Dao
                 Categories.AddRange(_seedCategories);
                 Manufacturers.AddRange(_seedManufacturers);
                 var productGen = new Faker<Product>()
-                    .StrictMode(true)
+                    .StrictMode(false)
                     .RuleFor(o => o.ID, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Name, f => f.Commerce.ProductName())
                     .RuleFor(o => o.Description, f => f.Lorem.Sentences(2))
@@ -145,9 +145,8 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.ID, f => 0)
                     .RuleFor(o => o.Timestamp, f => f.Date.Between(DateTime.Today.AddDays(-700), DateTime.Today))
                     .RuleFor(o => o.Customer, f => f.PickRandom(Customers.Local.AsEnumerable()))
-                    .RuleFor(o => o.Vouchers, f => [f.PickRandom(Vouchers.Local.AsEnumerable())])
-                    .RuleFor(o => o.Vouchers, f => new());
-                var orders = orderGen.GenerateBetween(10, 50);
+                    .RuleFor(o => o.Vouchers, f => [f.PickRandom(Vouchers.Local.AsEnumerable())]);
+                var orders = orderGen.GenerateBetween(20, 100);
                 orders.ForEach(o =>
                 {
                     Faker faker = new Faker();

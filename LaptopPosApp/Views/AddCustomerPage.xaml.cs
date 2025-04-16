@@ -1,6 +1,3 @@
-using LaptopPosApp.Dao;
-using LaptopPosApp.Model;
-using LaptopPosApp.Services;
 using LaptopPosApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -15,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -27,29 +23,27 @@ namespace LaptopPosApp.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class VouchersPage : Page
+    public sealed partial class AddCustomerPage : Page
     {
-        private VouchersPageViewModel ViewModel { get; set; }
-        public VouchersPage()
+        public ContentDialog? ContentDialog { get; set; }
+        private AddCustomerPageViewModel ViewModel { get; set; }
+        public AddCustomerPage()
         {
             this.InitializeComponent();
-            ViewModel = (Application.Current as App)!.Services.GetRequiredService<VouchersPageViewModel>();
+            ViewModel = (Application.Current as App)!.Services.GetRequiredService<AddCustomerPageViewModel>();
         }
 
-        private void DeleteItemBtn_Click(object sender, RoutedEventArgs e)
+        private void AddItem(object sender, EventArgs e)
         {
-            var selected = MyTable.SelectedItems;
-            ViewModel.Remove(selected.Cast<Voucher>());
+            if (ViewModel.Submit())
+            {
+                ContentDialog?.Hide();
+            }
         }
 
-        private async void NewItemBtn_Click(object sender, RoutedEventArgs e)
+        private void Cancel(object sender, EventArgs e)
         {
-            await ViewModel.StartAddFlow(this);
-        }
-
-        private void SendEmailBtn_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.OpenVouchersMailWindow(this);
+            ContentDialog?.Hide();
         }
     }
 }

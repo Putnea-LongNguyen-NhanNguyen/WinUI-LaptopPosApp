@@ -90,7 +90,8 @@ namespace LaptopPosApp.ViewModels
                     new NavigationItemLeaf()
                     {
                         Title = "Thông tin khách hàng",
-                        Icon = new SymbolIcon(Symbol.ContactInfo)
+                        Icon = new SymbolIcon(Symbol.ContactInfo),
+                        CreatePage = () => new CustomersPage(),
                     },
                     new NavigationItemLeaf()
                     {

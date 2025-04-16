@@ -22,6 +22,8 @@ using LaptopPosApp.Dao;
 using LaptopPosApp.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using LaptopPosApp.Services;
+using Microsoft.Extensions.Configuration;
+using LaptopPosApp.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -60,9 +62,15 @@ namespace LaptopPosApp
             appBuilder.Services.AddTransient<VouchersPageViewModel>();
             appBuilder.Services.AddTransient<AddVouchersViewModel>();
             appBuilder.Services.AddTransient<OrderDetailWindowViewModel>();
+            appBuilder.Services.AddTransient<CustomersPageViewModel>();
+            appBuilder.Services.AddTransient<AddCustomerPageViewModel>();
+            appBuilder.Services.AddTransient<SendVouchersMailViewModel>();
+            
 
             AppHost = appBuilder.Build();
             Services = AppHost.Services;
+
+            DotNetEnv.Env.Load(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".env"));
 
             var dbContext = Services.GetRequiredService<DbContextBase>();
             dbContext.Database.OpenConnection();
