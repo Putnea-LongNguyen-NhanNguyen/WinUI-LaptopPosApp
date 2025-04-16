@@ -21,6 +21,7 @@ using LaptopPosApp.Views;
 using LaptopPosApp.Dao;
 using LaptopPosApp.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using LaptopPosApp.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -46,6 +47,8 @@ namespace LaptopPosApp
             if (UseMockDatabase)
                 appBuilder.Services.AddDbContext<DbContextBase, DbContextInMemoryMock>();
 
+            appBuilder.Services.AddSingleton<CurrentOrderService>();
+
             appBuilder.Services.AddTransient<AddCategoryViewModel>();
             appBuilder.Services.AddTransient<AddManufacturerViewModel>();
             appBuilder.Services.AddTransient<AddProductViewModel>();
@@ -54,6 +57,9 @@ namespace LaptopPosApp
             appBuilder.Services.AddTransient<ProductPageViewModel>();
             appBuilder.Services.AddTransient<StatisticsPageViewModel>();
             appBuilder.Services.AddTransient<CreateOrderPageViewModel>();
+            appBuilder.Services.AddTransient<VouchersPageViewModel>();
+            appBuilder.Services.AddTransient<AddVouchersViewModel>();
+            appBuilder.Services.AddTransient<OrderDetailWindowViewModel>();
 
             AppHost = appBuilder.Build();
             Services = AppHost.Services;

@@ -14,6 +14,11 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 using LaptopPosApp.Model;
+using LaptopPosApp.ViewModels;
+using CSharpMarkup.WinUI;
+using System.Text.RegularExpressions;
+using TextBox = Microsoft.UI.Xaml.Controls.TextBox;
+using Microsoft.Extensions.DependencyInjection;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,12 +30,12 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class OrderDetailWindow : Window
     {
+        public OrderDetailWindowViewModel ViewModel { get; }
         public static OrderDetailWindow? Instance { get; private set; }
-        public IEnumerable<OrderProduct> CurrentOrder { get; private set; }
-        private OrderDetailWindow(IEnumerable<OrderProduct> CurrentOrder)
+        private OrderDetailWindow()
         {
             this.InitializeComponent();
-            this.CurrentOrder = CurrentOrder;
+            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<OrderDetailWindowViewModel>();
         }
 
         public static OrderDetailWindow CreateInstance(IEnumerable<OrderProduct> currentOrder)
@@ -41,9 +46,62 @@ namespace LaptopPosApp.Views
                 Instance = null;
             }
 
-            Instance = new OrderDetailWindow(currentOrder);
+            Instance = new OrderDetailWindow();
             Instance.Closed += (s, e) => Instance = null;
             return Instance;
         }
+
+        private void AddItem(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.Submit())
+            {
+                Instance?.Close();
+                Instance = null;
+            }               
+        }
+
+        private void PhoneNumber_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            var currentPosition = PhoneNumber.SelectionStart - 1;
+            var text = ((TextBox)sender).Text;
+
+            if (!PhoneNumberRegex().IsMatch(text))
+            {
+                var foundChar = NotNumberRegex().Match(PhoneNumber.Text);
+                if (foundChar.Success)
+                {
+                    PhoneNumber.Text = PhoneNumber.Text.Remove(foundChar.Index, 1);
+                }
+
+                PhoneNumber.Select(currentPosition, 0);
+            }
+        }
+
+        public void AddVoucherButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddVoucher();
+        }
+
+        public void RemoveVoucherButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Microsoft.UI.Xaml.Controls.Button button && button.DataContext is Voucher voucher)
+            {
+                ViewModel.RemoveVoucher(voucher);
+            }
+        }
+
+        public static void closeWindow()
+        {
+            if (Instance != null)
+            {
+                Instance.Close();
+                Instance = null;
+            }
+        }
+
+        [GeneratedRegex("^[0-9]*$")]
+        private static partial Regex PhoneNumberRegex();
+        [GeneratedRegex("[^0-9]")]
+        private static partial Regex NotNumberRegex();
     }
 }

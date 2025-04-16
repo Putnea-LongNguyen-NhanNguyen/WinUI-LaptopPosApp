@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LaptopPosApp.Dao;
 using LaptopPosApp.Model;
+using LaptopPosApp.Services;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace LaptopPosApp.ViewModels
     public partial class CreateOrderPageViewModel : PaginatableViewModel<Product>
     {
         private readonly DbContextBase dbContext;
-        public ObservableCollection<OrderProduct> CurrentOrder {get; private set; } = [];
-        public CreateOrderPageViewModel(DbContextBase dbContext) : base(dbContext.Products)
+        private readonly CurrentOrderService currentOrderService;
+        public ObservableCollection<OrderProduct> CurrentOrder => currentOrderService.CurrentOder;
+        public CreateOrderPageViewModel(DbContextBase dbContext, CurrentOrderService currentOrderService) : base(dbContext.Products)
         {
             this.dbContext = dbContext;
+            this.currentOrderService = currentOrderService;
             PerPage = 12;
         }
 
@@ -127,7 +130,12 @@ namespace LaptopPosApp.ViewModels
                 }
                 else
                 {
-                    CurrentOrder = [.. CurrentOrder.Where(op => op.ProductID != orderProduct.ProductID)];
+                    var updatedOrder = CurrentOrder.Where(op => op.ProductID != orderProduct.ProductID).ToList();
+                    CurrentOrder.Clear();
+                    foreach (var item in updatedOrder)
+                    {
+                        CurrentOrder.Add(item);
+                    }
                 }
                 OnPropertyChanged(nameof(CurrentOrder));
             }
