@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,6 +49,27 @@ namespace LaptopPosApp.Views
         {
             var selected = MyTable.SelectedItems;
             ViewModel.Remove(selected.Cast<Product>());
+        }
+
+        private async void ChangeTemporaryPriceButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selected = MyTable.SelectedItems.Cast<Product>().FirstOrDefault();
+            if (selected == null)
+            {
+                return;
+            }
+            var vm = new ChangeTemporaryPricesViewModel(selected);
+            var page = new ChangeTemporaryPricesPage(vm);
+            var window = new Window()
+            {
+                Content = page,
+                Title = "Thay đổi giá tạm thời",
+            };
+            window.Activate();
+            window.Closed += (_, args) =>
+            {
+                ViewModel.Refresh();
+            };
         }
     }
 }

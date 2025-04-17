@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace LaptopPosApp.Model
 {
-    public class ProductTemporaryPrice
+    public partial class ProductTemporaryPrice: ObservableObject
     {
         public required string ProductID { get; set; }
-        public required DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-        public required long Price { get; set; }
+        [ObservableProperty]
+        public partial DateTimeOffset StartDate { get; set; }
+        [ObservableProperty]
+        public partial DateTimeOffset EndDate { get; set; }
+        [ObservableProperty]
+        public required partial long Price { get; set; }
         public Product Product { get; set; } = null!;
     }
 }
