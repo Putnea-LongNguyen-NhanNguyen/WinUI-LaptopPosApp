@@ -50,6 +50,12 @@ namespace LaptopPosApp.ViewModels
             }
         }
 
+        public void OpenVouchersMailWindow(Page parent)
+        {
+            var window = new SendVouchersMailWindow();
+            window.Activate();
+        }
+
         public void SaveChanges()
         {
             _context.SaveChanges();

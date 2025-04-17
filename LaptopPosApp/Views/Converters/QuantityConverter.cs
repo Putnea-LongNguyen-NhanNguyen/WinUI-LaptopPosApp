@@ -10,12 +10,12 @@ namespace LaptopPosApp.Views.Converters
 {
     public class QuantityConverter : IValueConverter
     {
+        public string Unit { get; set; } = "cái";
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value == null) return "";
-
-            string formatted = $"{value} cái";
-            return formatted;
+            string formatted = $"{value} unit";
+            return formatted.Replace("unit", Unit);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

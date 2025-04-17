@@ -20,6 +20,7 @@
             <converters:DateTimeConverter x:Key="DateTimeConverter" />
             <converters:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
             <converters:ProductListToStringConverter x:Key="ProductListToStringConverter" />
+            <converters:CurrencyConverter x:Key="CurrencyConverter" />
         </Grid.Resources>
 
         <StackPanel Orientation="Vertical"
@@ -52,7 +53,7 @@
                                                Binding="{Binding Products, Mode=OneWay, Converter={StaticResource ProductListToStringConverter}}" />
                 <tableView:TableViewTextColumn Header="Tổng giá trị hóa đơn"
                                                IsReadOnly="True"
-                                               Binding="{Binding TotalPrice, Mode=OneWay}" />
+                                               Binding="{Binding TotalPrice, Mode=OneWay, Converter={StaticResource CurrencyConverter}}" />
             </tableView:TableView.Columns>
         </tableView:TableView>
     </Grid>

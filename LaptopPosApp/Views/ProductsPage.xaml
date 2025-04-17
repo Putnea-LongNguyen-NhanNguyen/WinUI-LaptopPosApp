@@ -51,7 +51,7 @@
                 <converters:CurrencyConverter
                     x:Key="currency" />
                 <converters:QuantityConverter
-                    x:Key="quantity" />
+                    x:Key="quantity" Unit="cái"/>
             </tableView:TableView.Resources>
             <tableView:TableView.Columns>
                 <tableView:TableViewTextColumn
