@@ -17,5 +17,6 @@ namespace LaptopPosApp.Model
         public Manufacturer? Manufacturer { get; set; }
         public Category? Category { get; set; }
         public List<ProductTemporaryPrice> TemporaryPrices { get; set; } = new();
+        public string Image { get; set; } = string.Empty;
     }
 }
