@@ -22,31 +22,41 @@
                 </StackPanel.Resources>
 
                 <ComboBox Name="VoucherTypeComboBox"
-                          Header="Chọn loại giảm giá"
+                          Header="Loại giảm giá"
                           HorizontalAlignment="Stretch"
                           ItemsSource="{x:Bind ViewModel.VoucherTypes, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.Type, Mode=TwoWay}"
                           Margin="0, 5, 0, 10" />
-                <NumberBox Header="Nhập giá trị giảm giá"
+                <NumberBox Header="Giá trị giảm giá"
                            Text="{x:Bind ViewModel.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="{x:Bind ViewModel.ValueValidationMessage, Mode=OneWay}"
                            Foreground="Red"
                            Margin="0, 5, 0, 5" />
-                <TextBox Header="Nhập số lượng mã giảm"
+                <TextBox Header="Số lượng mã giảm tối thiểu sẽ được tạo"
                          Text="{x:Bind ViewModel.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="{x:Bind ViewModel.QuantityValidationMessage, Mode=OneWay}"
                            Foreground="Red"
                            Margin="0, 5, 0, 5" />
-                <CalendarDatePicker Header="Nhập ngày bắt đầu có hiệu lực"
+                <CalendarDatePicker Header="Ngày bắt đầu có hiệu lực"
                                     HorizontalAlignment="Stretch"
-                                    Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                    Margin="0, 5, 0, 5"/>
-                <CalendarDatePicker Header="Nhập ngày hết hạn"
+                                    Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Margin="0, 5, 0, 5" />
+                <CalendarDatePicker Header="Ngày hết hạn"
                                     HorizontalAlignment="Stretch"
                                     Date="{x:Bind ViewModel.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="{x:Bind ViewModel.DateValidationMessage, Mode=OneWay}"
                            Foreground="Red"
                            Margin="0, 5, 0, 5" />
+
+                <CheckBox x:Name="SendMailCheckbox"
+                          Content="Tự động gửi cho khách hàng đủ điều kiện"
+                          IsChecked="{x:Bind ViewModel.SendVouchersThroughMail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Margin="0, 5, 0, 5" />
+                <NumberBox Header="Số tiền tối thiểu để sử dụng voucher"
+                           Text="{x:Bind ViewModel.MinMoney, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="{x:Bind ViewModel.MinMoneyValidationMessage, Mode=OneWay}"
+                           Foreground="Red"
+                           Margin="0, 5, 0, 15" />
             </StackPanel>
         </ScrollViewer>
     </layouts:AddItemLayout>
