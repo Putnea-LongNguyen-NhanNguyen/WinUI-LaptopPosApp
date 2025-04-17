@@ -51,7 +51,6 @@
                              AutoGenerateColumns="False">
             <tableView:TableView.Columns>
                 <tableView:TableViewTextColumn Header="ID"
-                                               IsReadOnly="True"
                                                Binding="{Binding Code, Mode=OneWay}" />
                 <tableView:TableViewComboBoxColumn Header="Loại khuyến mãi"
                                                    ItemsSource="{x:Bind ViewModel.VoucherTypes, Mode=OneWay}"

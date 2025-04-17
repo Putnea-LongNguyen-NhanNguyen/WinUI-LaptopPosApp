@@ -20,7 +20,7 @@ namespace LaptopPosApp.ViewModels
 {
     public partial class OrderDetailWindowViewModel: AddItemViewModel
     {
-        private DbContextBase dbContext;
+        private readonly DbContextBase dbContext;
         public ObservableCollection<OrderProduct> CurrentOrder { get; set; }
         public ObservableCollection<Voucher> VouchersAdded { get; set; } = [];
         public OrderDetailWindowViewModel(DbContextBase dbContext, CurrentOrderService currentOrderService)
@@ -28,76 +28,19 @@ namespace LaptopPosApp.ViewModels
             this.dbContext = dbContext;
             this.CurrentOrder = currentOrderService.CurrentOder;
             CurrentOrder.CollectionChanged += CurrentOrder_CollectionChanged;
+            VouchersAdded.CollectionChanged += VouchersAdded_CollectionChanged;
             foreach (var item in CurrentOrder)
             {
                 SubscribeToItemPropertyChanged(item);
             }
             UpdateTotalPrice();
         }
-        CurrencyConverter currencyConverter = new ();
+
+        private readonly CurrencyConverter currencyConverter = new ();
         [ObservableProperty]
         public partial long TotalPrice { get; set; } = 0;
         [ObservableProperty]
         public partial string TotalPriceString { get; set; } = string.Empty;
-        private void UpdateTotalPrice()
-        {
-            TotalPrice = CurrentOrder.Select(x => x.Product.Price * x.Quantity).Sum();
-            foreach (var voucher in VouchersAdded)
-            {
-                if (voucher.Type == VoucherType.Fixed)
-                {
-                    TotalPrice -= voucher.Value;
-                }
-                else if (voucher.Type == VoucherType.Percentage)
-                {
-                    TotalPrice -= TotalPrice * voucher.Value / 100;
-                }
-                TotalPrice = Math.Max(TotalPrice, 0);
-            }
-            TotalPriceString = "Tổng thành tiền: " + currencyConverter.Convert(TotalPrice, typeof(string), null, null).ToString();
-        }
-        private void CurrentOrder_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            // Handle added items
-            if (e.NewItems != null)
-            {
-                foreach (OrderProduct newItem in e.NewItems)
-                {
-                    SubscribeToItemPropertyChanged(newItem);
-                }
-            }
-
-            // Handle removed items
-            if (e.OldItems != null)
-            {
-                foreach (OrderProduct oldItem in e.OldItems)
-                {
-                    UnsubscribeFromItemPropertyChanged(oldItem);
-                }
-            }
-            UpdateTotalPrice();
-            if(CurrentOrder.Count == 0)
-            {
-                OrderDetailWindow.closeWindow();
-            }
-        }
-        private void SubscribeToItemPropertyChanged(OrderProduct item)
-        {
-            item.PropertyChanged += OrderProduct_PropertyChanged;
-        }
-
-        private void UnsubscribeFromItemPropertyChanged(OrderProduct item)
-        {
-            item.PropertyChanged -= OrderProduct_PropertyChanged;
-        }
-
-        private void OrderProduct_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(OrderProduct.Quantity))
-            {
-                UpdateTotalPrice();
-            }
-        }
         [ObservableProperty]
         public partial bool IsPaperBill { get; set; } = false;
         [ObservableProperty]
@@ -125,10 +68,74 @@ namespace LaptopPosApp.ViewModels
         public partial string AddressValidationMessage { get; private set; } = string.Empty;
         [ObservableProperty]
         public partial string VoucherValidationMessage { get; private set; } = string.Empty;
+        private void UpdateTotalPrice()
+        {
+            TotalPrice = CurrentOrder.Select(x => x.Product.Price * x.Quantity).Sum();
+            foreach (var voucher in VouchersAdded)
+            {
+                if (voucher.Type == VoucherType.Fixed)
+                {
+                    TotalPrice -= voucher.Value;
+                }
+                else if (voucher.Type == VoucherType.Percentage)
+                {
+                    TotalPrice -= TotalPrice * voucher.Value / 100;
+                }
+                TotalPrice = Math.Max(TotalPrice, 0);
+            }
+            TotalPriceString = "Tổng thành tiền: " + currencyConverter.Convert(TotalPrice, typeof(string), null, null).ToString();
+        }
 
+        private void VouchersAdded_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            UpdateTotalPrice();
+            VoucherValidationMessage = string.Empty;
+        }
+        private void CurrentOrder_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            // Handle added items
+            if (e.NewItems != null)
+            {
+                foreach (OrderProduct newItem in e.NewItems)
+                {
+                    SubscribeToItemPropertyChanged(newItem);
+                }
+            }
+            // Handle removed items
+            if (e.OldItems != null)
+            {
+                foreach (OrderProduct oldItem in e.OldItems)
+                {
+                    UnsubscribeFromItemPropertyChanged(oldItem);
+                }
+            }
+            UpdateTotalPrice();
+            if(CurrentOrder.Count == 0)
+            {
+                OrderDetailWindow.CloseWindow();
+            }
+        }
+        private void SubscribeToItemPropertyChanged(OrderProduct item)
+        {
+            item.PropertyChanged += OrderProduct_PropertyChanged;
+        }
+
+        private void UnsubscribeFromItemPropertyChanged(OrderProduct item)
+        {
+            item.PropertyChanged -= OrderProduct_PropertyChanged;
+        }
+
+        private void OrderProduct_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(OrderProduct.Quantity))
+            {
+                UpdateTotalPrice();
+            }
+        }
         partial void OnNameChanged(string value)
         {
             NameValidationMessage = string.Empty;
+            VouchersAdded.Clear();
         }
         partial void OnEmailChanged(string value)
         {
@@ -167,21 +174,23 @@ namespace LaptopPosApp.ViewModels
             {
                 VoucherValidationMessage = "Mã giảm giá chưa tới hoặc đã quá hạn sử dụng";
             }
-            else if(voucher.Orders.FirstOrDefault(o=>o.Customer.Name == Name) != null)
+            else if(voucher.Orders.Any(o=>o.Customer.Name == Name))
             {
                 VoucherValidationMessage = "Bạn đã sử dụng mã giảm giá rồi";
+            }
+            else if(VouchersAdded.Any(v=>v.Code == voucher.Code))
+            {
+                VoucherValidationMessage = "Bạn đã nhập mã giảm giá này rồi";
             }
             else
             {
                 VouchersAdded.Add(voucher);
-                UpdateTotalPrice();
             }
         }
 
         public void RemoveVoucher(Voucher voucher)
         {
             VouchersAdded.Remove(voucher);
-            UpdateTotalPrice();
         }
 
         protected override bool DoSubmit()
@@ -212,6 +221,7 @@ namespace LaptopPosApp.ViewModels
             customer.Orders.Add(order);
             dbContext.Orders.Add(order);
             dbContext.SaveChanges();
+            CurrentOrder.Clear();
             return true;
         }
 
@@ -221,6 +231,11 @@ namespace LaptopPosApp.ViewModels
             if (string.IsNullOrWhiteSpace(Name))
             {
                 NameValidationMessage = "Tên khách hàng không được để trống!!!";
+                isValid = false;
+            }
+            if (!string.IsNullOrWhiteSpace(Phone) && !Phone.IsPhoneNumber())
+            {
+                PhoneValidationMessage = "SĐT không hợp lệ!!!";
                 isValid = false;
             }
             if (IsDelivery == true && string.IsNullOrWhiteSpace(Address))
@@ -242,7 +257,7 @@ namespace LaptopPosApp.ViewModels
                 }
                 else if (!Email.IsEmail())
                 {
-                    EmailValidationMessage = "Email không hợp lệ";
+                    EmailValidationMessage = "Email không hợp lệ!!!";
                     isValid = false;
                 }
             }          

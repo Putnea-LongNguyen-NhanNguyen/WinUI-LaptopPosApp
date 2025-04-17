@@ -38,7 +38,7 @@ namespace LaptopPosApp.Views
             this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<OrderDetailWindowViewModel>();
         }
 
-        public static OrderDetailWindow CreateInstance(IEnumerable<OrderProduct> currentOrder)
+        public static OrderDetailWindow CreateInstance()
         {
             if (Instance != null)
             {
@@ -90,7 +90,7 @@ namespace LaptopPosApp.Views
             }
         }
 
-        public static void closeWindow()
+        public static void CloseWindow()
         {
             if (Instance != null)
             {

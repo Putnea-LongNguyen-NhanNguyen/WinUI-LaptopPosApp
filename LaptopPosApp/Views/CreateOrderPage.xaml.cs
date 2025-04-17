@@ -61,7 +61,7 @@ namespace LaptopPosApp.Views
 
         public void CreateOrderButton_Click(object sender, RoutedEventArgs e)
         {
-            var orderDetailWindow = OrderDetailWindow.CreateInstance(ViewModel.CurrentOrder);
+            var orderDetailWindow = OrderDetailWindow.CreateInstance();
             orderDetailWindow.Activate();
         }
     }
