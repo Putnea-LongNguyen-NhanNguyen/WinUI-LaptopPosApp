@@ -32,7 +32,7 @@
                 <TextBlock Text="{x:Bind ViewModel.ValueValidationMessage, Mode=OneWay}"
                            Foreground="Red"
                            Margin="0, 5, 0, 5" />
-                <TextBox Header="Số lượng mã giảm tối thiểu sẽ được tạo"
+                <NumberBox Header="Số lượng mã giảm tối thiểu sẽ được tạo"
                          Text="{x:Bind ViewModel.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="{x:Bind ViewModel.QuantityValidationMessage, Mode=OneWay}"
                            Foreground="Red"
