@@ -218,6 +218,10 @@ namespace LaptopPosApp.ViewModels
                 Vouchers = [.. VouchersAdded],
                 TotalPrice = TotalPrice
             };
+            foreach (var v in VouchersAdded)
+            {
+                v.Quantity--;
+            }
             customer.Orders.Add(order);
             dbContext.Orders.Add(order);
             dbContext.SaveChanges();
