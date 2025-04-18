@@ -13,8 +13,14 @@ namespace LaptopPosApp.Views.Converters
         {
             var products = (value as List<OrderProduct>)!;
             string result = "";
-            //TODO: change to temporary price
-            products.ForEach(product =>  result += $"{product.Product.Name} - {product.Product.Price:C}\n");
+            products.ForEach(op => {
+                Product product = op.Product;
+                var tempPriceObj = product.TemporaryPrices.Where(price => op.Order.Timestamp >= price.StartDate && op.Order.Timestamp <= price.EndDate)
+                    .FirstOrDefault();
+
+                var tempPrice = tempPriceObj?.Price ?? product.Price;
+                result += $"{product.Name} - {tempPrice:C}\n";
+            });
             if (result.Length > 0)
                 result = result[..^1];
             return result;

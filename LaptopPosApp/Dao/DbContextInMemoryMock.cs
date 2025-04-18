@@ -122,17 +122,18 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.Code, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Type, f => VoucherType.Fixed)
                     .RuleFor(o => o.Value, f => f.Random.Long(300000, 3000000))
-                    .RuleFor(o => o.Quantity, f => f.Random.Long(2, 10))
+                    .RuleFor(o => o.Quantity, f => 1)
                     .RuleFor(o => o.StartDate, f => f.Date.Recent(10))
                     .RuleFor(o => o.EndDate, f => f.Date.Soon(90))
-                    .RuleFor(o => o.Orders, f => new());
+                    .RuleFor(o => o.Orders, f => []);
+                Vouchers.AddRange(voucherFixedGen.GenerateBetween(10, 50));
 
                 var voucherPercentageGen = new Faker<Voucher>()
                     .StrictMode(true)
                     .RuleFor(o => o.Code, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Type, f => VoucherType.Percentage)
-                    .RuleFor(o => o.Value, f => f.Random.Long(5, 20))
-                    .RuleFor(o => o.Quantity, f => f.Random.Long(2, 10))
+                    .RuleFor(o => o.Value, f => 1)
+                    .RuleFor(o => o.Quantity, f => 1)
                     .RuleFor(o => o.StartDate, f => f.Date.Recent(10))
                     .RuleFor(o => o.EndDate, f => f.Date.Soon(90))
                     .RuleFor(o => o.Orders, f => new());

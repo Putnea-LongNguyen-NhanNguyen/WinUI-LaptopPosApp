@@ -6,6 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+        xmlns:converters="using:LaptopPosApp.Views.Converters"
         Title="Gửi voucher qua email">
 
     <Grid>
@@ -14,23 +15,15 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <Grid.Resources>
+            <converters:CurrencyConverter x:Key="currencyConverter" />
+        </Grid.Resources>
+
         <StackPanel Grid.Row="0"
                     Orientation="Horizontal"
                     VerticalAlignment="Center"
                     Padding="20, 0, 20, 0"
                     HorizontalAlignment="Stretch">
-
-            <AutoSuggestBox PlaceholderText="Tìm tên khách hàng"
-                            Width="300"
-                            Name="CustomerAutoSuggestBox"
-                            TextChanged="CustomerAutoSuggestBox_TextChanged"
-                            SuggestionChosen="CustomerAutoSuggestBox_SuggestionChosen"
-                            QuerySubmitted="CustomerAutoSuggestBox_QuerySubmitted"
-                            ItemsSource="{x:Bind ViewModel.FilteredCustomers, Mode=OneWay}"
-                            DisplayMemberPath="Name"
-                            TextMemberPath="Name"
-                            QueryIcon="Find">
-            </AutoSuggestBox>
 
             <TextBlock Text="Chọn mã giảm"
                        Margin="30, 0, 10, 0"
@@ -41,11 +34,17 @@
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock>
-                            <Run Text="{Binding Code, Mode=OneWay}" /> - Giảm <Run Text="{Binding Value, Mode=OneWay}" /> - Còn <Run Text="{Binding Quantity, Mode=OneWay}" /> mã
+                            <Run Text="{Binding Code, Mode=OneWay}" /> - Giảm <Run Text="{Binding ValueString, Mode=OneWay}" />
                         </TextBlock>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+
+            <TextBlock Text="Nhập số tiền tối thiểu để được gửi mã giảm"
+                       Margin="30, 0, 10, 0"
+                       VerticalAlignment="Center" />
+
+            <NumberBox Text="{x:Bind ViewModel.MinMoney, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button Content="Thêm vào danh sách gửi mail"
                     Margin="30, 0, 0, 0"
@@ -72,26 +71,36 @@
             <Grid Row="0"
                   Background="{StaticResource AccentAcrylicBackgroundFillColorBaseBrush}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0"
-                           Text="Tên khách hàng"
+                           Text="Mã giảm"
                            VerticalAlignment="Center"
                            Margin="15, 0, 0, 0" />
                 <TextBlock Grid.Column="1"
-                           Text="Địa chỉ mail"
+                           Text="Loại"
                            VerticalAlignment="Center"
                            Margin="15, 0, 0, 0" />
                 <TextBlock Grid.Column="2"
-                           Text="Mã giảm giá"
+                           Text="Giá trị giảm"
                            VerticalAlignment="Center"
                            Margin="15, 0, 0, 0" />
                 <TextBlock Grid.Column="3"
-                           Text="Giá trị giảm"
+                           Text="Ngày bắt đầu"
+                           VerticalAlignment="Center"
+                           Margin="15, 0, 0, 0" />
+                <TextBlock Grid.Column="4"
+                           Text="Ngày hết hạn"
+                           VerticalAlignment="Center"
+                           Margin="15, 0, 0, 0" />
+                <TextBlock Grid.Column="5"
+                           Text="Giá trị tối thiểu để được gửi"
                            VerticalAlignment="Center"
                            Margin="15, 0, 0, 0" />
             </Grid>
@@ -115,21 +124,26 @@
                             </Grid.ContextFlyout>
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="3*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="2*" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0"
-                                       Text="{Binding Customer.Name, Mode=OneWay}" />
-                            <TextBlock Grid.Column="1"
-                                       Text="{Binding Customer.Email, Mode=OneWay}" />
-                            <TextBlock Grid.Column="2"
                                        Text="{Binding Voucher.Code, Mode=OneWay}" />
-                            <TextBlock Grid.Column="3"
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Voucher.Type, Mode=OneWay}" />
+                            <TextBlock Grid.Column="2"
                                        Text="{Binding Voucher.ValueString, Mode=OneWay}" />
-
+                            <TextBlock Grid.Column="3"
+                                       Text="{Binding Voucher.StartDate, Mode=OneWay}" />
+                            <TextBlock Grid.Column="4"
+                                       Text="{Binding Voucher.EndDate, Mode=OneWay}" />
+                            <TextBlock Grid.Column="5"
+                                       Text="{Binding MinMoney, Mode=OneWay, Converter={StaticResource currencyConverter}}" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

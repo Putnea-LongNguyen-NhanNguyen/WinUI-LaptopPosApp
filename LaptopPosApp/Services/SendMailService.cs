@@ -51,6 +51,7 @@ namespace LaptopPosApp.Services
             smtpClient.SendAsync(message, null);
         }
 
+        // might delete this
         public static void SendVoucherEmail(Dictionary<Customer, List<Voucher>> dictionary)
         {
             foreach (var entry in dictionary)
@@ -123,6 +124,60 @@ namespace LaptopPosApp.Services
                 string emailBody = emailBodyTemplate(customer.Name, voucherEmailDescription, voucherTableString);
                 SendEmail(customerEmail, voucherEmailSubject, emailBody);
             }
+        }
+
+        public static void SendVoucherEmail(Customer customer, Voucher voucher)
+        {
+            // use your mail to demonstrate
+            string customerEmail = "tinnhan1806@gmail.com";
+
+            string voucherTableRows = "";
+
+            var i = 1;
+
+            if (voucher.Type == VoucherType.Percentage)
+            {
+                voucherTableRows += $@"
+                    <tr>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{i}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Code}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Value}%</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.StartDate}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.EndDate}</td>
+                    </tr>
+                ";
+            }
+            else
+            {
+                voucherTableRows += $@"
+                    <tr>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{i}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Code}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.Value:#,### đ}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.StartDate}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{voucher.EndDate}</td>
+                    </tr>
+                ";
+            }
+
+            string voucherTableString = @$"
+                <table class=""voucher-table"" style=""width: 100%; border-collapse: collapse;"">
+                    <thead>
+                        <tr style=""background-color: #f2f2f2;"">
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">STT</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Mã</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Giảm</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Ngày bắt đầu</th>
+                            <th style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">Ngày kết thúc</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {voucherTableRows}
+                    </tbody>
+                </table>
+            ";
+            string emailBody = emailBodyTemplate(customer.Name, voucherEmailDescription, voucherTableString);
+            SendEmail(customerEmail, voucherEmailSubject, emailBody);
         }
 
         public static void SendOrderEmail(Order order)
