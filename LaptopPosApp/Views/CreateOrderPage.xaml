@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page x:Class="LaptopPosApp.Views.CreateOrderPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:LaptopPosApp.Views"
+      xmlns:custom="using:LaptopPosApp.Components"
+      xmlns:converter="using:LaptopPosApp.Views.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <DataTemplate x:Name="ProductGridViewTemplate">
+            <Border Margin="5"
+                    BorderThickness="2"
+                    BorderBrush="Black"
+                    Width="210"
+                    CornerRadius="15">
+                <StackPanel Orientation="Vertical">
+                    <Image Source="/Assets/laptopDemoImg.jpg"
+                           Stretch="UniformToFill" />
+                    <TextBlock Text="{Binding Name, Mode=OneWay}"
+                               Padding="3"
+                               TextWrapping="Wrap"
+                               TextTrimming="CharacterEllipsis" />
+                    <Grid Background="{StaticResource AccentAAFillColorDisabled}"
+                          Padding="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="1"
+                                   Margin="0, 0, 0, 5">
+                            <Run Text="còn" />
+                            <Run Text="{Binding Quantity, Mode=OneWay}" />
+                            <Run Text="cái" />
+                        </TextBlock>
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center">
+                            <Run Text="Giá:" />
+                            <Run Text="{Binding Price, Converter={StaticResource currency}, Mode=OneWay}"
+                                 FontWeight="SemiBold" />
+                        </TextBlock>
+                        <Button Name="Cart"
+                                CornerRadius="15"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Click="CartButton_Click"
+                                VerticalAlignment="Center"
+                                Background="{StaticResource AccentAAFillColorDefaultBrush}"
+                                HorizontalAlignment="Right">
+                            <FontIcon Glyph="&#xE7BF;"
+                                      HorizontalAlignment="Center" />
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+        </DataTemplate>
+        <DataTemplate x:Name="ProductListViewTemplate">
+            <StackPanel Orientation="Horizontal"
+                        Padding="0,5,0,5">
+                <Image Source="/Assets/laptopDemoImg.jpg"
+                       Width="100"
+                       Stretch="UniformToFill" />
+                <StackPanel Padding="5">
+                    <TextBlock Text="{Binding Product.Name, Mode=OneWay}"
+                               TextWrapping="Wrap"
+                               TextTrimming="CharacterEllipsis"
+                               Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock>
+                        <Run Text="Đơn giá:" />
+                        <Run Text="{Binding Converter={StaticResource priceQuantity}, Mode=OneWay}"
+                             FontWeight="Bold" />
+                    </TextBlock>
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Bottom">
+                        <Button Name="RemoveFrom"
+                                Click="RemoveButton_Click">
+                            <FontIcon Glyph="&#xECC9;" />
+                        </Button>
+                        <NumberBox Margin="5"
+                                   Name="Wanted"
+                                   MaxHeight="30"
+                                   MaxWidth="30"
+                                   Maximum="{Binding Product.Quantity, Mode=OneWay}"
+                                   Minimum="1"
+                                   Value="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Name="AddTo"
+                                Click="AddButton_Click">
+                            <FontIcon Glyph="&#xECC8;" />
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <converter:CurrencyConverter x:Key="currency" />
+        <converter:PriceQuantityConverter x:Key="priceQuantity" />
+        <converter:TotalPriceConverter x:Key="totalPrice" />
+        <converter:CountToVisibilityConverter x:Key="countToVisibility" />
+    </Page.Resources>
+
+    <ScrollView VerticalScrollBarVisibility="Auto">
+        <Grid Name="CreateOrderView">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="0"
+                        Grid.Row="0">
+                <GridView x:Name="LaptopGridView"
+                          ItemTemplate="{StaticResource ProductGridViewTemplate}"
+                          ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
+
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem"
+                               BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                            <Setter Property="Margin"
+                                    Value="5, 5, 5, 5" />
+                        </Style>
+                    </GridView.ItemContainerStyle>
+
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid x:Name="MaxItemsWrapGrid"
+                                           MaximumRowsOrColumns="4"
+                                           Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+                <custom:PaginationControl CurrentPage="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}"
+                                          TotalPage="{x:Bind ViewModel.PageCount, Mode=OneWay}"
+                                          PerPage="{x:Bind ViewModel.PerPage, Mode=TwoWay}">
+                </custom:PaginationControl>
+            </StackPanel>
+            <StackPanel Grid.Row="0"
+                        Grid.Column="1"
+                        Height="Auto"
+                        Padding="12">
+                <TextBlock Text="Đơn hàng của bạn"
+                           Style="{StaticResource TitleTextBlockStyle }" />
+                <ListView x:Name="OrderListView"
+                          Visibility="{x:Bind ViewModel.CurrentOrder.Count, Converter={StaticResource countToVisibility}, Mode=OneWay}"
+                          ItemTemplate="{StaticResource ProductListViewTemplate}"
+                          ItemsSource="{x:Bind ViewModel.CurrentOrder, Mode=OneWay}"
+                          SelectionMode="None">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+                <StackPanel Padding="0, 50, 0, 0"
+                            VerticalAlignment="Center"
+                            Visibility="{x:Bind ViewModel.CurrentOrder.Count, Converter={StaticResource countToVisibility}, ConverterParameter='Invert',Mode=OneWay}">
+                    <FontIcon Glyph="&#xE7BF;"
+                              HorizontalAlignment="Center"
+                              FontSize="80"
+                              Foreground="LightGray" />
+                    <TextBlock FontSize="20"
+                               Foreground="LightGray"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center">
+                            <Run Text="Chưa có sản phẩm nào" />
+                            <LineBreak />
+                            <Run Text="trong giỏ hàng" />
+                    </TextBlock>
+                </StackPanel>
+                <TextBlock Visibility="{x:Bind ViewModel.CurrentOrder.Count, Converter={StaticResource countToVisibility}, Mode=OneWay}"
+                           Text="{x:Bind ViewModel.CurrentOrder, Converter={StaticResource totalPrice},Mode=OneWay}"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           Margin="0, 10, 0, 0" />
+                <Button x:Name="CreateOrderButton"
+                        Click="CreateOrderButton_Click"
+                        Visibility="{x:Bind ViewModel.CurrentOrder.Count, Converter={StaticResource countToVisibility}, Mode=OneWay}"
+                        Content="Tạo đơn hàng"
+                        HorizontalAlignment="Stretch"
+                        Style="{StaticResource AccentButtonStyle}"
+                        CornerRadius="18"
+                        Margin="0, 10, 0, 0" />
+            </StackPanel>
+        </Grid>
+    </ScrollView>
+</Page>

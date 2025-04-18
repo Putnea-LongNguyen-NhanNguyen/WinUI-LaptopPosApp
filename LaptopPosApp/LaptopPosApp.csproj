@@ -13,6 +13,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Views\Converter\QuantityConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove=".env" />
     <None Remove="Components\PaginationControl.xaml" />
 	<None Remove="Layouts\AddItemLayout.xaml" />
@@ -24,6 +27,7 @@
     <None Remove="Views\DashboardPage.xaml" />
     <None Remove="Views\DashboardWindow.xaml" />
     <None Remove="Views\ManufacturersPage.xaml" />
+    <None Remove="Views\OrderDetailWindow.xaml" />
     <None Remove="Views\SendVouchersMailWindow.xaml" />
     <None Remove="Views\StatisticsPage.xaml" />
     <None Remove="Views\VouchersPage.xaml" />
@@ -101,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\VouchersPage.xaml">
+		<Generator>MSBuild:Compile</Generator>
+	</Page>
+    <Page Update="Views\OrderDetailWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

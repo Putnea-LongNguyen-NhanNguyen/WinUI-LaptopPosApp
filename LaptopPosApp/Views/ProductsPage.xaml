@@ -7,7 +7,7 @@
     xmlns:custom="using:LaptopPosApp.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converters="using:LaptopPosApp.Views.Converters"
+    xmlns:converter="using:LaptopPosApp.Views.Converters"
     mc:Ignorable="d"
     xmlns:tableView="using:WinUI.TableView"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -45,13 +45,11 @@
             Grid.Row="1"
             ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
             SelectionUnit="CellOrRow"
-            SelectionMode="Multiple"
+            SelectionMode="Extended"
             AutoGenerateColumns="False">
             <tableView:TableView.Resources>
-                <converters:CurrencyConverter
+                <converter:CurrencyConverter
                     x:Key="currency" />
-                <converters:QuantityConverter
-                    x:Key="quantity" Unit="cái"/>
             </tableView:TableView.Resources>
             <tableView:TableView.Columns>
                 <tableView:TableViewTextColumn
@@ -70,14 +68,19 @@
                         <!--I don't know why the text alignment is useless-->
                         <DataTemplate>
                             <TextBlock
-                                TextAlignment="End"
-                                Text="{Binding Quantity, Converter={StaticResource quantity}}" />
+                                TextAlignment="End">                               
+                                <Run
+                                    Text="{Binding Quantity, Mode=OneWay}" />
+                                <Run
+                                    Text="cái" />
+                            </TextBlock>
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                     <tableView:TableViewTemplateColumn.EditingTemplate>
                         <DataTemplate>
                             <NumberBox
-                                Value="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                Value="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                Minimum="0"/>
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.EditingTemplate>
                 </tableView:TableViewTemplateColumn>
@@ -86,13 +89,14 @@
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
-                                Text="{Binding Price, Converter={StaticResource currency}}" />
+                                Text="{Binding Price, Mode=OneWay, Converter={StaticResource currency}}" />
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                     <tableView:TableViewTemplateColumn.EditingTemplate>
                         <DataTemplate>
                             <NumberBox
-                                Value="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                Value="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                Minimum="0"/>
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.EditingTemplate>
                 </tableView:TableViewTemplateColumn>

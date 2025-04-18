@@ -21,6 +21,7 @@ using LaptopPosApp.Views;
 using LaptopPosApp.Dao;
 using LaptopPosApp.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using LaptopPosApp.Services;
 using Microsoft.Extensions.Configuration;
 using LaptopPosApp.Services;
 
@@ -48,6 +49,8 @@ namespace LaptopPosApp
             if (UseMockDatabase)
                 appBuilder.Services.AddDbContext<DbContextBase, DbContextInMemoryMock>();
 
+            appBuilder.Services.AddSingleton<CurrentOrderService>();
+
             appBuilder.Services.AddTransient<AddCategoryViewModel>();
             appBuilder.Services.AddTransient<AddManufacturerViewModel>();
             appBuilder.Services.AddTransient<AddProductViewModel>();
@@ -55,8 +58,10 @@ namespace LaptopPosApp
             appBuilder.Services.AddTransient<ManufacturersPageViewModel>();
             appBuilder.Services.AddTransient<ProductPageViewModel>();
             appBuilder.Services.AddTransient<StatisticsPageViewModel>();
+            appBuilder.Services.AddTransient<CreateOrderPageViewModel>();
             appBuilder.Services.AddTransient<VouchersPageViewModel>();
             appBuilder.Services.AddTransient<AddVouchersViewModel>();
+            appBuilder.Services.AddTransient<OrderDetailWindowViewModel>();
             appBuilder.Services.AddTransient<CustomersPageViewModel>();
             appBuilder.Services.AddTransient<AddCustomerPageViewModel>();
             appBuilder.Services.AddTransient<SendVouchersMailViewModel>();
