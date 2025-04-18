@@ -46,11 +46,14 @@
                                                IsReadOnly="True"
                                                Binding="{Binding ID, Mode=OneWay}" />
                 <tableView:TableViewTextColumn Header="Ngày mua"
-                                               IsReadOnly="True" 
-                                               Binding="{Binding Timestamp, Mode=OneWay, Converter={StaticResource DateTimeToStringConverter}}"/>
+                                               IsReadOnly="True"
+                                               Binding="{Binding Timestamp, Mode=OneWay, Converter={StaticResource DateTimeToStringConverter}}" />
                 <tableView:TableViewTextColumn Header="Sản phẩm"
                                                IsReadOnly="True"
                                                Binding="{Binding Products, Mode=OneWay, Converter={StaticResource ProductListToStringConverter}}" />
+                <tableView:TableViewTextColumn Header="Mã giảm"
+                                               IsReadOnly="True"
+                                               Binding="{Binding Vouchers, Mode=OneWay, Converter={StaticResource ProductListToStringConverter}}" />
                 <tableView:TableViewTextColumn Header="Tổng giá trị hóa đơn"
                                                IsReadOnly="True"
                                                Binding="{Binding TotalPrice, Mode=OneWay, Converter={StaticResource CurrencyConverter}}" />

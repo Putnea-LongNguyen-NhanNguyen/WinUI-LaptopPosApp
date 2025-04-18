@@ -11,7 +11,6 @@ namespace LaptopPosApp.ViewModels
     public class CustomerOrderHistoryViewModel(Customer customer, DbContextBase context)
     {
         public readonly Customer Customer = customer;
-        private readonly DbContextBase _context = context;
         public readonly List<Order> CustomerOrders = [.. context.Orders.Where(order => order.Customer.ID == customer.ID)];
     }
 }

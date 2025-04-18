@@ -7,22 +7,16 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Views.Converters
 {
-    public class ProductListToStringConverter : Microsoft.UI.Xaml.Data.IValueConverter
+    internal class VoucherListToStringConverter : Microsoft.UI.Xaml.Data.IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is not List<OrderProduct> products)
+            if (value is not List<Voucher> vouchers)
                 return "";
 
             string result = "";
-            products.ForEach(op => {
-                Product product = op.Product;
-                var tempPriceObj = product.TemporaryPrices.Where(price => op.Order.Timestamp >= price.StartDate && op.Order.Timestamp <= price.EndDate)
-                    .FirstOrDefault();
-
-                var tempPrice = tempPriceObj?.Price ?? product.Price;
-                result += $"{product.Name} - {tempPrice:C} - SL {op.Quantity} cái\n";
-            });
+            //TODO: change to temporary price
+            vouchers.ForEach(voucher => result += $"{voucher.Type} - Giảm {voucher.ValueString}\n");
             if (result.Length > 0)
                 result = result[..^1];
             return result;
