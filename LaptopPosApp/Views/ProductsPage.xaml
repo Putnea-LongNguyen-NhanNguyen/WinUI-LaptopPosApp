@@ -21,7 +21,6 @@
             <RowDefinition
                 Height="50" />
         </Grid.RowDefinitions>
-
         <StackPanel
             Orientation="Horizontal"
             Grid.Row="0"
@@ -35,6 +34,10 @@
                 Click="DeleteButton_Click"
                 Background="Red"
                 Margin="10, 0, 0, 0" />
+            <Button
+                Content="Chỉnh sửa giá tạm thời"
+                Click="ChangeTemporaryPriceButton_Click"
+                Style="{StaticResource AccentButtonStyle}" />
         </StackPanel>
 
         <tableView:TableView

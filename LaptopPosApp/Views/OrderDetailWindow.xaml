@@ -12,7 +12,7 @@
     Title="OrderDetailWindow">
     <ScrollView
         VerticalScrollBarVisibility="Auto"
-        Padding="8">
+        Padding="15">
         <ScrollView.Resources>
             <converter:PriceQuantityConverter
                 x:Key="priceQuantity" />
@@ -21,7 +21,7 @@
             <converter:CountToVisibilityConverter
                 x:Key="countToVisibility" />
         </ScrollView.Resources>
-        <StackPanel>
+        <StackPanel Padding="10, 0, 10, 0">
             <TextBlock
                 Text="Chi tiết đơn hàng"
                 Style="{StaticResource TitleLargeTextBlockStyle}"
@@ -29,6 +29,7 @@
                 Margin="0,10,0,10" />
             <TextBlock
                 Text="Danh sách sản phẩm"
+                Margin="0, 0, 0, 10"
                 Style="{StaticResource TitleTextBlockStyle}" />
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -113,13 +114,16 @@
             </Grid>
             <TextBlock
                 Text="Áp mã giảm giá"
+                Margin="0, 0, 0, 10"
                 Style="{StaticResource TitleTextBlockStyle}" />
             <TextBlock
                 Text="Nhập mã giảm giá"
+                Margin="0, 0, 0, 5"
                 Style="{StaticResource BodyTextBlockStyle}" />
             <StackPanel
                 Orientation="Horizontal">
-                <TextBox
+                <TextBox 
+                    MinWidth="300"
                     Text="{x:Bind ViewModel.Voucher, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     PlaceholderText="Mã giảm giá" />
                 <Button
@@ -154,7 +158,7 @@
                     Grid.Column="0"
                     Grid.Row="0" />
                 <TextBlock
-                    Text="Giá tri"
+                    Text="Giá trị"
                     Style="{StaticResource BodyStrongTextBlockStyle}"
                     Grid.Column="1"
                     Grid.Row="0" />
@@ -294,9 +298,11 @@
                 Content="In hoá đơn giấy" />
             <CheckBox
                 IsChecked="{x:Bind ViewModel.IsEmailBill, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Content="Gửi hoá đơn qua email" />
+                Content="Gửi hoá đơn qua email"
+                Margin="0,10,0,10" />
             <TextBlock
                 Text="Phương thức thanh toán"
+                Margin="0, 0, 0, 5"
                 Style="{StaticResource TitleTextBlockStyle}" />
             <RadioButtons
                 Name="PaymentMethod"
