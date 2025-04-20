@@ -33,6 +33,7 @@ namespace LaptopPosApp.ViewModels
         {
             _data = [.. orders
                 .OrderBy(o => o.Timestamp)
+                .Where(o => o.Status != OrderStatus.Returned)
                 .Select(o => new DateTimePoint(o.Timestamp, o.TotalPrice))];
             RevenueFilters = [
                 new DailyRevenueFilter() { Title = "Ngày", TimeSpan = 1 },
