@@ -79,7 +79,8 @@ namespace LaptopPosApp.ViewModels
                     new NavigationItemLeaf()
                     {
                         Title = "Đơn hàng",
-                        Icon = new SymbolIcon(Symbol.Page)
+                        Icon = new SymbolIcon(Symbol.Page),
+                        CreatePage = () => new OrdersPage()
                     },
                     new NavigationItemLeaf()
                     {
@@ -109,7 +110,7 @@ namespace LaptopPosApp.ViewModels
                 Title = "Tạo đơn hàng",
                 Icon = new SymbolIcon(Symbol.Placeholder),
                 CreatePage = () => new CreateOrderPage(),
-            }
+            },
         };
         public void NavigateTo(Page? page)
         {

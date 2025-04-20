@@ -33,7 +33,7 @@
                 Content="Xóa"
                 Click="DeleteButton_Click"
                 Background="Red"
-                Margin="10, 0, 0, 0" />
+                Margin="10, 0, 10, 0" />
             <Button
                 Content="Chỉnh sửa giá tạm thời"
                 Click="ChangeTemporaryPriceButton_Click"

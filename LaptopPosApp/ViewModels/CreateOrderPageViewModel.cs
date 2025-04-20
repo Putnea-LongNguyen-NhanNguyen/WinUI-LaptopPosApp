@@ -111,8 +111,7 @@ namespace LaptopPosApp.ViewModels
         {
             if (orderProduct != null)
             {
-                var foundOrderProduct = CurrentOrder.FirstOrDefault(op => op.ProductID == orderProduct.Product.ID);
-                if (foundOrderProduct != null && foundOrderProduct.Product.Quantity > foundOrderProduct.Quantity)
+                if (CurrentOrder.Any(op => op.ProductID == orderProduct.Product.ID) && orderProduct.Product.Quantity > orderProduct.Quantity)
                 {
                     orderProduct.Quantity++;
                     OnPropertyChanged(nameof(CurrentOrder));
@@ -130,12 +129,7 @@ namespace LaptopPosApp.ViewModels
                 }
                 else
                 {
-                    var updatedOrder = CurrentOrder.Where(op => op.ProductID != orderProduct.ProductID).ToList();
-                    CurrentOrder.Clear();
-                    foreach (var item in updatedOrder)
-                    {
-                        CurrentOrder.Add(item);
-                    }
+                    CurrentOrder.Remove(orderProduct);
                 }
                 OnPropertyChanged(nameof(CurrentOrder));
             }
