@@ -162,7 +162,7 @@
                                     Grid.Column="0"
                                     VerticalAlignment="Center" />
                                 <TextBlock
-                                    Text="{Binding Value}"
+                                    Text="{Binding ValueString}"
                                     Style="{StaticResource BodyTextBlockStyle}"
                                     Grid.Column="1"
                                     VerticalAlignment="Center" />
@@ -218,6 +218,7 @@
                     Grid.Column="0"
                     Margin="0, 0, 8, 0">
                     <TextBox
+                        IsReadOnly="True"
                         Name="PhoneNumber"
                         Text="{x:Bind Phone, Mode=OneWay}"
                         Header="Số điện thoại khách hàng"
@@ -229,6 +230,7 @@
                     <TextBox
                         Text="{x:Bind Address, Mode=OneWay}"
                         Header="Địa chỉ khách hàng"
+                        IsReadOnly="True"
                         PlaceholderText="Địa chỉ" />
                 </StackPanel>
             </Grid>
@@ -237,6 +239,7 @@
                 Style="{StaticResource TitleTextBlockStyle}" />
             <!--wait for Long-->
             <CheckBox
+                IsHitTestVisible="False"
                 IsChecked="True"
                 Content="Giao hàng tận nơi"
                 Margin="0,10,0,10" />

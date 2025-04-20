@@ -110,7 +110,7 @@ namespace LaptopPosApp.ViewModels
                 Title = "Tạo đơn hàng",
                 Icon = new SymbolIcon(Symbol.Placeholder),
                 CreatePage = () => new CreateOrderPage(),
-            }
+            },
         };
         public void NavigateTo(Page? page)
         {

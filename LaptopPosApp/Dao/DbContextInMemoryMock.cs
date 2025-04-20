@@ -132,7 +132,7 @@ namespace LaptopPosApp.Dao
                     .StrictMode(true)
                     .RuleFor(o => o.Code, f => Guid.NewGuid().ToString())
                     .RuleFor(o => o.Type, f => VoucherType.Percentage)
-                    .RuleFor(o => o.Value, f => 1)
+                    .RuleFor(o => o.Value, f => f.Random.Int(10, 30))
                     .RuleFor(o => o.Quantity, f => 1)
                     .RuleFor(o => o.StartDate, f => f.Date.Recent(10))
                     .RuleFor(o => o.EndDate, f => f.Date.Soon(90))
@@ -150,7 +150,7 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.Address, f => f.Address.FullAddress())
                     .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
                     .RuleFor(o => o.Email, f => f.Internet.Email())
-                    .RuleFor(o => o.Orders, f => new());
+                    .RuleFor(o => o.Orders, f => []);
                 var customers = customerGen.GenerateBetween(10, 50);
                 Customers.AddRange(customers);
 

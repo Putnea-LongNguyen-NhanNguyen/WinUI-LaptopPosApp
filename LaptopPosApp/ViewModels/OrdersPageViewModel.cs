@@ -12,6 +12,12 @@ namespace LaptopPosApp.ViewModels
     class OrdersPageViewModel : PaginatableViewModel<Order>
     {
         private readonly DbContextBase dbContext;
+        public List<OrderStatus> OrderStatuses =>
+        [
+            OrderStatus.Delivered,
+            OrderStatus.Delivering,
+            OrderStatus.Returned,
+        ];
         public OrdersPageViewModel(DbContextBase dbContext) : base(dbContext.Orders)
         {
             this.dbContext = dbContext;
