@@ -65,7 +65,8 @@ namespace LaptopPosApp
             appBuilder.Services.AddTransient<CustomersPageViewModel>();
             appBuilder.Services.AddTransient<AddCustomerPageViewModel>();
             appBuilder.Services.AddTransient<SendVouchersMailViewModel>();
-            
+            appBuilder.Services.AddTransient<OrdersPageViewModel>();
+
 
             AppHost = appBuilder.Build();
             Services = AppHost.Services;

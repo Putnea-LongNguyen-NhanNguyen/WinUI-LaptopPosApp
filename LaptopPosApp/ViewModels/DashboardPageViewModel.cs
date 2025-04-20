@@ -79,7 +79,8 @@ namespace LaptopPosApp.ViewModels
                     new NavigationItemLeaf()
                     {
                         Title = "Đơn hàng",
-                        Icon = new SymbolIcon(Symbol.Page)
+                        Icon = new SymbolIcon(Symbol.Page),
+                        CreatePage = () => new OrdersPage()
                     },
                     new NavigationItemLeaf()
                     {
