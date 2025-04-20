@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Model
 {
+    public enum OrderStatus
+    {
+        Delivering,
+        Delivered,
+        Returned,
+    }
     public class Order: IHasId
     {
         public required int ID { get; set; } = 0;
@@ -16,5 +22,7 @@ namespace LaptopPosApp.Model
         public List<OrderProduct> Products { get; set; } = [];
         public List<Voucher> Vouchers { get; set; } = [];
         public required long TotalPrice { get; set; }
+        public OrderStatus Status { get; set; }
+        public DateTimeOffset DeliveryDate { get; set; }
     }
 }
