@@ -5,17 +5,33 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace LaptopPosApp.ViewModels
 {
-    public partial class PaginatableViewModel<T>: ObservableObject
+    public class Filter
     {
+        public required string Name { get; set; }
+        public required string Field { get; set; }
+        public required IList Values { get; set; }
+    }
+    public abstract partial class PaginatableViewModel<T>: ObservableObject
+    {
+        protected IQueryable<T> allItems { get; set; }
+
         [ObservableProperty]
         public partial IList Items { get; private set; } = Array.Empty<T>();
 
-        protected IQueryable<T> allItems { get; set; }
+        [ObservableProperty]
+        public partial IList<Filter> Filters { get; set; } = Array.Empty<Filter>();
+        partial void OnFiltersChanged(IList<Filter> filters)
+        {
+            Refresh();
+        }
+
+        public abstract IList<Filter> GetAllFilters();
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(PageCount))]
@@ -50,12 +66,27 @@ namespace LaptopPosApp.ViewModels
             this.allItems = allItems;
             Refresh();
         }
+        protected virtual IQueryable<T> ApplyFilters(IQueryable<T> items)
+        {
+            foreach (var filter in Filters)
+            {
+                if (filter.Values.Count == 0)
+                    continue;
+                var property = typeof(T).GetProperty(filter.Field);
+                if (property == null)
+                    throw new ArgumentException($"Property {filter.Field} not found on type {typeof(T).Name}");
+                var values = filter.Values.Cast<object>().ToArray();
+                items = items.Where(x => values.Contains(property.GetValue(x)));
+            }
+            return items;
+        }
         public async Task Refresh()
         {
             Refreshing = true;
-            Count = await allItems.CountAsync();
+            var items = ApplyFilters(allItems);
+            Count = await items.CountAsync();
             CurrentPage = Math.Clamp(CurrentPage, 1, PageCount);
-            Items = await allItems
+            Items = await items
                 .Skip((CurrentPage - 1) * PerPage)
                 .Take(PerPage)
                 .ToArrayAsync();
