@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,6 +53,8 @@ namespace LaptopPosApp.ViewModels
         public partial Manufacturer? Manufacturer { get; set; }
         [ObservableProperty]
         public partial Category? Category { get; set; }
+        [ObservableProperty]
+        public partial string Image { get; set; } = string.Empty;
 
         partial void OnNameChanged(string value)
         {
@@ -137,15 +140,33 @@ namespace LaptopPosApp.ViewModels
         }
         protected override bool DoSubmit()
         {
+            string ID = Guid.NewGuid().ToString();
+            if (File.Exists(Image))
+            {
+                string imageDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ProductImages");
+                if (!Directory.Exists(imageDirectory))
+                {
+                    Directory.CreateDirectory(imageDirectory);
+                }
+                string finalImagePath = Path.Combine(imageDirectory, $"{ID}{Path.GetExtension(Image)}");
+                File.Copy(Image, finalImagePath);
+                Image = finalImagePath;
+            }
+            else
+            {
+                Image = string.Empty;
+            }
+
             dbContext.Products.Add(new()
             {
-                ID = Guid.NewGuid().ToString(),
+                ID = ID,
                 Name = Name,
                 Price = Price,
                 Quantity = Quantity,
                 Description = Description,
                 Category = Category,
-                Manufacturer = Manufacturer
+                Manufacturer = Manufacturer,
+                Image = Image,
             });
             dbContext.SaveChanges();
             return true;

@@ -226,6 +226,12 @@ namespace LaptopPosApp.ViewModels
             dbContext.Orders.Add(order);
             dbContext.SaveChanges();
             CurrentOrder.Clear();
+
+            if (IsEmailBill)
+            {
+                Task.Run(() => SendMailService.SendOrderEmail(order));
+            }
+
             return true;
         }
 

@@ -84,7 +84,7 @@
                                     Padding="8"
                                     VerticalAlignment="Center">
                                     <Image
-                                        Source="/Assets/laptopDemoImg.jpg"
+                                        Source="{Binding Product.ImagePath}"
                                         Width="100"
                                         Stretch="UniformToFill" />
                                     <TextBlock

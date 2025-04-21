@@ -16,15 +16,28 @@
                     BorderThickness="2"
                     BorderBrush="Black"
                     Width="210"
+                    Height="300"
                     CornerRadius="15">
-                <StackPanel Orientation="Vertical">
-                    <Image Source="/Assets/laptopDemoImg.jpg"
-                           Stretch="UniformToFill" />
-                    <TextBlock Text="{Binding Name, Mode=OneWay}"
-                               Padding="3"
-                               TextWrapping="Wrap"
-                               TextTrimming="CharacterEllipsis" />
-                    <Grid Background="{StaticResource AccentAAFillColorDisabled}"
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0"
+                                Orientation="Vertical">
+                        <Image Source="{Binding ImagePath, Mode=OneWay}"
+                               Stretch="UniformToFill"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Height="200" />
+                        <!-- Optional fixed image height -->
+                        <TextBlock Text="{Binding Name, Mode=OneWay}"
+                                   Padding="3"
+                                   TextWrapping="Wrap"
+                                   TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <Grid Grid.Row="1"
+                          Background="{StaticResource AccentAAFillColorDisabled}"
                           Padding="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -37,16 +50,16 @@
                         <TextBlock Grid.Row="0"
                                    Grid.Column="1"
                                    Margin="0, 0, 0, 5">
-                            <Run Text="còn" />
-                            <Run Text="{Binding Quantity, Mode=OneWay}" />
-                            <Run Text="cái" />
+                    <Run Text="còn" />
+                    <Run Text="{Binding Quantity, Mode=OneWay}" />
+                    <Run Text="cái" />
                         </TextBlock>
                         <TextBlock Grid.Row="1"
                                    Grid.Column="0"
                                    VerticalAlignment="Center">
-                            <Run Text="Giá:" />
-                            <Run Text="{Binding Price, Converter={StaticResource currency}, Mode=OneWay}"
-                                 FontWeight="SemiBold" />
+                    <Run Text="Giá:" />
+                    <Run Text="{Binding Price, Converter={StaticResource currency}, Mode=OneWay}"
+                            FontWeight="SemiBold" />
                         </TextBlock>
                         <Button Name="Cart"
                                 CornerRadius="15"
@@ -60,16 +73,18 @@
                                       HorizontalAlignment="Center" />
                         </Button>
                     </Grid>
-                </StackPanel>
+                </Grid>
             </Border>
-
         </DataTemplate>
+
         <DataTemplate x:Name="ProductListViewTemplate">
             <StackPanel Orientation="Horizontal"
                         Padding="0,5,0,5">
-                <Image Source="/Assets/laptopDemoImg.jpg"
+                <Image Source="{Binding Product.ImagePath, Mode=OneWay}"
                        Width="100"
-                       Stretch="UniformToFill" />
+                       Stretch="UniformToFill"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
                 <StackPanel Padding="5">
                     <TextBlock Text="{Binding Product.Name, Mode=OneWay}"
                                TextWrapping="Wrap"
