@@ -24,5 +24,6 @@ namespace LaptopPosApp.Model
         public required long TotalPrice { get; set; }
         public OrderStatus Status { get; set; }
         public DateTimeOffset DeliveryDate { get; set; }
+        public string DeliveryAddress { get; set; } = string.Empty;
     }
 }
