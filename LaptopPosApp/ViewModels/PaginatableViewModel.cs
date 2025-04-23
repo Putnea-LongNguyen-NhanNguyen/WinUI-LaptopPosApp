@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
@@ -11,13 +13,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LaptopPosApp.ViewModels
 {
-    public class Filter
+    public abstract class Filter<T>
     {
         public required string Name { get; set; }
-        public required string Field { get; set; }
-        public required IList Values { get; set; }
     }
-    public abstract partial class PaginatableViewModel<T>: ObservableObject
+    public class FilterChoice<T> : Filter<T>
+    {
+        public required IDictionary<string, object> Values { get; set; }
+        public List<object> SelectedValues = new();
+        public required Func<IQueryable<T>, IList<object>, IQueryable<T>> Filterer { get; set; }
+    }
+    public class FilterRange<T> : Filter<T>
+    {
+        public required object Min { get; set; }
+        public required object Max { get; set; }
+        public object? SelectedMin { get; set; }
+        public object? SelectedMax { get; set; }
+        public required Func<IQueryable<T>, object, object, IQueryable<T>> Filterer { get; set; }
+    }
+    public partial class PaginatableViewModel<T>: ObservableObject
     {
         protected IQueryable<T> allItems { get; set; }
 
@@ -25,13 +39,16 @@ namespace LaptopPosApp.ViewModels
         public partial IList Items { get; private set; } = Array.Empty<T>();
 
         [ObservableProperty]
-        public partial IList<Filter> Filters { get; set; } = Array.Empty<Filter>();
-        partial void OnFiltersChanged(IList<Filter> filters)
+        public partial IList<Filter<T>> Filters { get; set; } = Array.Empty<Filter<T>>();
+        partial void OnFiltersChanged(IList<Filter<T>> filters)
         {
             Refresh();
         }
 
-        public abstract IList<Filter> GetAllFilters();
+        public virtual IList<Filter<T>> GetAllFilters()
+        {
+            return [];
+        }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(PageCount))]
@@ -70,13 +87,19 @@ namespace LaptopPosApp.ViewModels
         {
             foreach (var filter in Filters)
             {
-                if (filter.Values.Count == 0)
+                // Fix this function to use the 2 specialized class above
+                if (filter is FilterRange<T> rangeFilter)
+                {
+                    if (rangeFilter.SelectedMin == null || rangeFilter.SelectedMax == null)
+                        throw new ArgumentNullException("SelectedMin or SelectedMax cannot be null");
+                    items = rangeFilter.Filterer(items, rangeFilter.SelectedMin, rangeFilter.SelectedMax);
                     continue;
-                var property = typeof(T).GetProperty(filter.Field);
-                if (property == null)
-                    throw new ArgumentException($"Property {filter.Field} not found on type {typeof(T).Name}");
-                var values = filter.Values.Cast<object>().ToArray();
-                items = items.Where(x => values.Contains(property.GetValue(x)));
+                }
+                if (filter is FilterChoice<T> choiceFilter)
+                {
+                    items = choiceFilter.Filterer(items, choiceFilter.SelectedValues);
+                    continue;
+                }
             }
             return items;
         }

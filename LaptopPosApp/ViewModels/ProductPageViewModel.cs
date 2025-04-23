@@ -29,6 +29,45 @@ namespace LaptopPosApp.ViewModels
             Manufacturers = dbContext.Manufacturers.AsEnumerable();
         }
 
+        public override IList<Filter<Product>> GetAllFilters()
+        {
+            return new List<Filter<Product>>
+            {
+                new FilterChoice<Product>
+                {
+                    Name = "Danh mục",
+                    Filterer = (query, selectedValues) =>
+                    {
+                        if (selectedValues.Count == 0)
+                            return query;
+                        return query.Where(p => selectedValues.Contains(p.Category.ID));
+                    },
+                    Values = Categories.ToDictionary(c => c.Name, c => (object)c.ID)
+                },
+                new FilterChoice<Product>
+                {
+                    Name = "Nhà sản xuất",
+                    Filterer = (query, selectedValues) =>
+                    {
+                        if (selectedValues.Count == 0)
+                            return query;
+                        return query.Where(p => selectedValues.Contains(p.Manufacturer.ID));
+                    },
+                    Values = Manufacturers.ToDictionary(c => c.Name, c => (object)c.ID)
+                },
+                new FilterRange<Product>
+                {
+                    Name = "Giá",
+                    Filterer = (query, min, max) =>
+                    {
+                        return query.Where(p => p.Price >= (long)min && p.Price <= (long)max);
+                    },
+                    Min = allItems.Select(p => p.Price).Min(),
+                    Max = allItems.Select(p => p.Price).Max()
+                }
+            };
+        }
+
         public async Task StartAddFlow(Page parent)
         {
             var page = new AddProductPage();

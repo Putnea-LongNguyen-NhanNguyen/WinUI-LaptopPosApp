@@ -22,7 +22,34 @@ namespace LaptopPosApp.ViewModels
         {
             this.dbContext = dbContext;
         }
-
+        public override IList<Filter<Order>> GetAllFilters()
+        {
+            return [
+                new FilterChoice<Order>
+                {
+                    Name = "Trạng thái",
+                    Filterer = (query, values) =>
+                    {
+                        return query.Where(o => values.Contains(o.Status));
+                    },
+                    Values = new Dictionary<string, object>()
+                    {
+                        { "Đã giao", OrderStatus.Delivered },
+                        { "Đang giao", OrderStatus.Delivering },
+                        { "Đã trả hàng", OrderStatus.Returned }
+                    }
+                },
+                new FilterChoice<Order>
+                {
+                    Name = "Khách hàng",
+                    Filterer = (query, values) =>
+                    {
+                        return query.Where(o => values.Contains(o.Customer.ID));
+                    },
+                    Values = dbContext.Customers.ToDictionary(c => c.Name, c => (object)c.ID)
+                },
+            ];
+        }
         public void Remove(IEnumerable<Order> items)
         {
             var deleted = false;
