@@ -40,12 +40,18 @@ namespace LaptopPosApp.Views
             Products = order.Products.AsEnumerable();
             Vouchers = order.Vouchers.AsEnumerable();
             TotalPrice = "Tổng thành tiền: " + _currencyConverter.Convert(order.TotalPrice, typeof(string), null, null).ToString();
+            DeliveryAddress = order.DeliveryAddress;
+            HomeDelivery = !string.IsNullOrEmpty(DeliveryAddress);
+            DeliveryDate = order.DeliveryDate;
         }
         public string Name { get; }
         public string Phone { get; }
         public string Address { get; }
         public string Email { get; }
         public string TotalPrice { get; }
+        public string DeliveryAddress { get; }
+        public bool HomeDelivery { get; }
+        public DateTimeOffset DeliveryDate { get; }
         public IEnumerable<OrderProduct> Products { get; } = [];
         public IEnumerable<Voucher> Vouchers { get; } = [];
         private readonly CurrencyConverter _currencyConverter = new();

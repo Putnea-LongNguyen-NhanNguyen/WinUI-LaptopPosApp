@@ -57,6 +57,20 @@
                 <tableView:TableViewComboBoxColumn Header="Trạng thái"
                                                    ItemsSource="{x:Bind ViewModel.OrderStatuses}"
                                                    Binding="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <tableView:TableViewTextColumn Header="Địa chỉ giao hàng"
+                                               Binding="{Binding DeliveryAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <tableView:TableViewTemplateColumn Header="Ngày giao">
+                    <tableView:TableViewTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CalendarDatePicker Date="{Binding DeliveryDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.CellTemplate>
+                    <tableView:TableViewTemplateColumn.EditingTemplate>
+                        <DataTemplate>
+                            <CalendarDatePicker Date="{Binding DeliveryDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.EditingTemplate>
+                </tableView:TableViewTemplateColumn>
                 <tableView:TableViewTemplateColumn Header=""
                                                    IsReadOnly="True">
                     <tableView:TableViewTemplateColumn.CellTemplate>
