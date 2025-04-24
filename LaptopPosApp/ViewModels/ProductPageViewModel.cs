@@ -29,43 +29,46 @@ namespace LaptopPosApp.ViewModels
             Manufacturers = dbContext.Manufacturers.AsEnumerable();
         }
 
-        public override IList<Filter<Product>> GetAllFilters()
+        public override IList<IFilter> GetAllFilters()
         {
-            return new List<Filter<Product>>
-            {
-                new FilterChoice<Product>
+            return [
+                new FilterMultipleChoice<Product, int>
                 {
                     Name = "Danh mục",
-                    Filterer = (query, selectedValues) =>
+                    Filterer = (query, values) =>
                     {
-                        if (selectedValues.Count == 0)
-                            return query;
-                        return query.Where(p => selectedValues.Contains(p.Category.ID));
+                        return query.Where(p => values.Contains(p.Category.ID));
                     },
-                    Values = Categories.ToDictionary(c => c.Name, c => (object)c.ID)
+                    Values = Categories.Select(c => new FilterMultipleChoiceValue<int> {
+                        Key = c.Name,
+                        Value = c.ID
+                    }).ToList()
                 },
-                new FilterChoice<Product>
+                new FilterMultipleChoice<Product, int>
                 {
                     Name = "Nhà sản xuất",
-                    Filterer = (query, selectedValues) =>
+                    Filterer = (query, values) =>
                     {
-                        if (selectedValues.Count == 0)
-                            return query;
-                        return query.Where(p => selectedValues.Contains(p.Manufacturer.ID));
+                        return query.Where(p => values.Contains(p.Manufacturer.ID));
                     },
-                    Values = Manufacturers.ToDictionary(c => c.Name, c => (object)c.ID)
+                    Values = Manufacturers.Select(c => new FilterMultipleChoiceValue<int> {
+                        Key = c.Name,
+                        Value = c.ID
+                    }).ToList()
                 },
-                new FilterRange<Product>
+                new FilterRange<Product, long>
                 {
                     Name = "Giá",
                     Filterer = (query, min, max) =>
                     {
-                        return query.Where(p => p.Price >= (long)min && p.Price <= (long)max);
+                        return query.Where(p => p.Price >= min && p.Price <= max);
                     },
                     Min = allItems.Select(p => p.Price).Min(),
-                    Max = allItems.Select(p => p.Price).Max()
+                    Max = allItems.Select(p => p.Price).Max(),
+                    SelectedMin = allItems.Select(p => p.Price).Min(),
+                    SelectedMax = allItems.Select(p => p.Price).Min(),
                 }
-            };
+            ];
         }
 
         public async Task StartAddFlow(Page parent)

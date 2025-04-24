@@ -13,25 +13,97 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LaptopPosApp.ViewModels
 {
-    public abstract class Filter<T>
+    #region Filter Base Class
+    public interface IFilter
+    {
+        string Name { get; }
+    }
+    public abstract class Filter<T>: IFilter
     {
         public required string Name { get; set; }
+        public abstract IQueryable<T> Apply(IQueryable<T> queryable);
     }
-    public class FilterChoice<T> : Filter<T>
+    #endregion
+
+    #region Multiple Choice Filter
+    public interface IFilterMultipleChoiceValue
     {
-        public required IDictionary<string, object> Values { get; set; }
-        public List<object> SelectedValues = new();
-        public required Func<IQueryable<T>, IList<object>, IQueryable<T>> Filterer { get; set; }
+        public string Key { get; }
+        public object Value { get; }
+        public bool Selected { get; } 
     }
-    public class FilterRange<T> : Filter<T>
+    class FilterMultipleChoiceValue<ValueType>: IFilterMultipleChoiceValue
     {
-        public required object Min { get; set; }
-        public required object Max { get; set; }
-        public object? SelectedMin { get; set; }
-        public object? SelectedMax { get; set; }
-        public required Func<IQueryable<T>, object, object, IQueryable<T>> Filterer { get; set; }
+        public required string Key { get; set; }
+        public required ValueType Value { get; set; }
+        object IFilterMultipleChoiceValue.Value => Value;
+        public bool Selected { get; set; } = false;
     }
-    public partial class PaginatableViewModel<T>: ObservableObject
+    public interface IFilterMultipleChoice
+    {
+        public IList<IFilterMultipleChoiceValue> Values { get; }
+    }
+    class FilterMultipleChoice<T, ValueType> : Filter<T>, IFilterMultipleChoice
+    {
+        public required List<FilterMultipleChoiceValue<ValueType>> Values { get; set; }
+        IList<IFilterMultipleChoiceValue> IFilterMultipleChoice.Values => Values.Cast<IFilterMultipleChoiceValue>().ToList();
+        public required Func<IQueryable<T>, IList<ValueType>, IQueryable<T>> Filterer { get; set; }
+        public override IQueryable<T> Apply(IQueryable<T> queryable)
+        {
+            return Filterer(
+                queryable,
+                Values.Where(v => v.Selected).Select(v => v.Value).ToList()
+            );
+        }
+    }
+    #endregion
+
+    #region Range Filter
+    public interface IFilterRange
+    {
+        public object Min { get; }
+        public object Max { get; }
+        public object SelectedMin { get; set; }
+        public object SelectedMax { get; set; }
+    }
+    class FilterRange<T, ValueType> : Filter<T>, IFilterRange
+    {
+        public required ValueType Min { get; set; }
+        public required ValueType Max { get; set; }
+        public required ValueType SelectedMin { get; set; }
+        public required ValueType SelectedMax { get; set; }
+        object IFilterRange.Min => Min;
+        object IFilterRange.Max => Max;
+        object IFilterRange.SelectedMin {
+            get => SelectedMin;
+            set {
+                if (value is ValueType min)
+                    SelectedMin = min;
+            }
+        }
+        object IFilterRange.SelectedMax
+        {
+            get => SelectedMax;
+            set
+            {
+                if (value is ValueType max)
+                    SelectedMax = max;
+            }
+        }
+        public required Func<IQueryable<T>, ValueType, ValueType, IQueryable<T>> Filterer { get; set; }
+        public override IQueryable<T> Apply(IQueryable<T> queryable)
+        {
+            return Filterer(queryable, Min, Max);
+        }
+    }
+    #endregion
+
+    public interface IFilterable
+    {
+        IList<IFilter> GetAllFilters();
+        IList<IFilter> Filters { get; set; }
+    }
+    public partial class PaginatableViewModel<T>: ObservableObject, IFilterable
     {
         protected IQueryable<T> allItems { get; set; }
 
@@ -39,13 +111,13 @@ namespace LaptopPosApp.ViewModels
         public partial IList Items { get; private set; } = Array.Empty<T>();
 
         [ObservableProperty]
-        public partial IList<Filter<T>> Filters { get; set; } = Array.Empty<Filter<T>>();
-        partial void OnFiltersChanged(IList<Filter<T>> filters)
+        public partial IList<IFilter> Filters { get; set; } = Array.Empty<Filter<T>>();
+        partial void OnFiltersChanged(IList<IFilter> filters)
         {
             Refresh();
         }
 
-        public virtual IList<Filter<T>> GetAllFilters()
+        public virtual IList<IFilter> GetAllFilters()
         {
             return [];
         }
@@ -87,18 +159,9 @@ namespace LaptopPosApp.ViewModels
         {
             foreach (var filter in Filters)
             {
-                // Fix this function to use the 2 specialized class above
-                if (filter is FilterRange<T> rangeFilter)
+                if (filter is Filter<T> typedFilter)
                 {
-                    if (rangeFilter.SelectedMin == null || rangeFilter.SelectedMax == null)
-                        throw new ArgumentNullException("SelectedMin or SelectedMax cannot be null");
-                    items = rangeFilter.Filterer(items, rangeFilter.SelectedMin, rangeFilter.SelectedMax);
-                    continue;
-                }
-                if (filter is FilterChoice<T> choiceFilter)
-                {
-                    items = choiceFilter.Filterer(items, choiceFilter.SelectedValues);
-                    continue;
+                    items = typedFilter.Apply(items);
                 }
             }
             return items;

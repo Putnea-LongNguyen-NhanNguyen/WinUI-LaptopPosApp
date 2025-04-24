@@ -20,10 +20,10 @@ namespace LaptopPosApp.ViewModels
             VoucherType.Fixed,
             VoucherType.Percentage,
         };
-        public override IList<Filter<Voucher>> GetAllFilters()
+        public override IList<IFilter> GetAllFilters()
         {
             return [
-                new FilterChoice<Voucher>
+                new FilterMultipleChoice<Voucher, VoucherType>
                 {
                     Name = "Loại mã giảm giá",
                     Filterer = (query, selectedValues) =>
@@ -32,21 +32,28 @@ namespace LaptopPosApp.ViewModels
                             return query;
                         return query.Where(v => selectedValues.Contains(v.Type));
                     },
-                    Values = new Dictionary<string, object>
-                    {
-                        { "Giảm cố định", VoucherType.Fixed },
-                        { "Giảm theo phần trăm", VoucherType.Percentage }
-                    }
+                    Values = [
+                        new() {
+                            Key = "Giảm cố định",
+                            Value = VoucherType.Fixed,
+                        },
+                        new() {
+                            Key = "Giảm theo phần trăm",
+                            Value = VoucherType.Percentage,
+                        }
+                    ]
                 },
-                new FilterRange<Voucher>
+                new FilterRange<Voucher, DateTime>
                 {
                     Name = "Ngày hết hạn",
                     Filterer = (query, min, max) =>
                     {
-                        return query.Where(v => v.EndDate >= (DateTime)min && v.EndDate <= (DateTime)max);
+                        return query.Where(v => v.EndDate >= min && v.EndDate <= max);
                     },
                     Min = allItems.Select(v => v.EndDate).Min(),
-                    Max = allItems.Select(v => v.EndDate).Max()
+                    Max = allItems.Select(v => v.EndDate).Max(),
+                    SelectedMin = allItems.Select(v => v.EndDate).Min(),
+                    SelectedMax = allItems.Select(v => v.EndDate).Max(),
                 },
             ];
         }
