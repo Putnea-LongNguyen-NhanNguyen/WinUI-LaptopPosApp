@@ -32,8 +32,6 @@ namespace LaptopPosApp.Views
         {
             this.InitializeComponent();
             ViewModel = new LoginViewModel();
-
-            RestorePassword();
         }
 
         private void LoginButton_Click(Object sender, RoutedEventArgs e)
@@ -41,11 +39,7 @@ namespace LaptopPosApp.Views
             if (ViewModel.CanLogin())
             {
                 bool success = ViewModel.Login();
-
-                if (ViewModel.RememberMe)
-                {
-                    StorePassword();
-                }
+                ViewModel.StorePassword();
 
                 if (success)
                 {
@@ -54,53 +48,6 @@ namespace LaptopPosApp.Views
                     this.Close();
                 }
             }
-        }
-
-        private void StorePassword()
-        {
-            var passwordInBytes = Encoding.UTF8.GetBytes(ViewModel.Password);
-            var entropyInBytes = new byte[20];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(entropyInBytes);
-            }
-            var encryptedInBytes = ProtectedData.Protect(
-                passwordInBytes,
-                entropyInBytes,
-                DataProtectionScope.CurrentUser
-            );
-            var encryptedInBase64 = Convert.ToBase64String(encryptedInBytes);
-            var entropyInBase64 = Convert.ToBase64String(entropyInBytes);
-
-            var localStorage = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localStorage.Values["Username"] = ViewModel.Username;
-            localStorage.Values["Password"] = encryptedInBase64;
-            localStorage.Values["Entropy"] = entropyInBase64;
-        }
-
-        private void RestorePassword()
-        {
-            var localStorage = Windows.Storage.ApplicationData.Current.LocalSettings;
-            var username = (string)localStorage.Values["Username"];
-            var encryptedInBase64 = (string)localStorage.Values["Password"];
-            var entropyInBase64 = (string)localStorage.Values["Entropy"];
-
-            if (username == null)
-                return;
-
-            var encryptedInBytes = Convert.FromBase64String(encryptedInBase64);
-            var entropyInBytes = Convert.FromBase64String(entropyInBase64);
-
-            var passwordInBytes = ProtectedData.Unprotect(
-                encryptedInBytes, 
-                entropyInBytes, 
-                DataProtectionScope.CurrentUser
-            );
-            var password = Encoding.UTF8.GetString(passwordInBytes);
-            
-            ViewModel.Username = username;
-            ViewModel.Password = password;
-            ViewModel.RememberMe = true;
         }
     }
 }

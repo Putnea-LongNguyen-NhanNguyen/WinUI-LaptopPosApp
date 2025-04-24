@@ -111,6 +111,12 @@ namespace LaptopPosApp.ViewModels
                 Icon = new SymbolIcon(Symbol.Placeholder),
                 CreatePage = () => new CreateOrderPage(),
             },
+            new NavigationItemLeaf()
+            {
+                Title = "Cài đặt",
+                Icon = new SymbolIcon(Symbol.Edit),
+                CreatePage = () => new SettingsPage(),
+            }
         };
         public void NavigateTo(Page? page)
         {

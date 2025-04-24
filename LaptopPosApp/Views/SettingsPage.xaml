@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page x:Class="LaptopPosApp.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:LaptopPosApp.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <PasswordBox x:Name="OldPasswordBox"
+                         Header="Nhập mật khẩu cũ"
+                         Width="300"
+                         Password="{x:Bind ViewModel.OldPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock x:Name="OldPasswordValidationMessage"
+                       Margin="0, 0, 0, 10"
+                       Width="300"
+                       Foreground="Red"
+                       Text="{x:Bind ViewModel.OldPasswordValidationMessage, Mode=OneWay}" />
+            <PasswordBox x:Name="NewPasswordBox"
+                         Header="Nhập mật khẩu mới"
+                         Width="300"
+                         Password="{x:Bind ViewModel.NewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock x:Name="NewPasswordValidationMessage"
+                       Width="300"
+                       Foreground="Red"
+                       Margin="0, 0, 0, 10"
+                       Text="{x:Bind ViewModel.NewPasswordValidationMessage, Mode=OneWay}" />
+            <PasswordBox x:Name="ConfirmNewPasswordBox"
+                         Header="Xác nhận mật khẩu mới"
+                         Width="300"
+                         Margin="0, 0, 0, 10"
+                         Password="{x:Bind ViewModel.ConfirmNewPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock x:Name="ConfirmNewPasswordValidationMessage"
+                       Width="300"
+                       Foreground="Red"
+                       Text="{x:Bind ViewModel.ConfirmNewPasswordValidationMessage, Mode=OneWay}" />
+            <TextBlock x:Name="SuccessMessage"
+                       Width="300"
+                       Text="{x:Bind ViewModel.SuccessMessage, Mode=OneWay}"
+                       Foreground="Green" />
+            <Button Margin="0, 10, 0, 0"
+                    Content="Đổi"
+                    x:Name="ChangePasswordButton"
+                    Background="{StaticResource SystemAccentColor}"
+                    HorizontalAlignment="Stretch"
+                    Click="ChangePasswordButton_Click" />
+        </StackPanel>
+    </Grid>
+</Page>
