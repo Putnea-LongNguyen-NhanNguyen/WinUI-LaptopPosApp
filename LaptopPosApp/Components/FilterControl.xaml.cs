@@ -68,10 +68,8 @@ namespace LaptopPosApp.Components
             return null;
         }
     }
-    public partial class FilterControl: UserControl, INotifyPropertyChanged
+    public partial class FilterControl: UserControl
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         [GeneratedDependencyProperty]
         public partial IFilterable? ViewModel { get; set; }
 
