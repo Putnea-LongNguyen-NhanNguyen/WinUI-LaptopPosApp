@@ -50,7 +50,9 @@
                         <CheckBox
                             Content="{Binding Key}"
                             Tag="{Binding Value}"
-                            IsEnabled="{Binding DataContext.Enabled, ElementName=Choices}" IsChecked="{Binding Selected}" />
+                            IsEnabled="{Binding DataContext.Enabled, ElementName=Choices}"
+                            IsChecked="{Binding Selected, Mode=TwoWay}"
+                        />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -86,5 +88,8 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <Button Click="Button_Click">
+            Lọc
+        </Button>
     </StackPanel>
 </UserControl>

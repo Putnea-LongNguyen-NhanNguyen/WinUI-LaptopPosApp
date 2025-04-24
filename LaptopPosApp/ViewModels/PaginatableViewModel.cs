@@ -113,12 +113,13 @@ namespace LaptopPosApp.ViewModels
         [ObservableProperty]
         public partial IList Items { get; private set; } = Array.Empty<T>();
 
-        [ObservableProperty]
-        public partial IList<IFilter> Filters { get; set; } = Array.Empty<Filter<T>>();
-        partial void OnFiltersChanged(IList<IFilter> filters)
-        {
-            Refresh();
-        }
+        public IList<IFilter> Filters {
+            get;
+            set {
+                field = value;
+                Refresh();
+            }
+        } = Array.Empty<Filter<T>>();
 
         public virtual IList<IFilter> GetAllFilters()
         {

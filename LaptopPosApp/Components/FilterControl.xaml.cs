@@ -97,5 +97,11 @@ namespace LaptopPosApp.Components
             var expander = checkbox.FindAscendant<Expander>()!;
             expander.IsExpanded = false;
         }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel is null)
+                return;
+            ViewModel.Filters = Filters!;
+        }
     }
 }
