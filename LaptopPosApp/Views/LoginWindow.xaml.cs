@@ -43,8 +43,7 @@ namespace LaptopPosApp.Views
 
                 if (success)
                 {
-                    DashboardWindow dashboardWindow = new DashboardWindow();
-                    dashboardWindow.Activate();
+                    App.DashBoardWindow.Activate();
                     this.Close();
                 }
             }

@@ -15,6 +15,9 @@ using Microsoft.UI.Xaml.Navigation;
 using LaptopPosApp.ViewModels;
 using LaptopPosApp.Model;
 using Microsoft.Extensions.DependencyInjection;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -44,6 +47,43 @@ namespace LaptopPosApp.Views
         private void Cancel(object sender, EventArgs e)
         {
             ContentDialog?.Hide();
+        }
+
+        private async void AddImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = (sender as Button)!;
+            btn.IsEnabled = false;
+
+            FileOpenPicker openPicker = new()
+            {
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary
+            };
+            openPicker.FileTypeFilter.Add(".jpg");
+            openPicker.FileTypeFilter.Add(".jpeg");
+            openPicker.FileTypeFilter.Add(".png");
+
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.DashBoardWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hwnd);
+
+            StorageFile file = await openPicker.PickSingleFileAsync();
+            if (file != null)
+            {
+                ViewModel.Image = file.Path;
+                BitmapImage bitmapImage = new()
+                {
+                    UriSource = new Uri(file.Path)
+                };
+                ImageView.Source = bitmapImage;
+            }
+
+            btn.IsEnabled = true;
+        }
+
+        private void DeleteImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            ImageView.Source = null;
+            ViewModel.Image = string.Empty;
         }
     }
 }

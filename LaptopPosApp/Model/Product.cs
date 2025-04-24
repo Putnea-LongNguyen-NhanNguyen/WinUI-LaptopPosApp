@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,5 +23,7 @@ namespace LaptopPosApp.Model
         public Category? Category { get; set; }
         public List<ProductTemporaryPrice> TemporaryPrices { get; set; } = new();
         public string Image { get; set; } = string.Empty;
+        [NotMapped]
+        public string ImagePath => File.Exists(Image) ? Image : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/laptopDemoImg.jpg");
     }
 }
