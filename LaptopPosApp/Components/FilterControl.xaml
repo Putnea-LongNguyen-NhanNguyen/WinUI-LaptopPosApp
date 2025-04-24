@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="LaptopPosApp.Components.FilterControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaptopPosApp.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LaptopPosApp.ViewModels"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="NumericRangeTemplate" x:DataType="vm:IFilterRange">
+            <toolkit:RangeSelector
+                RangeStart="{Binding SelectedMin, Mode=TwoWay}"
+                RangeEnd="{Binding SelectedMax, Mode=TwoWay}"
+                Minimum="{Binding Min, Mode=OneWay}"
+                Maximum="{Binding Max, Mode=OneWay}"
+            />
+        </DataTemplate>
+        <DataTemplate x:Key="DateRangeTemplate" x:DataType="vm:IFilterRange">
+            <StackPanel>
+                <CalendarDatePicker
+                    Header="Start Date"
+                    Date="{Binding SelectedMin, Mode=TwoWay}"
+                    PlaceholderText="Select Start Date" />
+                <CalendarDatePicker
+                    Header="End Date"
+                    Date="{Binding SelectedMax, Mode=TwoWay}"
+                    PlaceholderText="Select End Date" />
+            </StackPanel>
+        </DataTemplate>
+        <local:FilterRangeTemplateSelector
+            x:Key="FilterRangeTemplateSelector"
+            DateSelector="{StaticResource DateRangeTemplate}"
+            NumericSelector="{StaticResource NumericRangeTemplate}"
+        />
+        
+        <DataTemplate x:Key="FilterRangeTemplate" x:DataType="vm:IFilterRange">
+            <ContentControl
+                ContentTemplateSelector="{StaticResource FilterRangeTemplateSelector}"
+                Content="{Binding}"
+            />
+        </DataTemplate>
+        <DataTemplate x:Key="FilterChoiceTemplate" x:DataType="vm:IFilterMultipleChoice">
+            <ItemsControl ItemsSource="{Binding Values}" Margin="20,0,0,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Key}" Tag="{Binding Value}" IsChecked="{Binding Selected}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DataTemplate>
+        <local:FilterTemplateSelector
+            x:Key="FilterTemplateSelector"
+            Range="{StaticResource FilterRangeTemplate}"
+            Choice="{StaticResource FilterChoiceTemplate}"
+        />
+    </UserControl.Resources>
+
+    <StackPanel>
+        <ItemsControl
+            x:Name="FilterList"
+        >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Expander>
+                        <Expander.Header>
+                            <CheckBox Content="{Binding Name}" Checked="EnableFilter" Unchecked="DisableFilter"/>
+                        </Expander.Header>
+                        <Expander.Content>
+                            <ContentControl
+                                ContentTemplateSelector="{StaticResource FilterTemplateSelector}"
+                                Content="{Binding}"
+                            />
+                        </Expander.Content>
+                    </Expander>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>
