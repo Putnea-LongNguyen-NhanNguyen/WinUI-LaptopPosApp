@@ -56,6 +56,13 @@
                     Header="ID"
                     IsReadOnly="True"
                     Binding="{Binding ID, Mode=OneWay}" />
+                <tableView:TableViewTemplateColumn Header="Hình ảnh">
+                    <tableView:TableViewTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="/Assets/laptopDemoImg.jpg" />
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.CellTemplate>
+                </tableView:TableViewTemplateColumn>
                 <tableView:TableViewTextColumn
                     Header="Tên sản phẩm"
                     Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

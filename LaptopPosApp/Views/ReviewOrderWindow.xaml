@@ -74,8 +74,8 @@
                                 <TextBlock Grid.Column="1"
                                            VerticalAlignment="Center"
                                            Style="{StaticResource BodyTextBlockStyle}">
-                                <Run Text="x" />
-                                <Run Text="{Binding Quantity}" />
+                                    <Run Text="x" />
+                                    <Run Text="{Binding Quantity}" />
                                 </TextBlock>
                                 <TextBlock Grid.Column="2"
                                            VerticalAlignment="Center"
@@ -187,9 +187,9 @@
             <TextBlock Text="Ngày giao hàng"
                        Style="{StaticResource TitleTextBlockStyle}" />
             <CalendarDatePicker Date="{Binding DeliveryDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                Margin="0,10,0,10" 
+                                Margin="0,10,0,10"
                                 IsHitTestVisible="False"
-                                FontSize="20"/>
+                                FontSize="20" />
         </StackPanel>
     </ScrollView>
 </Window>

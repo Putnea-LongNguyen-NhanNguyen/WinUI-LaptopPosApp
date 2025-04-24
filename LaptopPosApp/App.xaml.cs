@@ -89,5 +89,6 @@ namespace LaptopPosApp
         }
 
         private Window? m_window;
+        public static Window DashBoardWindow = new DashboardWindow();
     }
 }

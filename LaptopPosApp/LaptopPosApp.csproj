@@ -31,6 +31,7 @@
     <None Remove="Views\OrdersPage.xaml" />
     <None Remove="Views\ReviewOrderWindow.xaml" />
     <None Remove="Views\SendVouchersMailWindow.xaml" />
+    <None Remove="Views\SettingsPage.xaml" />
     <None Remove="Views\StatisticsPage.xaml" />
     <None Remove="Views\VouchersPage.xaml" />
   </ItemGroup>
@@ -79,6 +80,11 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250228001" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.3" />
     <PackageReference Include="WinUI.TableView" Version="1.2.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\ReviewOrderWindow.xaml">
