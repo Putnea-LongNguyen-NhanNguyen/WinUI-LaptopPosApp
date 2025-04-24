@@ -208,7 +208,7 @@ namespace LaptopPosApp.ViewModels
                     Orders = [],
                 };
                 dbContext.Customers.Add(customer);
-            }           
+            }
             var order = new Order()
             {
                 ID = 0,
@@ -216,7 +216,9 @@ namespace LaptopPosApp.ViewModels
                 Customer = customer,
                 Products = [.. CurrentOrder],
                 Vouchers = [.. VouchersAdded],
-                TotalPrice = TotalPrice
+                TotalPrice = TotalPrice,
+                DeliveryAddress = IsDelivery ? Address : string.Empty,
+                DeliveryDate = IsDelivery ? DateTimeOffset.Now.AddDays(5) : DateTimeOffset.Now,
             };
             foreach (var v in VouchersAdded)
             {
