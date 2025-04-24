@@ -43,6 +43,7 @@ namespace LaptopPosApp.Views
             DeliveryAddress = order.DeliveryAddress;
             HomeDelivery = !string.IsNullOrEmpty(DeliveryAddress);
             DeliveryDate = order.DeliveryDate;
+            DeliveryDateView.Date = DeliveryDate;
         }
         public string Name { get; }
         public string Phone { get; }
