@@ -12,7 +12,7 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="NumericRangeTemplate" x:DataType="vm:IFilterRange">
-            <toolkit:RangeSelector
+            <toolkit:RangeSelector IsEnabled="{Binding Enabled}"
                 RangeStart="{Binding SelectedMin, Mode=TwoWay}"
                 RangeEnd="{Binding SelectedMax, Mode=TwoWay}"
                 Minimum="{Binding Min, Mode=OneWay}"
@@ -21,11 +21,11 @@
         </DataTemplate>
         <DataTemplate x:Key="DateRangeTemplate" x:DataType="vm:IFilterRange">
             <StackPanel>
-                <CalendarDatePicker
+                <CalendarDatePicker IsEnabled="{Binding Enabled}"
                     Header="Start Date"
                     Date="{Binding SelectedMin, Mode=TwoWay}"
                     PlaceholderText="Select Start Date" />
-                <CalendarDatePicker
+                <CalendarDatePicker IsEnabled="{Binding Enabled}"
                     Header="End Date"
                     Date="{Binding SelectedMax, Mode=TwoWay}"
                     PlaceholderText="Select End Date" />
@@ -44,10 +44,13 @@
             />
         </DataTemplate>
         <DataTemplate x:Key="FilterChoiceTemplate" x:DataType="vm:IFilterMultipleChoice">
-            <ItemsControl ItemsSource="{Binding Values}" Margin="20,0,0,0">
+            <ItemsControl Name="Choices" DataContext="{Binding}" ItemsSource="{Binding Values}" Margin="20,0,0,0">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Content="{Binding Key}" Tag="{Binding Value}" IsChecked="{Binding Selected}" />
+                        <CheckBox
+                            Content="{Binding Key}"
+                            Tag="{Binding Value}"
+                            IsEnabled="{Binding DataContext.Enabled, ElementName=Choices}" IsChecked="{Binding Selected}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -64,10 +67,14 @@
             x:Name="FilterList"
         >
             <ItemsControl.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="vm:IFilter">
                     <Expander>
                         <Expander.Header>
-                            <CheckBox Content="{Binding Name}" Checked="EnableFilter" Unchecked="DisableFilter"/>
+                            <CheckBox
+                                Content="{Binding Name}"
+                                IsChecked="{Binding Enabled, Mode=TwoWay}"
+                                Checked="EnableFilter" Unchecked="DisableFilter"
+                            />
                         </Expander.Header>
                         <Expander.Content>
                             <ContentControl

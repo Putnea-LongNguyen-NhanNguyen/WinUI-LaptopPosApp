@@ -17,10 +17,13 @@ namespace LaptopPosApp.ViewModels
     public interface IFilter
     {
         string Name { get; }
+        bool Enabled { get; set; }
     }
-    public abstract class Filter<T>: IFilter
+    public abstract partial class Filter<T>: ObservableObject, IFilter
     {
         public required string Name { get; set; }
+        [ObservableProperty]
+        public partial bool Enabled { get; set; } = false;
         public abstract IQueryable<T> Apply(IQueryable<T> queryable);
     }
     #endregion
@@ -39,7 +42,7 @@ namespace LaptopPosApp.ViewModels
         object IFilterMultipleChoiceValue.Value => Value;
         public bool Selected { get; set; } = false;
     }
-    public interface IFilterMultipleChoice
+    public interface IFilterMultipleChoice: IFilter
     {
         public IList<IFilterMultipleChoiceValue> Values { get; }
     }
@@ -59,7 +62,7 @@ namespace LaptopPosApp.ViewModels
     #endregion
 
     #region Range Filter
-    public interface IFilterRange
+    public interface IFilterRange: IFilter
     {
         public object Min { get; }
         public object Max { get; }
@@ -159,7 +162,7 @@ namespace LaptopPosApp.ViewModels
         {
             foreach (var filter in Filters)
             {
-                if (filter is Filter<T> typedFilter)
+                if (filter is Filter<T> typedFilter && typedFilter.Enabled)
                 {
                     items = typedFilter.Apply(items);
                 }

@@ -85,25 +85,17 @@ namespace LaptopPosApp.Components
         {
             this.InitializeComponent();
         }
-        private void ToggleFilterSettings(Expander expander, bool enabled)
-        {
-            foreach (var control in (expander.Content as DependencyObject)!.FindDescendantsRecursive().OfType<Control>())
-            {
-                control.IsEnabled = enabled;
-            }
-            expander.IsExpanded = enabled;
-        }
         private void EnableFilter(object sender, RoutedEventArgs e)
         {
             var checkbox = (sender as CheckBox)!;
             var expander = checkbox.FindAscendant<Expander>()!;
-            ToggleFilterSettings(expander, true);
+            expander.IsExpanded = true;
         }
         private void DisableFilter(object sender, RoutedEventArgs e)
         {
             var checkbox = (sender as CheckBox)!;
             var expander = checkbox.FindAscendant<Expander>()!;
-            ToggleFilterSettings(expander, false);
+            expander.IsExpanded = false;
         }
     }
 }
