@@ -7,17 +7,30 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LaptopPosApp.ViewModels"
+    xmlns:convert="using:LaptopPosApp.Views.Converters"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <convert:LongToDoubleConverter x:Key="LongToDoubleConverter" />
         <DataTemplate x:Key="NumericRangeTemplate" x:DataType="vm:IFilterRange">
-            <toolkit:RangeSelector IsEnabled="{Binding Enabled}"
-                RangeStart="{Binding SelectedMin, Mode=TwoWay}"
-                RangeEnd="{Binding SelectedMax, Mode=TwoWay}"
-                Minimum="{Binding Min, Mode=OneWay}"
-                Maximum="{Binding Max, Mode=OneWay}"
-            />
+            <StackPanel MinWidth="200" HorizontalAlignment="Stretch">
+                <toolkit:RangeSelector IsEnabled="{Binding Enabled}"
+                    RangeStart="{Binding SelectedMin, Mode=TwoWay, Converter={StaticResource LongToDoubleConverter}}"
+                    RangeEnd="{Binding SelectedMax, Mode=TwoWay, Converter={StaticResource LongToDoubleConverter}}"
+                    Minimum="{Binding Min, Mode=OneWay, Converter={StaticResource LongToDoubleConverter}}"
+                    Maximum="{Binding Max, Mode=OneWay, Converter={StaticResource LongToDoubleConverter}}"
+                    StepFrequency="1"
+                />
+                <TextBlock>
+                    Từ: 
+                    <Run Text="{Binding SelectedMin, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock>
+                    Đến: 
+                    <Run Text="{Binding SelectedMax, Mode=OneWay}" />
+                </TextBlock>
+            </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="DateRangeTemplate" x:DataType="vm:IFilterRange">
             <StackPanel>
@@ -70,7 +83,7 @@
         >
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:IFilter">
-                    <Expander>
+                    <Expander HorizontalAlignment="Stretch">
                         <Expander.Header>
                             <CheckBox
                                 Content="{Binding Name}"

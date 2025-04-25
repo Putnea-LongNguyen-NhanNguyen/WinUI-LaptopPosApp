@@ -69,12 +69,14 @@ namespace LaptopPosApp.ViewModels
         public object SelectedMin { get; set; }
         public object SelectedMax { get; set; }
     }
-    class FilterRange<T, ValueType> : Filter<T>, IFilterRange
+    partial class FilterRange<T, ValueType> : Filter<T>, IFilterRange
     {
         public required ValueType Min { get; set; }
         public required ValueType Max { get; set; }
-        public required ValueType SelectedMin { get; set; }
-        public required ValueType SelectedMax { get; set; }
+        [ObservableProperty]
+        public required partial ValueType SelectedMin { get; set; }
+        [ObservableProperty]
+        public required partial ValueType SelectedMax { get; set; }
         object IFilterRange.Min => Min;
         object IFilterRange.Max => Max;
         object IFilterRange.SelectedMin {
@@ -96,7 +98,7 @@ namespace LaptopPosApp.ViewModels
         public required Func<IQueryable<T>, ValueType, ValueType, IQueryable<T>> Filterer { get; set; }
         public override IQueryable<T> Apply(IQueryable<T> queryable)
         {
-            return Filterer(queryable, Min, Max);
+            return Filterer(queryable, SelectedMin, SelectedMax);
         }
     }
     #endregion
