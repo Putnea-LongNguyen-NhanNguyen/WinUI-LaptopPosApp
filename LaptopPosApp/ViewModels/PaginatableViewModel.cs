@@ -69,14 +69,21 @@ namespace LaptopPosApp.ViewModels
         public object SelectedMin { get; set; }
         public object SelectedMax { get; set; }
     }
-    partial class FilterRange<T, ValueType> : Filter<T>, IFilterRange
+    partial class FilterRange<T, ValueType>: Filter<T>, IFilterRange where ValueType : IComparable
     {
-        public required ValueType Min { get; set; }
-        public required ValueType Max { get; set; }
+        public FilterRange(ValueType min, ValueType max)
+        {
+            Min = min;
+            Max = max;
+            SelectedMin = min;
+            SelectedMax = max;
+        }
+        public ValueType Min { get; }
+        public ValueType Max { get; }
         [ObservableProperty]
-        public required partial ValueType SelectedMin { get; set; }
+        public partial ValueType SelectedMin { get; set; }
         [ObservableProperty]
-        public required partial ValueType SelectedMax { get; set; }
+        public partial ValueType SelectedMax { get; set; }
         object IFilterRange.Min => Min;
         object IFilterRange.Max => Max;
         object IFilterRange.SelectedMin {

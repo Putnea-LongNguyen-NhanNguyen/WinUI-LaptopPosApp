@@ -43,17 +43,16 @@ namespace LaptopPosApp.ViewModels
                         }
                     ]
                 },
-                new FilterRange<Voucher, DateTime>
+                new FilterRange<Voucher, DateTime>(
+                    allItems.Select(v => v.EndDate).Min(),
+                    allItems.Select(v => v.EndDate).Max()
+                )
                 {
                     Name = "Ngày hết hạn",
                     Filterer = (query, min, max) =>
                     {
                         return query.Where(v => v.EndDate >= min && v.EndDate <= max);
-                    },
-                    Min = allItems.Select(v => v.EndDate).Min(),
-                    Max = allItems.Select(v => v.EndDate).Max(),
-                    SelectedMin = allItems.Select(v => v.EndDate).Min(),
-                    SelectedMax = allItems.Select(v => v.EndDate).Max(),
+                    }
                 },
             ];
         }

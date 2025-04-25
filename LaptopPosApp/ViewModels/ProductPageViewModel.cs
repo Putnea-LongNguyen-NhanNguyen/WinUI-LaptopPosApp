@@ -56,17 +56,16 @@ namespace LaptopPosApp.ViewModels
                         Value = c.ID
                     }).ToList()
                 },
-                new FilterRange<Product, long>
+                new FilterRange<Product, long>(
+                    allItems.Select(p => p.Price).Min(),
+                    allItems.Select(p => p.Price).Max()
+                )
                 {
                     Name = "Giá",
                     Filterer = (query, min, max) =>
                     {
                         return query.Where(p => p.Price >= min && p.Price <= max);
-                    },
-                    Min = allItems.Select(p => p.Price).Min(),
-                    Max = allItems.Select(p => p.Price).Max(),
-                    SelectedMin = allItems.Select(p => p.Price).Min(),
-                    SelectedMax = allItems.Select(p => p.Price).Min(),
+                    }
                 }
             ];
         }
