@@ -11,21 +11,6 @@ using System.Linq;
 
 namespace LaptopPosApp.Components
 {
-    static class VisualTreeExtensions
-    {
-        public static IEnumerable<DependencyObject> FindDescendantsRecursive(this DependencyObject parent)
-        {
-            if (parent == null) yield break;
-            foreach (var child in parent.FindDescendants())
-            {
-                yield return child;
-                foreach (var descendant in child.FindDescendantsRecursive())
-                {
-                    yield return descendant;
-                }
-            }
-        }
-    }
     public partial class FilterTemplateSelector : DataTemplateSelector
     {
         public DataTemplate? Choice { get; set; }
