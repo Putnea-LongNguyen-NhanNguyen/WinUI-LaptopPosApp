@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -75,17 +75,56 @@ namespace LaptopPosApp.Views
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.AddOrChange(false);
+            var (result, _) = ViewModel.AddOrChange(false);
+            if (result != AddTemporaryPriceResult.Success)
+            {
+                Show_Error_Dialog(result);
+            }
         }
 
         private void Change_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.AddOrChange(true);
+            var (result, _) = ViewModel.AddOrChange(true);
+            if (result != AddTemporaryPriceResult.Success)
+            {
+                Show_Error_Dialog(result);
+            }
         }
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Remove();
+        }
+
+        private async void Show_Error_Dialog(AddTemporaryPriceResult result)
+        {
+            ContentDialog errorDialog = new ContentDialog
+            {
+                CloseButtonText = "OK",
+                XamlRoot = this.XamlRoot
+            };
+
+            switch (result)
+            {
+                case AddTemporaryPriceResult.StartTimeInThePast:
+                    errorDialog.Title = "Thời gian bắt đầu trong quá khứ";
+                    errorDialog.Content = "Thời gian bắt đầu phải ở tương lai, vui lòng nhập lại thời gian bắt đầu";
+                    break;
+                case AddTemporaryPriceResult.EndTimeBeforeStartTime:
+                    errorDialog.Title = "Thời gian kết thúc trước thời gian bắt đầu";
+                    errorDialog.Content = "Thời gian kết thúc phải sau thời gian bắt đầu, vui lòng nhập lại thời gian kết thúc";
+                    break;
+                case AddTemporaryPriceResult.PriceNotChanged:
+                    errorDialog.Title = "Giá tiền đã nhập không thay đổi";
+                    errorDialog.Content = "Phải nhập giá tiền mới";
+                    break;
+                case AddTemporaryPriceResult.AnotherTemporaryPriceInProgress:
+                    errorDialog.Title = "Đã có giá tạm thời khác";
+                    errorDialog.Content = "Quãng thời gian vừa nhập đã có giá tiền tạm thời khác, vui lòng chọn quãng thời gian mới";
+                    break;
+            }
+
+            await errorDialog.ShowAsync();
         }
     }
 }
