@@ -58,7 +58,7 @@
                                    Grid.Column="0"
                                    VerticalAlignment="Center">
                     <Run Text="Giá:" />
-                    <Run Text="{Binding Price, Converter={StaticResource currency}, Mode=OneWay}"
+                    <Run Text="{Binding CurrentPrice, Converter={StaticResource currency}, Mode=OneWay}"
                             FontWeight="SemiBold" />
                         </TextBlock>
                         <Button Name="Cart"

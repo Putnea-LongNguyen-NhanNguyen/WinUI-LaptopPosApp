@@ -24,66 +24,6 @@ namespace LaptopPosApp.ViewModels
             PerPage = 12;
         }
 
-        //public void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        //{
-        //    if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-        //    {
-        //        var suitableItems = new List<string>();
-        //        var splitText = sender.Text.ToLower().Split(" ");
-        //        foreach (var prod in dbContext.Products)
-        //        {
-        //            var found = splitText.All((key) =>
-        //            {
-        //                return prod.Name.ToLower().Contains(key);
-        //            });
-        //            if (found)
-        //            {
-        //                suitableItems.Add(prod.Name);
-        //            }
-        //        }
-        //        if (suitableItems.Count == 0)
-        //        {
-        //            suitableItems.Add("No results found");
-        //        }
-        //        sender.ItemsSource = suitableItems;
-        //    }
-        //}
-
-        //public void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        //{
-        //    if (args.SelectedItem is string productName)
-        //    {
-        //        var selectedProduct = dbContext.Products.FirstOrDefault(p => p.Name == productName);
-        //        if (selectedProduct != null)
-        //        {
-        //            Items = new List<Product> { selectedProduct };
-        //            OnPropertyChanged(nameof(Items));
-        //        }
-        //    }
-        //}
-
-        //public void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        //{
-        //    if (args.ChosenSuggestion != null)
-        //    {
-        //        var selectedProduct = dbContext.Products.FirstOrDefault(p => p.Name == args.ChosenSuggestion.ToString());
-        //        if (selectedProduct != null)
-        //        {
-        //            Items = new List<Product> { selectedProduct };
-        //        }
-        //    }
-        //    else
-        //    {
-        //        var queryText = sender.Text.ToLower();
-        //        var filteredProducts = dbContext.Products.Where(p => p.Name.ToLower().Contains(queryText)).ToList();
-        //        if (filteredProducts.Any())
-        //        {
-        //            Items = filteredProducts;
-        //        }
-        //    }
-        //    OnPropertyChanged(nameof(Items));
-        //}
-
         public void AddToCart(Product product)
         {
             if (product != null)
