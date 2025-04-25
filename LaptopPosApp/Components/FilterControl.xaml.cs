@@ -76,8 +76,7 @@ namespace LaptopPosApp.Components
         IList<IFilter>? Filters;
         partial void OnViewModelChanged(IFilterable? newValue)
         {
-            Filters = newValue?.GetAllFilters() ?? Array.Empty<IFilter>();
-            FilterList.ItemsSource = Filters;
+            ResetFilter();
         }
         public FilterControl()
         {
@@ -95,11 +94,25 @@ namespace LaptopPosApp.Components
             var expander = checkbox.FindAscendant<Expander>()!;
             expander.IsExpanded = false;
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SetFilter()
         {
             if (ViewModel is null)
                 return;
             ViewModel.Filters = Filters!;
+        }
+        private void ResetFilter()
+        {
+            if (ViewModel is null)
+                return;
+            FilterList.ItemsSource = ViewModel.Filters = Filters = ViewModel.GetAllFilters();
+        }
+        private void SetFilter_Click(object sender, RoutedEventArgs e)
+        {
+            SetFilter();
+        }
+        private void ResetFilter_Click(object sender, RoutedEventArgs e)
+        {
+            ResetFilter();
         }
     }
 }

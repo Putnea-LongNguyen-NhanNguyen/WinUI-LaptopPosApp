@@ -115,12 +115,7 @@
                     Binding="{Binding Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </tableView:TableView.Columns>
         </tableView:TableView>
-        <ScrollViewer
-            Grid.Row="1"
-            Grid.Column="1"
-        >
-            <custom:FilterControl ViewModel="{x:Bind ViewModel}"/>
-        </ScrollViewer>
+        <custom:FilterControl Grid.Row="1" Grid.Column="1" ViewModel="{x:Bind ViewModel}"/>
         <custom:PaginationControl
             Grid.Row="2"
             CurrentPage="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}"
