@@ -21,7 +21,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <tableView:TableView
-            ItemsSource="{x:Bind ViewModel.TemporaryPrices}"
+            ItemsSource="{x:Bind ViewModel.TemporaryPrices, Mode=OneWay}"
             SelectionUnit="Row"
             SelectionMode="Single"
             AutoGenerateColumns="False"
