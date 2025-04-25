@@ -20,7 +20,42 @@ namespace LaptopPosApp.ViewModels
             VoucherType.Fixed,
             VoucherType.Percentage,
         };
-
+        public override IList<IFilter> GetAllFilters()
+        {
+            return [
+                new FilterMultipleChoice<Voucher, VoucherType>
+                {
+                    Name = "Loại mã giảm giá",
+                    Filterer = (query, selectedValues) =>
+                    {
+                        if (selectedValues.Count == 0)
+                            return query;
+                        return query.Where(v => selectedValues.Contains(v.Type));
+                    },
+                    Values = [
+                        new() {
+                            Key = "Giảm cố định",
+                            Value = VoucherType.Fixed,
+                        },
+                        new() {
+                            Key = "Giảm theo phần trăm",
+                            Value = VoucherType.Percentage,
+                        }
+                    ]
+                },
+                new FilterRange<Voucher, DateTime>(
+                    allItems.Select(v => v.EndDate).Min(),
+                    allItems.Select(v => v.EndDate).Max()
+                )
+                {
+                    Name = "Ngày hết hạn",
+                    Filterer = (query, min, max) =>
+                    {
+                        return query.Where(v => v.EndDate >= min && v.EndDate <= max);
+                    }
+                },
+            ];
+        }
         public async Task StartAddFlow(Page parent)
         {
             var page = new AddVouchersPage();

@@ -21,6 +21,10 @@
             <RowDefinition
                 Height="50" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <StackPanel
             Orientation="Horizontal"
             Grid.Row="0"
@@ -43,6 +47,7 @@
         <tableView:TableView
             x:Name="MyTable"
             Grid.Row="1"
+            Grid.Column="0"
             ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
             SelectionUnit="CellOrRow"
             SelectionMode="Extended"
@@ -117,7 +122,7 @@
                     Binding="{Binding Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </tableView:TableView.Columns>
         </tableView:TableView>
-
+        <custom:FilterControl Grid.Row="1" Grid.Column="1" ViewModel="{x:Bind ViewModel}"/>
         <custom:PaginationControl
             Grid.Row="2"
             CurrentPage="{x:Bind ViewModel.CurrentPage, Mode=TwoWay}"

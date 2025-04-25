@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="LaptopPosApp.Components.FilterControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaptopPosApp.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LaptopPosApp.ViewModels"
+    xmlns:convert="using:LaptopPosApp.Views.Converters"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <convert:LongToDoubleConverter x:Key="LongToDoubleConverter" />
+        <convert:DateTimeConverter x:Key="DateTimeConverter" />
+        <DataTemplate x:Key="NumericRangeTemplate" x:DataType="vm:IFilterRange">
+            <StackPanel MinWidth="200" HorizontalAlignment="Stretch">
+                <toolkit:RangeSelector IsEnabled="{Binding Enabled}"
+                    RangeStart="{Binding SelectedMin, Mode=TwoWay, Converter={StaticResource LongToDoubleConverter}}"
+                    RangeEnd="{Binding SelectedMax, Mode=TwoWay, Converter={StaticResource LongToDoubleConverter}}"
+                    Minimum="{Binding Min, Mode=OneWay, Converter={StaticResource LongToDoubleConverter}}"
+                    Maximum="{Binding Max, Mode=OneWay, Converter={StaticResource LongToDoubleConverter}}"
+                    StepFrequency="1"
+                />
+                <TextBlock>
+                    Từ: 
+                    <Run Text="{Binding SelectedMin, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock>
+                    Đến: 
+                    <Run Text="{Binding SelectedMax, Mode=OneWay}" />
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="DateRangeTemplate" x:DataType="vm:IFilterRange">
+            <StackPanel>
+                <CalendarDatePicker IsEnabled="{Binding Enabled}"
+                    Header="Start Date"
+                    MinDate="{Binding Min, Mode=OneWay, Converter={StaticResource DateTimeConverter}}"
+                    MaxDate="{Binding SelectedMax, Mode=OneWay, Converter={StaticResource DateTimeConverter}}"
+                    Date="{Binding SelectedMin, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}"
+                    PlaceholderText="Select Start Date" />
+                <CalendarDatePicker IsEnabled="{Binding Enabled}"
+                    Header="End Date"
+                    MinDate="{Binding SelectedMin, Mode=OneWay, Converter={StaticResource DateTimeConverter}}"
+                    MaxDate="{Binding Max, Mode=OneWay, Converter={StaticResource DateTimeConverter}}"
+                    Date="{Binding SelectedMax, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}"
+                    PlaceholderText="Select End Date" />
+            </StackPanel>
+        </DataTemplate>
+        <local:FilterRangeTemplateSelector
+            x:Key="FilterRangeTemplateSelector"
+            DateSelector="{StaticResource DateRangeTemplate}"
+            NumericSelector="{StaticResource NumericRangeTemplate}"
+        />
+        
+        <DataTemplate x:Key="FilterRangeTemplate" x:DataType="vm:IFilterRange">
+            <ContentControl
+                ContentTemplateSelector="{StaticResource FilterRangeTemplateSelector}"
+                Content="{Binding}"
+            />
+        </DataTemplate>
+        <DataTemplate x:Key="FilterChoiceTemplate" x:DataType="vm:IFilterMultipleChoice">
+            <ItemsControl
+                Name="Choices"
+                DataContext="{Binding}"
+                ItemsSource="{Binding Values}"
+            >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox
+                            Content="{Binding Key}"
+                            Tag="{Binding Value}"
+                            IsEnabled="{Binding DataContext.Enabled, ElementName=Choices}"
+                            IsChecked="{Binding Selected, Mode=TwoWay}"
+                        />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DataTemplate>
+        <local:FilterTemplateSelector
+            x:Key="FilterTemplateSelector"
+            Range="{StaticResource FilterRangeTemplate}"
+            Choice="{StaticResource FilterChoiceTemplate}"
+        />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
+            <ItemsControl
+                x:Name="FilterList"
+            >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:IFilter">
+                        <Expander HorizontalAlignment="Stretch">
+                            <Expander.Header>
+                                <CheckBox
+                                    Content="{Binding Name}"
+                                    IsChecked="{Binding Enabled, Mode=TwoWay}"
+                                    Checked="EnableFilter" Unchecked="DisableFilter"
+                                />
+                            </Expander.Header>
+                            <Expander.Content>
+                                <ContentControl
+                                    ContentTemplateSelector="{StaticResource FilterTemplateSelector}"
+                                    Content="{Binding}"
+                                />
+                            </Expander.Content>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Click="SetFilter_Click">
+            Lọc
+        </Button>
+        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Click="ResetFilter_Click">
+            Reset
+        </Button>
+    </Grid>
+</UserControl>
