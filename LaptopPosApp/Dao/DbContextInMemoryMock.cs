@@ -158,6 +158,7 @@ namespace LaptopPosApp.Dao
                     .RuleFor(o => o.ID, f => 0)
                     .RuleFor(o => o.Timestamp, f => f.Date.Between(DateTime.Today.AddDays(-700), DateTime.Today))
                     .RuleFor(o => o.Customer, f => f.PickRandom(customers))
+                    .RuleFor(o => o.Status, f => f.PickRandom(new List<OrderStatus>() { OrderStatus.Delivered, OrderStatus.Delivering, OrderStatus.Returned}))
                     .RuleFor(o => o.Vouchers, f => [f.PickRandom(vouchers)]);
                 var orders = orderGen.GenerateBetween(10, 50);
                 orders.ForEach(o =>
@@ -172,7 +173,7 @@ namespace LaptopPosApp.Dao
                             ProductID = p.ID,
                             Quantity = faker.Random.Int(1, 3),
                             Order = o,
-                            Product = p
+                            Product = p,
                         };
                     });
                     o.Products.AddRange(orderProduct);
@@ -181,6 +182,16 @@ namespace LaptopPosApp.Dao
                         acc + (v.Type == VoucherType.Fixed ? v.Value : (long)(o.TotalPrice * (v.Value / 100.0)))
                     );
                     o.TotalPrice = o.TotalPrice > reductions ? o.TotalPrice - reductions : 0;
+
+                    if (o.Status == OrderStatus.Delivering)
+                    {
+                        o.DeliveryAddress = faker.Address.StreetAddress();
+                        o.DeliveryDate = faker.Date.SoonOffset(30);
+                    }
+                    else
+                    {
+                        o.DeliveryDate = faker.Date.Between(DateTime.Now.AddDays(-100), DateTime.Now.AddDays(-5));
+                    }
                 });
                 Orders.AddRange(orders);
 

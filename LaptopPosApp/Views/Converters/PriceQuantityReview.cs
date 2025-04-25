@@ -9,24 +9,22 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.Views.Converters
 {
-    class TotalPriceConverter:IValueConverter
+    class PriceQuantityConverterReview : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            long totalPrice = 0;
-            if (value is IEnumerable<OrderProduct> orderProduct)
+            long calculatedPrice = 0;
+            if (value is OrderProduct orderProduct)
             {
-                foreach (var item in orderProduct)
-                {
-                    if (item.Product != null)
-                    {
-                        totalPrice += item.Product.CurrentPrice * item.Quantity;
-                    }
-                }
+                var timestamp = orderProduct.Order.Timestamp;
+                long price = orderProduct.Product.TemporaryPrices
+                    .Where(tp => timestamp >= tp.StartDate && timestamp <= tp.EndDate)
+                    .FirstOrDefault()?.Price ?? orderProduct.Product.Price;
+                calculatedPrice = price * orderProduct.Quantity;
             }
             CultureInfo culture = CultureInfo.GetCultureInfo("vi-VN");  // en-US /en-UK
-            string formattedTotalPrice = totalPrice.ToString("#,### đ", culture.NumberFormat);
-            return $"Tổng số tiền: {formattedTotalPrice}";
+            string formatted = calculatedPrice.ToString("#,### đ", culture.NumberFormat);
+            return formatted;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

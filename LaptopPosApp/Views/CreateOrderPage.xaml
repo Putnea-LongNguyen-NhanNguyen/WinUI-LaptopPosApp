@@ -92,7 +92,7 @@
                                Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <TextBlock>
                         <Run Text="Đơn giá:" />
-                        <Run Text="{Binding Converter={StaticResource priceQuantity}, Mode=OneWay}"
+                        <Run Text="{Binding Product.CurrentPrice, Converter={StaticResource currency}, Mode=OneWay}"
                              FontWeight="Bold" />
                     </TextBlock>
                     <StackPanel Orientation="Horizontal"

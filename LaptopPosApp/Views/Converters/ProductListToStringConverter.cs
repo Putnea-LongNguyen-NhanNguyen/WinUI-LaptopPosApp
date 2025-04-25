@@ -19,7 +19,7 @@ namespace LaptopPosApp.Views.Converters
                     .FirstOrDefault();
 
                 var tempPrice = tempPriceObj?.Price ?? product.Price;
-                result += $"{product.Name} - {tempPrice:C}\n";
+                result += $"{product.Name} - {tempPrice:C} - x{op.Quantity}\n";
             });
             if (result.Length > 0)
                 result = result[..^1];

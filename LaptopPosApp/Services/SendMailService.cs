@@ -193,13 +193,13 @@ namespace LaptopPosApp.Services
             {
                 var tempPrice = op.Product.TemporaryPrices
                     .Where(p => op.Order.Timestamp >= p.StartDate && op.Order.Timestamp <= p.EndDate)
-                    .FirstOrDefault();
+                    .FirstOrDefault()?.Price ?? op.Product.Price;
                 orderProductTableRows += $@"
                     <tr style=""background-color: #f2f2f2;"">
                         <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{i}</td>
                         <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{op.Product.Name}</td>
                         <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{op.Quantity}</td>
-                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{tempPrice?.Price ?? op.Product.Price}</td>
+                        <td style=""text-align: center; padding: 8px; border: 1px solid #ddd;"">{tempPrice:#,###đ}</td>
                     </tr>
                 ";
                 i++;

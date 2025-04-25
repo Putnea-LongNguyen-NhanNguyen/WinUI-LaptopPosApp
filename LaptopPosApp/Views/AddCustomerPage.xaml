@@ -17,8 +17,8 @@
                         VerticalAlignment="Stretch"
                         HorizontalAlignment="Stretch">
 
-                <NumberBox Header="Nhập tên khách hàng"
-                           Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Header="Nhập tên khách hàng"
+                         Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="{x:Bind ViewModel.NameValidationMessage, Mode=OneWay}"
                            Foreground="Red"
                            Margin="0, 5, 0, 5" />

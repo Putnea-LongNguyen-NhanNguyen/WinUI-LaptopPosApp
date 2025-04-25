@@ -70,7 +70,7 @@ namespace LaptopPosApp.ViewModels
         public partial string VoucherValidationMessage { get; private set; } = string.Empty;
         private void UpdateTotalPrice()
         {
-            TotalPrice = CurrentOrder.Select(x => x.Product.Price * x.Quantity).Sum();
+            TotalPrice = CurrentOrder.Select(x => x.Product.CurrentPrice * x.Quantity).Sum();
             foreach (var voucher in VouchersAdded)
             {
                 if (voucher.Type == VoucherType.Fixed)
@@ -220,12 +220,23 @@ namespace LaptopPosApp.ViewModels
                 DeliveryAddress = IsDelivery ? Address : string.Empty,
                 DeliveryDate = IsDelivery ? DateTimeOffset.Now.AddDays(5) : DateTimeOffset.Now,
             };
+            
             foreach (var v in VouchersAdded)
             {
                 v.Quantity--;
             }
             customer.Orders.Add(order);
             dbContext.Orders.Add(order);
+
+            foreach (var product in order.Products)
+            {
+                var product2 = dbContext.Products.Where(p => p.ID == product.ProductID).FirstOrDefault();
+                if (product2 != null)
+                {
+                    product2.Quantity--;
+                }
+            }
+
             dbContext.SaveChanges();
             CurrentOrder.Clear();
 

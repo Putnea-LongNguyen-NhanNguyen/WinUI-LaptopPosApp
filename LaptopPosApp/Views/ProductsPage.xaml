@@ -61,10 +61,10 @@
                     Header="ID"
                     IsReadOnly="True"
                     Binding="{Binding ID, Mode=OneWay}" />
-                <tableView:TableViewTemplateColumn Header="Hình ảnh">
+                <tableView:TableViewTemplateColumn Header="Hình ảnh" Width="70">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Source="/Assets/laptopDemoImg.jpg" />
+                            <Image Source="/Assets/laptopDemoImg.jpg" Width="70"/>
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                 </tableView:TableViewTemplateColumn>

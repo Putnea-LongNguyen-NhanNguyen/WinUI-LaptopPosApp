@@ -16,7 +16,7 @@ namespace LaptopPosApp.Views.Converters
             long calculatedPrice = 0;
             if (value is OrderProduct orderProduct)
             {
-                calculatedPrice = orderProduct.Product.Price * orderProduct.Quantity;
+                calculatedPrice = orderProduct.Product.CurrentPrice * orderProduct.Quantity;
             }
             CultureInfo culture = CultureInfo.GetCultureInfo("vi-VN");  // en-US /en-UK
             string formatted = calculatedPrice.ToString("#,### đ", culture.NumberFormat);

@@ -23,7 +23,7 @@ namespace LaptopPosApp.ViewModels
             {
                 XamlRoot = parent.XamlRoot,
                 Content = page,
-                Title = "Thêm mã giảm mới",
+                Title = "Thêm khách hàng mới",
             };
             page.ContentDialog = contentDialog;
             await contentDialog.ShowAsync();

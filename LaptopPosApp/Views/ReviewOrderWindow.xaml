@@ -12,8 +12,7 @@
     <ScrollView VerticalScrollBarVisibility="Auto"
                 Padding="15">
         <ScrollView.Resources>
-            <converter:PriceQuantityConverter x:Key="priceQuantity" />
-            <converter:TotalPriceConverter x:Key="totalPrice" />
+            <converter:PriceQuantityConverterReview x:Key="priceQuantity" />
             <converter:CountToVisibilityConverter x:Key="countToVisibility" />
         </ScrollView.Resources>
         <StackPanel Padding="10, 0, 10, 0">
