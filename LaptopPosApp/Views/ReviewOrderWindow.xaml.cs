@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -29,6 +30,7 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class ReviewOrderWindow : Window
     {
+        ReviewOrderViewModel ViewModel { get; }
         public static ReviewOrderWindow? Instance { get; private set; }
         private ReviewOrderWindow(Order order)
         {
@@ -44,6 +46,7 @@ namespace LaptopPosApp.Views
             HomeDelivery = !string.IsNullOrEmpty(DeliveryAddress);
             DeliveryDate = order.DeliveryDate;
             DeliveryDateView.Date = DeliveryDate;
+            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<ReviewOrderViewModel>();
         }
         public string Name { get; }
         public string Phone { get; }
@@ -67,6 +70,13 @@ namespace LaptopPosApp.Views
             Instance = new ReviewOrderWindow(order);
             Instance.Closed += (s, e) => Instance = null;
             return Instance;
+        }
+        public void ReturnProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is OrderProduct orderProduct)
+            {
+                ViewModel.ReturnOrderProduct(orderProduct);
+            }
         }
     }
 }

@@ -77,15 +77,13 @@
                     IsReadOnly="True">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel
-                                HorizontalAlignment="Stretch"
-                                Orientation="Vertical">
+                            <RelativePanel>
                                 <ContentControl
                                     Content="{Binding DeliveryDate, Converter={StaticResource deliveryStatusConverter}}"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
+                                    RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                    RelativePanel.AlignVerticalCenterWithPanel="True"
                                     FontSize="20" />
-                            </StackPanel>
+                            </RelativePanel>
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                 </tableView:TableViewTemplateColumn>

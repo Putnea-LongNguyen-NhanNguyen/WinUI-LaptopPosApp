@@ -30,13 +30,13 @@ namespace LaptopPosApp.Views
         public DeliveryPage()
         {
             this.InitializeComponent();
-            this.InitializeComponent();
             this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<DeliveryPageViewModel>();
             Loaded += (_, args) =>
             {
                 ViewModel.Refresh();
             };
             Unloaded += (_, args) => ViewModel.SaveChanges();
+
         }
 
         public void DeliveryCompleteButton_Click(object sender, RoutedEventArgs e)

@@ -102,6 +102,12 @@ namespace LaptopPosApp.ViewModels
                     },
                     new NavigationItemLeaf()
                     {
+                        Title = "Lịch sử đổi trả",
+                        Icon = new SymbolIcon(Symbol.Bookmarks),
+                        CreatePage = () => new ReturnHistoryPage(),
+                    },
+                    new NavigationItemLeaf()
+                    {
                         Title = "Thống kê",
                         Icon = new SymbolIcon(Symbol.Document),
                         CreatePage = () => new StatisticsPage(),
