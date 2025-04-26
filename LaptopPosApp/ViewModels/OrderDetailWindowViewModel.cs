@@ -196,9 +196,9 @@ namespace LaptopPosApp.ViewModels
 
         protected override bool DoSubmit()
         {
-            var customer = dbContext.Customers.FirstOrDefault(c => c.Name == Name);
-            if (customer == null)
-            {
+            var customer = dbContext.Customers.FirstOrDefault(c => c.Email == Email);
+            customer ??= dbContext.Customers.FirstOrDefault(c => c.Phone == Phone);
+            if (customer == null) {
                 customer = new()
                 {
                     ID = 0,
@@ -235,7 +235,7 @@ namespace LaptopPosApp.ViewModels
                 var product2 = dbContext.Products.Where(p => p.ID == product.ProductID).FirstOrDefault();
                 if (product2 != null)
                 {
-                    product2.Quantity--;
+                    product2.Quantity -= product.Quantity;
                 }
             }
 
