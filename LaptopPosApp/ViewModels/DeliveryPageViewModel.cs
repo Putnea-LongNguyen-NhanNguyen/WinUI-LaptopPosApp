@@ -39,7 +39,7 @@ namespace LaptopPosApp.ViewModels
             order.Status = OrderStatus.Delivered;
             dbContext.Orders.Update(order);
             dbContext.SaveChanges();
-
+            UpdateDeliveryOrderList();
         }
 
         public void SaveChanges()
