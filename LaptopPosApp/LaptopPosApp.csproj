@@ -90,6 +90,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\DeliveryPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -146,8 +147,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\VouchersPage.xaml">
-		<Generator>MSBuild:Compile</Generator>
+	  <Generator>MSBuild:Compile</Generator>
 	</Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\OrderDetailWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
