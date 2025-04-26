@@ -96,10 +96,16 @@ namespace LaptopPosApp.ViewModels
                     },
                     new NavigationItemLeaf()
                     {
+                        Title = "Đơn hàng cần giao",
+                        Icon = new SymbolIcon(Symbol.Flag),
+                        CreatePage = () => new DeliveryPage(),
+                    },
+                    new NavigationItemLeaf()
+                    {
                         Title = "Thống kê",
                         Icon = new SymbolIcon(Symbol.Document),
                         CreatePage = () => new StatisticsPage(),
-                    }
+                    },
                 }
             },
         };
