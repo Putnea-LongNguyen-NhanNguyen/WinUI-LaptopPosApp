@@ -30,7 +30,6 @@ namespace LaptopPosApp.Views
         public DeliveryPage()
         {
             this.InitializeComponent();
-            this.InitializeComponent();
             this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<DeliveryPageViewModel>();
         }
 

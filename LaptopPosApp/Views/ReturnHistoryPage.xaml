@@ -1,4 +1,4 @@
-<!--<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="LaptopPosApp.Views.ReturnHistoryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -12,12 +12,12 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <converters:DateTimeToStringConverter
-            x:Key="dateTimeToString" />
+        <converters:DateTimeOffsetToStringConverter
+            x:Key="dateTimeOffsetToString" />
         <converters:CurrencyConverter
             x:Key="currencyConverter" />
         <converters:DeliveryStatusConverter
-            x:Key="deliveryStatusConverter" />
+            x:Key="deliveryStatusConverter"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
         <tableView:TableView
             x:Name="MyOrderTable"
             Grid.Row="1"
-            ItemsSource="{x:Bind ViewModel.ReturnedOrderProducts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{x:Bind ViewModel.ReturnOrderProducts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             SelectionUnit="CellOrRow"
             AutoGenerateColumns="False">
             <tableView:TableView.Columns>
@@ -63,23 +63,14 @@
                     IsReadOnly="True"
                     Binding="{Binding Product.Name, Mode=OneWay}" />
                 <tableView:TableViewTextColumn
-                    Header="Số lượng trả"
-                    IsReadOnly="True"
-                    Binding="{Binding ReturnAmount, Mode=OneWay}" />
-                <tableView:TableViewTextColumn
                     Header="Khách hàng"
                     IsReadOnly="True"
-                    Binding="{Binding Customer.Name, Mode=OneWay}" />
-                <tableView:TableViewTemplateColumn
-                    Header="Ngày trả hàng">
-                    <tableView:TableViewTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CalendarDatePicker
-                                Date="{Binding ReturnedDate, Mode=OneWay}" />
-                        </DataTemplate>
-                    </tableView:TableViewTemplateColumn.CellTemplate>
-                </tableView:TableViewTemplateColumn>                
+                    Binding="{Binding Order.Customer.Name, Mode=OneWay}" />
+                <tableView:TableViewTextColumn
+                    Header="Ngày trả hàng"
+                    IsReadOnly="True"
+                    Binding="{Binding ReturnDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource dateTimeOffsetToString}}" />
             </tableView:TableView.Columns>
         </tableView:TableView>
     </Grid>
-</Page>-->
+</Page>

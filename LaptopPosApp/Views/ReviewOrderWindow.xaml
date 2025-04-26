@@ -1,195 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="LaptopPosApp.Views.ReviewOrderWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="using:LaptopPosApp.Views"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:converter="using:LaptopPosApp.Views.Converters"
-        mc:Ignorable="d"
-        Title="ReviewOrderWindow">
+<Window
+    x:Class="LaptopPosApp.Views.ReviewOrderWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LaptopPosApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:LaptopPosApp.Views.Converters"
+    mc:Ignorable="d"
+    Title="ReviewOrderWindow">
 
-    <ScrollView VerticalScrollBarVisibility="Auto"
-                Padding="15">
+    <ScrollView
+        VerticalScrollBarVisibility="Auto"
+        Padding="15">
         <ScrollView.Resources>
-            <converter:PriceQuantityConverterReview x:Key="priceQuantity" />
-            <converter:CountToVisibilityConverter x:Key="countToVisibility" />
+            <converter:PriceQuantityConverterReview
+                x:Key="priceQuantity" />
+            <converter:CountToVisibilityConverter
+                x:Key="countToVisibility" />
+            <converter:NullToOpacityConverter
+                x:Key="nullToOpacity" />
+            <converter:NullToVisibilityConverter
+                x:Key="nullToVisibility" />
         </ScrollView.Resources>
-        <StackPanel Padding="10, 0, 10, 0">
-            <TextBlock Text="Chi tiết đơn hàng"
-                       Style="{StaticResource TitleLargeTextBlockStyle}"
-                       HorizontalAlignment="Center"
-                       Margin="0,10,0,10" />
-            <TextBlock Text="Danh sách sản phẩm"
-                       Margin="0, 0, 0, 10"
-                       Style="{StaticResource TitleTextBlockStyle}" />
+        <StackPanel
+            Padding="10, 0, 10, 0">
+            <TextBlock
+                Text="Chi tiết đơn hàng"
+                Style="{StaticResource TitleLargeTextBlockStyle}"
+                HorizontalAlignment="Center"
+                Margin="0,10,0,10" />
+            <TextBlock
+                Text="Danh sách sản phẩm"
+                Margin="0, 0, 0, 10"
+                Style="{StaticResource TitleTextBlockStyle}" />
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition
+                        Height="Auto" />
+                    <RowDefinition
+                        Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Text="Tên sản phẩm"
-                           Style="{StaticResource BodyStrongTextBlockStyle}"
-                           Grid.Column="0"
-                           Grid.Row="0" />
-                <TextBlock Text="Số lượng"
-                           Style="{StaticResource BodyStrongTextBlockStyle}"
-                           Grid.Column="1"
-                           Grid.Row="0" />
-                <TextBlock Text="Giá"
-                           Style="{StaticResource BodyStrongTextBlockStyle}"
-                           Grid.Column="2"
-                           Grid.Row="0" />
-                <ListView ItemsSource="{x:Bind Products, Mode=OneWay}"
-                          Grid.ColumnSpan="3"
-                          Grid.Row="1"
-                          Margin="0,8,0,8">
+                <TextBlock
+                    Text="Tên sản phẩm"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    Grid.Column="0"
+                    Grid.Row="0" />
+                <TextBlock
+                    Text="Số lượng"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    Grid.Column="1"
+                    Grid.Row="0" />
+                <TextBlock
+                    Text="Giá"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    Grid.Column="2"
+                    Grid.Row="0" />
+                <ListView
+                    ItemsSource="{x:Bind Products, Mode=OneWay}"
+                    Grid.ColumnSpan="3"
+                    Grid.Row="1"
+                    Margin="0,8,0,8">
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
+                                <Grid.Opacity>
+                                    <Binding
+                                        Path="ReturnDate"
+                                        Mode="TwoWay"
+                                        UpdateSourceTrigger="PropertyChanged"
+                                        Converter="{StaticResource nullToOpacity}" />
+                                </Grid.Opacity>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition
+                                        Width="*" />
+                                    <ColumnDefinition
+                                        Width="*" />
+                                    <ColumnDefinition
+                                        Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0"
-                                            Orientation="Horizontal"
-                                            Padding="8"
-                                            VerticalAlignment="Center">
-                                    <Image Source="/Assets/laptopDemoImg.jpg"
-                                           Width="100"
-                                           Stretch="UniformToFill" />
-                                    <TextBlock Text="{Binding Product.Name}"
-                                               Style="{StaticResource BodyTextBlockStyle}"
-                                               VerticalAlignment="Center"
-                                               Margin="10,0,0,0" />
+                                <StackPanel
+                                    Grid.Column="0"
+                                    Orientation="Horizontal"
+                                    Padding="8"
+                                    VerticalAlignment="Center">
+                                    <Image
+                                        Source="/Assets/laptopDemoImg.jpg"
+                                        Width="100"
+                                        Stretch="UniformToFill" />
+                                    <TextBlock
+                                        Text="{Binding Product.Name}"
+                                        Style="{StaticResource BodyTextBlockStyle}"
+                                        VerticalAlignment="Center"
+                                        Margin="10,0,0,0" />
                                 </StackPanel>
-                                <TextBlock Grid.Column="1"
-                                           VerticalAlignment="Center"
-                                           Style="{StaticResource BodyTextBlockStyle}">
-                                    <Run Text="x" />
-                                    <Run Text="{Binding Quantity}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource BodyTextBlockStyle}">
+                                    <Run
+                                        Text="x" />
+                                    <Run
+                                        Text="{Binding Quantity}" />
                                 </TextBlock>
-                                <TextBlock Grid.Column="2"
-                                           VerticalAlignment="Center"
-                                           Style="{StaticResource BodyTextBlockStyle}"
-                                           Text="{Binding Converter={StaticResource priceQuantity}}" />
+                                <RelativePanel
+                                    Grid.Column="2">
+                                    <TextBlock
+                                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                                        Style="{StaticResource BodyTextBlockStyle}"
+                                        Text="{Binding Converter={StaticResource priceQuantity}}" />
+                                    <Button
+                                        Content="Trả hàng"
+                                        IsEnabled="{Binding ReturnDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nullToVisibility}}"
+                                        Margin="20,0,0,0"
+                                        RelativePanel.AlignRightWithPanel="True"
+                                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                                        Click="ReturnProductButton_Click"
+                                        Style="{StaticResource AccentButtonStyle}" />
+                                </RelativePanel>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
-            <TextBlock Text="Mã giảm giá"
-                       Margin="0, 0, 0, 10"
-                       Style="{StaticResource TitleTextBlockStyle}" />
-            <Grid Margin="0,8,0,8">
+            <TextBlock
+                Text="Mã giảm giá"
+                Margin="0, 0, 0, 10"
+                Style="{StaticResource TitleTextBlockStyle}" />
+            <Grid
+                Margin="0,8,0,8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition
+                        Height="Auto" />
+                    <RowDefinition
+                        Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Text="Loại"
-                           Style="{StaticResource BodyStrongTextBlockStyle}"
-                           Grid.Column="0"
-                           Grid.Row="0" />
-                <TextBlock Text="Giá trị"
-                           Style="{StaticResource BodyStrongTextBlockStyle}"
-                           Grid.Column="1"
-                           Grid.Row="0" />
-                <ListView ItemsSource="{x:Bind Vouchers, Mode=OneWay}"
-                          Grid.ColumnSpan="2"
-                          Grid.Row="1"
-                          Margin="0,8,0,8">
+                <TextBlock
+                    Text="Loại"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    Grid.Column="0"
+                    Grid.Row="0" />
+                <TextBlock
+                    Text="Giá trị"
+                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                    Grid.Column="1"
+                    Grid.Row="0" />
+                <ListView
+                    ItemsSource="{x:Bind Vouchers, Mode=OneWay}"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="1"
+                    Margin="0,8,0,8">
 
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition
+                                        Width="*" />
+                                    <ColumnDefinition
+                                        Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Type}"
-                                           Style="{StaticResource BodyTextBlockStyle}"
-                                           Grid.Column="0"
-                                           VerticalAlignment="Center" />
-                                <TextBlock Text="{Binding ValueString}"
-                                           Style="{StaticResource BodyTextBlockStyle}"
-                                           Grid.Column="1"
-                                           VerticalAlignment="Center" />
+                                <TextBlock
+                                    Text="{Binding Type}"
+                                    Style="{StaticResource BodyTextBlockStyle}"
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center" />
+                                <TextBlock
+                                    Text="{Binding ValueString}"
+                                    Style="{StaticResource BodyTextBlockStyle}"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
-            <TextBlock Margin="0, 8, 0, 8"
-                       Text="{x:Bind TotalPrice, Mode=OneWay}"
-                       Style="{StaticResource TitleTextBlockStyle}" />
-            <TextBlock Text="Thông tin khách hàng"
-                       Style="{StaticResource TitleTextBlockStyle}" />
-            <Grid Padding="0, 8, 0, 8">
+            <TextBlock
+                Margin="0, 8, 0, 8"
+                Text="{x:Bind TotalPrice, Mode=OneWay}"
+                Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock
+                Text="Thông tin khách hàng"
+                Style="{StaticResource TitleTextBlockStyle}" />
+            <Grid
+                Padding="0, 8, 0, 8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0"
-                            Margin="0, 0, 8, 0">
-                    <TextBox Text="{x:Bind Name, Mode=OneWay}"
-                             IsReadOnly="True"
-                             Header="Tên khách hàng"
-                             PlaceholderText="Tên" />
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="0, 0, 8, 0">
+                    <TextBox
+                        Text="{x:Bind Name, Mode=OneWay}"
+                        IsReadOnly="True"
+                        Header="Tên khách hàng"
+                        PlaceholderText="Tên" />
                 </StackPanel>
-                <StackPanel Grid.Column="1"
-                            Margin="8, 0, 8, 0">
-                    <TextBox Text="{x:Bind Email, Mode=OneWay}"
-                             Header="Email khách hàng"
-                             IsReadOnly="True"
-                             PlaceholderText="Email" />
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="8, 0, 8, 0">
+                    <TextBox
+                        Text="{x:Bind Email, Mode=OneWay}"
+                        Header="Email khách hàng"
+                        IsReadOnly="True"
+                        PlaceholderText="Email" />
                 </StackPanel>
 
             </Grid>
-            <Grid Padding="0, 0, 0, 8">
+            <Grid
+                Padding="0, 0, 0, 8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition
+                        Width="3*" />
+                    <ColumnDefinition
+                        Width="7*" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0"
-                            Margin="0, 0, 8, 0">
-                    <TextBox IsReadOnly="True"
-                             Name="PhoneNumber"
-                             Text="{x:Bind Phone, Mode=OneWay}"
-                             Header="Số điện thoại khách hàng"
-                             PlaceholderText="SĐT" />
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="0, 0, 8, 0">
+                    <TextBox
+                        IsReadOnly="True"
+                        Name="PhoneNumber"
+                        Text="{x:Bind Phone, Mode=OneWay}"
+                        Header="Số điện thoại khách hàng"
+                        PlaceholderText="SĐT" />
                 </StackPanel>
-                <StackPanel Grid.Column="1"
-                            Margin="8, 0, 8, 0">
-                    <TextBox Text="{x:Bind Address, Mode=OneWay}"
-                             Header="Địa chỉ khách hàng"
-                             IsReadOnly="True"
-                             PlaceholderText="Địa chỉ" />
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="8, 0, 8, 0">
+                    <TextBox
+                        Text="{x:Bind Address, Mode=OneWay}"
+                        Header="Địa chỉ khách hàng"
+                        IsReadOnly="True"
+                        PlaceholderText="Địa chỉ" />
                 </StackPanel>
             </Grid>
-            <TextBlock Text="Phương thức giao hàng"
-                       Style="{StaticResource TitleTextBlockStyle}" />
-            <CheckBox IsHitTestVisible="False"
-                      IsChecked="{x:Bind HomeDelivery, Mode=OneWay}"
-                      Content="Giao hàng tận nơi"
-                      Margin="0,10,0,10" />
-            <TextBlock Text="Ngày giao hàng"
-                       Style="{StaticResource TitleTextBlockStyle}" />
-            <CalendarDatePicker Date="{Binding DeliveryDate, Mode=OneWay}"
-                                Margin="0,10,0,10"
-                                x:Name="DeliveryDateView"
-                                IsHitTestVisible="False"
-                                FontSize="20" />
+            <TextBlock
+                Text="Phương thức giao hàng"
+                Style="{StaticResource TitleTextBlockStyle}" />
+            <CheckBox
+                IsHitTestVisible="False"
+                IsChecked="{x:Bind HomeDelivery, Mode=OneWay}"
+                Content="Giao hàng tận nơi"
+                Margin="0,10,0,10" />
+            <TextBlock
+                Text="Ngày giao hàng"
+                Style="{StaticResource TitleTextBlockStyle}" />
+            <CalendarDatePicker
+                Date="{Binding DeliveryDate, Mode=OneWay}"
+                Margin="0,10,0,10"
+                x:Name="DeliveryDateView"
+                IsHitTestVisible="False"
+                FontSize="20" />
         </StackPanel>
     </ScrollView>
 </Window>

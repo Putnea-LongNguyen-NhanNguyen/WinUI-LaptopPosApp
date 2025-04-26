@@ -52,6 +52,8 @@ namespace LaptopPosApp
             appBuilder.Services.AddTransient<SendVouchersMailViewModel>();
             appBuilder.Services.AddTransient<OrdersPageViewModel>();
             appBuilder.Services.AddTransient<DeliveryPageViewModel>();
+            appBuilder.Services.AddTransient<ReturnHistoryViewModel>();
+            appBuilder.Services.AddTransient<ReviewOrderViewModel>();
 
 
             AppHost = appBuilder.Build();
