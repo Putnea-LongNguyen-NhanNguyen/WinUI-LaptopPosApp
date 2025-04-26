@@ -21,7 +21,7 @@ namespace LaptopPosApp.ViewModels
             var order = dbContext.Orders.FirstOrDefault(o => o.ID == orderProduct.OrderID);
             if (order != null)
             {
-                order.Products.FirstOrDefault(p => p.ProductID == orderProduct.ProductID).ReturnDate = DateTime.UtcNow;
+                order.Products.FirstOrDefault(p => p.ProductID == orderProduct.ProductID).ReturnDate = DateTime.Now;
                 dbContext.SaveChanges();
             }         
         }

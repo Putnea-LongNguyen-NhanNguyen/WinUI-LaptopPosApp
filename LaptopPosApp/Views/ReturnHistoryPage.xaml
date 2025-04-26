@@ -66,10 +66,16 @@
                     Header="Khách hàng"
                     IsReadOnly="True"
                     Binding="{Binding Order.Customer.Name, Mode=OneWay}" />
-                <tableView:TableViewTextColumn
-                    Header="Ngày trả hàng"
-                    IsReadOnly="True"
-                    Binding="{Binding ReturnDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource dateTimeOffsetToString}}" />
+                <tableView:TableViewTemplateColumn
+                    Header="Ngày trả hàng">
+                    <tableView:TableViewTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CalendarDatePicker
+                                Date="{Binding ReturnDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                IsHitTestVisible="False"/>
+                        </DataTemplate>
+                    </tableView:TableViewTemplateColumn.CellTemplate>
+                </tableView:TableViewTemplateColumn>
             </tableView:TableView.Columns>
         </tableView:TableView>
     </Grid>

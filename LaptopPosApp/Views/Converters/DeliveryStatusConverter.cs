@@ -15,7 +15,7 @@ namespace LaptopPosApp.Views.Converters
         {
             if (value is DateTimeOffset deliveryDate)
             {
-                var now = DateTimeOffset.UtcNow;
+                var now = DateTimeOffset.Now;
 
                 if (deliveryDate < now)
                 {

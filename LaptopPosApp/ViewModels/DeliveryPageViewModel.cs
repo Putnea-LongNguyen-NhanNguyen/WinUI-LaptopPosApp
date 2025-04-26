@@ -25,12 +25,21 @@ namespace LaptopPosApp.ViewModels
             var filteredAndSortedOrders = dbContext.Orders
                     .Where(o => o.Status == OrderStatus.Delivering)
                     .AsEnumerable()
-                    .OrderBy(o => o.DeliveryDate.UtcDateTime)
+                    .OrderBy(o => o.DeliveryDate.LocalDateTime)
                     .ToList();
 
             foreach (var order in filteredAndSortedOrders)
             {
+                order.PropertyChanged += OnOrderPropertyChanged;
                 DeliveryOrders.Add(order);
+            }
+        }
+
+        public void OnOrderPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Order.DeliveryDate))
+            {
+                UpdateDeliveryOrderList();
             }
         }
 
