@@ -12,43 +12,22 @@ namespace LaptopPosApp.ViewModels
     class DeliveryPageViewModel : PaginatableViewModel<Order>
     {
         private readonly DbContextBase dbContext;
-        public ObservableCollection<Order> DeliveryOrders { get; set; } = [];
-        public DeliveryPageViewModel(DbContextBase dbContext) : base(dbContext.Orders)
+        public DeliveryPageViewModel(DbContextBase dbContext) : base(
+            dbContext.Orders
+                .Where(o => o.Status == OrderStatus.Delivering)
+                .AsEnumerable()
+                .OrderBy(o => o.DeliveryDate.LocalDateTime)
+                .AsQueryable()
+        )
         {
             this.dbContext = dbContext;
-            UpdateDeliveryOrderList();
-        }
-
-        public void UpdateDeliveryOrderList()
-        {
-            DeliveryOrders.Clear();
-            var filteredAndSortedOrders = dbContext.Orders
-                    .Where(o => o.Status == OrderStatus.Delivering)
-                    .AsEnumerable()
-                    .OrderBy(o => o.DeliveryDate.LocalDateTime)
-                    .ToList();
-
-            foreach (var order in filteredAndSortedOrders)
-            {
-                order.PropertyChanged += OnOrderPropertyChanged;
-                DeliveryOrders.Add(order);
-            }
-        }
-
-        public void OnOrderPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Order.DeliveryDate))
-            {
-                UpdateDeliveryOrderList();
-            }
         }
 
         public void DeliveryCompleted(Order order)
         {
             order.Status = OrderStatus.Delivered;
-            dbContext.Orders.Update(order);
             dbContext.SaveChanges();
-            UpdateDeliveryOrderList();
+            Refresh();
         }
 
         public void SaveChanges()

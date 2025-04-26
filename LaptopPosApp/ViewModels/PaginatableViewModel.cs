@@ -180,12 +180,13 @@ namespace LaptopPosApp.ViewModels
         {
             Refreshing = true;
             var items = ApplyFilters(allItems);
-            Count = await items.CountAsync();
+            Count = items.Count();
             CurrentPage = Math.Clamp(CurrentPage, 1, PageCount);
-            Items = await items
+            Items = await Task.Run(() => items
                 .Skip((CurrentPage - 1) * PerPage)
                 .Take(PerPage)
-                .ToArrayAsync();
+                .ToArray()
+            );
             Refreshing = false;
         }
     }

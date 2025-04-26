@@ -47,7 +47,7 @@
         <tableView:TableView
             x:Name="MyOrderTable"
             Grid.Row="1"
-            ItemsSource="{x:Bind ViewModel.DeliveryOrders, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
             SelectionUnit="CellOrRow"
             AutoGenerateColumns="False">
             <tableView:TableView.Columns>
@@ -56,7 +56,7 @@
                     IsReadOnly="True"
                     Binding="{Binding ID, Mode=OneWay}" />
                 <tableView:TableViewTemplateColumn
-                    Header="TT"
+                    Header=" "
                     IsReadOnly="True">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -73,17 +73,19 @@
                     </tableView:TableViewTemplateColumn.CellTemplate>
                 </tableView:TableViewTemplateColumn>
                 <tableView:TableViewTemplateColumn
-                    Header=" "
+                    Header="TT"
                     IsReadOnly="True">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <RelativePanel HorizontalAlignment="Stretch">
+                            <Grid HorizontalAlignment="Stretch">
                                 <ContentControl
-                                    Content="{Binding DeliveryDate, Converter={StaticResource deliveryStatusConverter}}"
-                                    RelativePanel.AlignHorizontalCenterWithPanel="True"
-                                    RelativePanel.AlignVerticalCenterWithPanel="True"
-                                    FontSize="20" />
-                            </RelativePanel>
+                                    Content="{Binding DeliveryDate, Mode=OneWay, Converter={StaticResource deliveryStatusConverter}}"
+                                    FontSize="20"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                >
+                            </ContentControl>
+                            </Grid>
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
                 </tableView:TableViewTemplateColumn>
