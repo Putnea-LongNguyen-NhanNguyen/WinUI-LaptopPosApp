@@ -12,6 +12,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using LaptopPosApp.Model;
+using LaptopPosApp.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,9 +26,13 @@ namespace LaptopPosApp.Views
     /// </summary>
     public sealed partial class ReturnHistoryPage : Page
     {
+        ReturnHistoryViewModel ViewModel { get; }
         public ReturnHistoryPage()
         {
             this.InitializeComponent();
+            this.InitializeComponent();
+            this.ViewModel = (Application.Current as App)!.Services.GetRequiredService<ReturnHistoryViewModel>();
         }
+
     }
 }

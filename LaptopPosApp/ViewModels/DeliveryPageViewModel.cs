@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace LaptopPosApp.ViewModels
 {
-    class DeliveryPageViewModel : PaginatableViewModel<Order>
+    class DeliveryPageViewModel
     {
         private readonly DbContextBase dbContext;
         public ObservableCollection<Order> DeliveryOrders { get; set; } = [];
-        public DeliveryPageViewModel(DbContextBase dbContext) : base(dbContext.Orders)
+        public DeliveryPageViewModel(DbContextBase dbContext)
         {
             this.dbContext = dbContext;
             UpdateDeliveryOrderList();

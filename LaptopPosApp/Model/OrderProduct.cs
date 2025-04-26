@@ -13,6 +13,7 @@ namespace LaptopPosApp.Model
         public required string ProductID { get; set; }
         [ObservableProperty]
         public partial int Quantity { get; set; } = 1;
+        public DateTimeOffset? ReturnDate { get; set; }
         public Order Order { get; set; } = null!;
         public Product Product { get; set; } = null!;
     }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="LaptopPosApp.Views.ReturnHistoryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -78,9 +78,8 @@
                                 Date="{Binding ReturnedDate, Mode=OneWay}" />
                         </DataTemplate>
                     </tableView:TableViewTemplateColumn.CellTemplate>
-                </tableView:TableViewTemplateColumn>
-                
+                </tableView:TableViewTemplateColumn>                
             </tableView:TableView.Columns>
         </tableView:TableView>
     </Grid>
-</Page>
+</Page>-->
