@@ -182,11 +182,17 @@ namespace LaptopPosApp.ViewModels
             var items = ApplyFilters(allItems);
             Count = items.Count();
             CurrentPage = Math.Clamp(CurrentPage, 1, PageCount);
-            Items = await Task.Run(() => items
+            var paginated = items
                 .Skip((CurrentPage - 1) * PerPage)
-                .Take(PerPage)
-                .ToArray()
-            );
+                .Take(PerPage);
+            try
+            {
+                Items = await paginated.ToArrayAsync();
+            }
+            catch (Exception)
+            {
+                Items = paginated.ToArray();
+            }
             Refreshing = false;
         }
     }
