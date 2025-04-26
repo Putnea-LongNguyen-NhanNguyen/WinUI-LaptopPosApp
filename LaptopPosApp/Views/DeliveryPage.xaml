@@ -56,7 +56,7 @@
                     IsReadOnly="True"
                     Binding="{Binding ID, Mode=OneWay}" />
                 <tableView:TableViewTemplateColumn
-                    Header=""
+                    Header="TT"
                     IsReadOnly="True">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -73,11 +73,11 @@
                     </tableView:TableViewTemplateColumn.CellTemplate>
                 </tableView:TableViewTemplateColumn>
                 <tableView:TableViewTemplateColumn
-                    Header="Trạng thái"
+                    Header=" "
                     IsReadOnly="True">
                     <tableView:TableViewTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <RelativePanel>
+                            <RelativePanel HorizontalAlignment="Stretch">
                                 <ContentControl
                                     Content="{Binding DeliveryDate, Converter={StaticResource deliveryStatusConverter}}"
                                     RelativePanel.AlignHorizontalCenterWithPanel="True"
@@ -111,7 +111,7 @@
                     Binding="{Binding DeliveryAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <tableView:TableViewTextColumn
                     Header="SĐT"
-                    Binding="{Binding Customer.Phone, Mode=OneWay}" />
+                    Binding="{Binding Customer.Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <tableView:TableViewTextColumn
                     Header="Tổng tiền"
                     IsReadOnly="True"
