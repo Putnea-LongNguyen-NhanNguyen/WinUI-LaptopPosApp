@@ -8,14 +8,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LaptopPosApp.Dao
 {
-    public abstract class DbContextBase: DbContext
+    public partial class DbContextBase: DbContext
     {
+        public DbSet<DbCreatedMarker> CreatedMarkers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbContextBase(DbContextOptions options) : base(options)
+        {
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

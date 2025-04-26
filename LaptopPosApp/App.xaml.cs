@@ -32,7 +32,11 @@ namespace LaptopPosApp
             this.InitializeComponent();
             var appBuilder = Host.CreateApplicationBuilder();
             if (UseMockDatabase)
-                appBuilder.Services.AddDbContext<DbContextBase, DbContextInMemoryMock>();
+                appBuilder.Services.AddDbContext<DbContextBase, DbContextInMemoryMock>(options =>
+                {
+                    var path = System.IO.Path.Join(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "database.db");
+                    options.UseSqlite($"Data Source={path}");
+                });
 
             appBuilder.Services.AddSingleton<CurrentOrderService>();
 
@@ -54,7 +58,6 @@ namespace LaptopPosApp
             appBuilder.Services.AddTransient<DeliveryPageViewModel>();
             appBuilder.Services.AddTransient<ReturnHistoryViewModel>();
             appBuilder.Services.AddTransient<ReviewOrderViewModel>();
-
 
             AppHost = appBuilder.Build();
             Services = AppHost.Services;

@@ -3,6 +3,7 @@ using System;
 using LaptopPosApp.Dao;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LaptopPosApp.Migrations
 {
     [DbContext(typeof(DbContextInMemoryMock))]
-    partial class DbContextInMemoryMockModelSnapshot : ModelSnapshot
+    [Migration("20250426162529_AddDbCreatedMarker")]
+    partial class AddDbCreatedMarker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
