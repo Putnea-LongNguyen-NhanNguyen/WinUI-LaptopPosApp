@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,6 +19,7 @@ using CSharpMarkup.WinUI;
 using System.Text.RegularExpressions;
 using TextBox = Microsoft.UI.Xaml.Controls.TextBox;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -51,13 +52,35 @@ namespace LaptopPosApp.Views
             return Instance;
         }
 
-        private void AddItem(object sender, RoutedEventArgs e)
+        private async void AddItem(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.Submit())
+            bool eWalletResult = true;
+            if (PayByEWallet.IsChecked == true)
+            {
+                eWalletResult = await ShowQRCode();
+            }
+
+            if (eWalletResult && ViewModel.Submit())
             {
                 Instance?.Close();
                 Instance = null;
-            }               
+            }
+        }
+
+        private async Task<Boolean> ShowQRCode()
+        {
+            string momoQR = ViewModel.CreateMomoQR(ViewModel.TotalPrice, "Thanh toán hóa đơn");
+            Microsoft.UI.Xaml.Controls.ContentDialog contentDialog = new()
+            {
+                Title = "Mã QR thanh toán",
+                Content = new PaymentQRContentDialog(momoQR),
+                PrimaryButtonText = "OK",
+                SecondaryButtonText = "Cancel",
+                XamlRoot = this.Content.XamlRoot,
+            };
+
+            var result = await contentDialog.ShowAsync();
+            return result == ContentDialogResult.Primary;
         }
 
         private void PhoneNumber_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
