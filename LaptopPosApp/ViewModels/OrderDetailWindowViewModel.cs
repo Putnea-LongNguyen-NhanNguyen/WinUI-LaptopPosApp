@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using vietnam_qr_pay_csharp;
 
 namespace LaptopPosApp.ViewModels
 {
@@ -195,9 +196,9 @@ namespace LaptopPosApp.ViewModels
 
         protected override bool DoSubmit()
         {
-            var customer = dbContext.Customers.FirstOrDefault(c => c.Name == Name);
-            if (customer == null)
-            {
+            var customer = dbContext.Customers.FirstOrDefault(c => c.Email == Email);
+            customer ??= dbContext.Customers.FirstOrDefault(c => c.Phone == Phone);
+            if (customer == null) {
                 customer = new()
                 {
                     ID = 0,
@@ -217,6 +218,7 @@ namespace LaptopPosApp.ViewModels
                 Products = [.. CurrentOrder],
                 Vouchers = [.. VouchersAdded],
                 TotalPrice = TotalPrice,
+                Status = IsDelivery ? OrderStatus.Delivering : OrderStatus.Delivered,
                 DeliveryAddress = IsDelivery ? Address : string.Empty,
                 DeliveryDate = IsDelivery ? DateTimeOffset.Now.AddDays(5) : DateTimeOffset.Now,
             };
@@ -233,7 +235,7 @@ namespace LaptopPosApp.ViewModels
                 var product2 = dbContext.Products.Where(p => p.ID == product.ProductID).FirstOrDefault();
                 if (product2 != null)
                 {
-                    product2.Quantity--;
+                    product2.Quantity -= product.Quantity;
                 }
             }
 
@@ -285,6 +287,26 @@ namespace LaptopPosApp.ViewModels
                 }
             }          
             return isValid;
+        }
+
+        public string CreateMomoQR(long amount, string purpose)
+        {
+            // Số tài khoản trong ví MoMo
+            var accountNumber = Environment.GetEnvironmentVariable("MOMO_NUMBER")!;
+
+            var momoQR = QRPay.InitVietQR(
+                bankBin: BankApp.BanksObject[BankKey.BANVIET].bin,
+                bankNumber: accountNumber,
+                amount: amount.ToString(), // Số tiền (không bắt buộc)
+                purpose
+            );
+
+            // Trong mã QR của MoMo có chứa thêm 1 mã tham chiếu tương ứng với STK
+            momoQR.additionalData.reference = "MOMOW2W" + accountNumber.Substring(10);
+
+            // Mã QR của MoMo có thêm 1 trường ID 80 với giá trị là 3 số cuối của SỐ ĐIỆN THOẠI của tài khoản nhận tiền
+            momoQR.SetUnreservedField("80", Environment.GetEnvironmentVariable("MOMO_LAST_3_NUMBERS")!);
+            return momoQR.Build();
         }
     }
 }
