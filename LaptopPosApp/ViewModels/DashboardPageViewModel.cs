@@ -53,19 +53,19 @@ namespace LaptopPosApp.ViewModels
                     new NavigationItemLeaf()
                     {
                         Title = "Sản phẩm",
-                        Icon = new SymbolIcon(Symbol.Shop),
+                        Icon = new SymbolIcon(Symbol.Manage),
                         CreatePage = () => new ProductsPage()
                     },
                     new NavigationItemLeaf()
                     {
                         Title = "Danh mục",
-                        Icon = new SymbolIcon(Symbol.Shop),
+                        Icon = new SymbolIcon(Symbol.Tag),
                         CreatePage = () => new CategoriesPage()
                     },
                     new NavigationItemLeaf()
                     {
                         Title = "Nhà sản xuất",
-                        Icon = new SymbolIcon(Symbol.Shop),
+                        Icon = new SymbolIcon(Symbol.People),
                         CreatePage = () => new ManufacturersPage()
                     }
                 }
@@ -79,13 +79,13 @@ namespace LaptopPosApp.ViewModels
                     new NavigationItemLeaf()
                     {
                         Title = "Đơn hàng",
-                        Icon = new SymbolIcon(Symbol.Page),
+                        Icon = new SymbolIcon(Symbol.Folder),
                         CreatePage = () => new OrdersPage()
                     },
                     new NavigationItemLeaf()
                     {
                         Title = "Mã khuyến mãi",
-                        Icon = new SymbolIcon(Symbol.Page),
+                        Icon = new SymbolIcon(Symbol.Preview),
                         CreatePage = () => new VouchersPage()
                     },
                     new NavigationItemLeaf()
@@ -126,7 +126,7 @@ namespace LaptopPosApp.ViewModels
             new NavigationItemLeaf()
             {
                 Title = "Cài đặt",
-                Icon = new SymbolIcon(Symbol.Edit),
+                Icon = new SymbolIcon(Symbol.Setting),
                 CreatePage = () => new SettingsPage(),
             }
         };

@@ -236,6 +236,7 @@ namespace LaptopPosApp.ViewModels
                 if (product2 != null)
                 {
                     product2.Quantity -= product.Quantity;
+                    dbContext.Products.Update(product2);
                 }
             }
 
