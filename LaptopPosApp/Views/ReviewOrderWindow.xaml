@@ -94,11 +94,10 @@
                                     Padding="8"
                                     VerticalAlignment="Center">
                                     <Image
-                                        Source="/Assets/laptopDemoImg.jpg"
+                                        Source="{Binding Product.ImagePath, Mode=OneWay}"
                                         Width="100"
                                         Stretch="UniformToFill" />
-                                    <TextBlock
-                                        Text="{Binding Product.Name}"
+                                    <TextBlock Text="{Binding Product.Name, Mode=OneWay}"
                                         Style="{StaticResource BodyTextBlockStyle}"
                                         VerticalAlignment="Center"
                                         Margin="10,0,0,0" />
@@ -109,8 +108,7 @@
                                     Style="{StaticResource BodyTextBlockStyle}">
                                     <Run
                                         Text="x" />
-                                    <Run
-                                        Text="{Binding Quantity}" />
+                                    <Run Text="{Binding Quantity, Mode=OneWay}" />
                                 </TextBlock>
                                 <RelativePanel
                                     Grid.Column="2">
